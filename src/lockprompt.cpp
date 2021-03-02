@@ -33,7 +33,8 @@ LockPrompt::LockPrompt(QWidget *parent)
 {
     setObjectName("MereLockPrompt");
 
-    setWindowFlags(Qt::FramelessWindowHint);
+//    setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setWindowModality(Qt::ApplicationModal);
 
     resize(500, 300);

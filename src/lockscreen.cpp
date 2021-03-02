@@ -1,7 +1,9 @@
 #include "lockscreen.h"
 #include "lockprompt.h"
 #include "locker.h"
+#include "config.h"
 
+#include <QDebug>
 #include <QTimer>
 #include <QVBoxLayout>
 
@@ -26,9 +28,10 @@ LockScreen::LockScreen(QWidget *parent)
     setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setCursor(Qt::BlankCursor);
 
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+
     QPalette pal = palette();
-    //pal.setColor(QPalette::Background, QColor(249, 249, 249, 50));
-    pal.setColor(QPalette::Window, Qt::white);
+    pal.setColor(QPalette::Window, QColor(config->background().c_str()));
     setAutoFillBackground(true);
     setPalette(pal);
 

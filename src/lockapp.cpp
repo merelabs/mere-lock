@@ -20,10 +20,15 @@ LockApp::LockApp(int &argc, char **argv)
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption configOption("config", "Set the path of the configuration file", "path", "mere/lock.conf");
+    QCommandLineOption configOption(QStringList() << "c" << "config", "Set the path of the configuration file",
+                                    "path",
+                                    "mere/lock.conf");
     QCommandLineOption screenOption("screen", "Set the flag to lock the system's screens.");
     QCommandLineOption systemOption("system", "Set the flag to lock the system.");
-    parser.parse(QCoreApplication::arguments());
+
+    parser.addOptions({configOption, screenOption, systemOption});
+
+    parser.process(QCoreApplication::arguments());
 
     m_config = Mere::Lock::Config::instance(parser.value(configOption).toStdString());
 
