@@ -21,7 +21,7 @@ Simply invoke the 'mere-lock' command. To get out of it, enter your password.
 $ mere-lock
 ```
 
-## Build
+### Build
 
 ```shell
 $ git clone https://github.com/merelabs/mere-lock.git
