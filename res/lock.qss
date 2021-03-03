@@ -21,4 +21,5 @@ QLineEdit {
     border-radius: 0px;
     margin: auto;
     padding: 5px 18px;
+    background: transparent;
 }
