@@ -1,4 +1,5 @@
 #include "lockprompt.h"
+#include "config.h"
 
 #include "mere/auth/service.h"
 
@@ -32,21 +33,22 @@ LockPrompt::LockPrompt(QWidget *parent)
     : QWidget(parent)
 {
     setObjectName("MereLockPrompt");
-
-//    setWindowFlags(Qt::FramelessWindowHint);
     setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setWindowModality(Qt::ApplicationModal);
 
     resize(500, 300);
-    moveToCenterScreen();
+    QScreen *screen = QApplication::primaryScreen();
+    move(screen->virtualGeometry().center() - this->rect().center());
+
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
 
     QPalette pal = palette();
-    pal.setColor(QPalette::Background, QColor(249, 249, 249, 255));
+    pal.setColor(QPalette::Background, QColor(config->promptbackground().c_str()));
     setAutoFillBackground(true);
     setPalette(pal);
 
     QGraphicsDropShadowEffect* dropShadowEffect = new QGraphicsDropShadowEffect(this);
-    dropShadowEffect->setColor(Qt::lightGray);
+    dropShadowEffect->setColor(config->promptshadow().c_str());
     dropShadowEffect->setOffset(10);
     dropShadowEffect->setBlurRadius(20);
     setGraphicsEffect(dropShadowEffect);
@@ -71,6 +73,7 @@ void LockPrompt::initUI()
 
     m_password = new QLineEdit(this);
     m_password->setAlignment(Qt::AlignCenter);
+    m_password->setEchoMode(QLineEdit::Password);
     this->layout()->addWidget(m_password);
 
     QSpacerItem *bottomSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -103,6 +106,7 @@ void LockPrompt::setVisible(bool visible)
 {
     if (visible)
     {
+        clear();
         m_password->grabKeyboard();
         emit keyboardGrabbed();
     }
@@ -117,16 +121,8 @@ void LockPrompt::setVisible(bool visible)
 
 void LockPrompt::keyReleaseEvent(QKeyEvent *keyEvent)
 {
-    if (keyEvent->key() == Qt::Key_Escape)
-    {
-        clear();
+    if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Enter)
         setVisible(false);
-    }
-
-    if (keyEvent->key() == Qt::Key_Enter)
-    {
-        setVisible(false);
-    }
 }
 
 void LockPrompt::verify()
@@ -140,11 +136,4 @@ void LockPrompt::verify()
     }
 
     emit verified();
-}
-
-void LockPrompt::moveToCenterScreen()
-{
-    QRect rect = QApplication::primaryScreen()->geometry();
-    QPoint center(rect.center() - this->rect().center());
-    move(center);
 }
