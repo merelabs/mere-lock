@@ -23,6 +23,9 @@ public:
     QVariant get(const std::string &key) const;
     void set(const std::string &key, const QVariant &value);
 
+    std::string password() const;
+    void password(const std::string &password);
+
     unsigned int timeout() const;
     std::string background() const;
 
