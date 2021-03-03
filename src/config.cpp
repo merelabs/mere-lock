@@ -25,6 +25,18 @@ void Mere::Lock::Config::set(const std::string &key, const QVariant &value)
     m_properties.insert({key, value});
 }
 
+std::string Mere::Lock::Config::password() const
+{
+    QVariant value = this->get("mere.lock.password");
+    if (!value.isValid()) return "";
+
+    return value.toString().toStdString();
+}
+void Mere::Lock::Config::password(const std::string &password)
+{
+    this->set("mere.lock.password", password.c_str());
+}
+
 unsigned int Mere::Lock::Config::timeout() const
 {
     QVariant value = this->get("mere.lock.timeout");

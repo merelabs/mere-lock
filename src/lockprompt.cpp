@@ -201,8 +201,20 @@ void LockPrompt::setPromptLogo()
 
 void LockPrompt::verify()
 {
-    Mere::Auth::Service service;
-    bool ok = service.verify(m_password->text().toStdString());
+    bool ok = false;
+
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+    std::string password = config->password();
+    if (!password.empty())
+    {
+        ok = (password.compare(m_password->text().toStdString()) == 0);
+    }
+    else
+    {
+        Mere::Auth::Service service;
+        ok = service.verify(m_password->text().toStdString());
+    }
+
     if (!ok)
     {
         m_result->setVisible(true);
