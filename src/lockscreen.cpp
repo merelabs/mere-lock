@@ -5,10 +5,15 @@
 
 #include <QDebug>
 #include <QTimer>
+#include <QScreen>
 #include <QVBoxLayout>
+#include <QApplication>
 
 LockScreen::~LockScreen()
 {
+    releaseMouse();
+    releaseKeyboard();
+
     if (m_label)
     {
         delete m_label;
@@ -27,13 +32,10 @@ LockScreen::LockScreen(QWidget *parent)
 {
     setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setCursor(Qt::BlankCursor);
+    setMouseTracking(true);
 
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-
-    QPalette pal = palette();
-    pal.setColor(QPalette::Window, QColor(config->background().c_str()));
-    setAutoFillBackground(true);
-    setPalette(pal);
+    setBackground();
+    setScreenLogo();
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setAlignment(Qt::AlignCenter);
@@ -52,12 +54,75 @@ LockScreen::LockScreen(QWidget *parent)
     });
 
     m_prompt->hide();
-    QTimer::singleShot(100, this, &QWidget::grabKeyboard);
+
+    grabMouse();
+    grabKeyboard();
+
+    installEventFilter(this);
 }
 
-void LockScreen::keyReleaseEvent(QKeyEvent *keyEvent)
+void LockScreen::prompt()
 {
-    Q_UNUSED(keyEvent)
+    if (m_prompt->isHidden())
+        m_prompt->showNormal();
+}
 
-    m_prompt->showNormal();
+void LockScreen::setBackground()
+{
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+    QString background(config->background().c_str());
+
+    QPalette pal = palette();
+    if (background.startsWith("#"))
+    {
+        pal.setColor(QPalette::Window, QColor(background));
+        setAutoFillBackground(true);
+    }
+    else
+    {
+        QPixmap pixmap(background);
+        QScreen *primaryScreen = QApplication::primaryScreen();
+        pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pal.setBrush(QPalette::Window, pixmap);
+    }
+    setPalette(pal);
+}
+
+void LockScreen::setScreenLogo()
+{
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+    if(!config->logoshow()) return;
+
+    QString logo(config->logo().c_str());
+    if (logo.isEmpty()) return;
+
+    QPixmap pixmap(logo);
+
+    QLabel *label = new QLabel(this);
+    label->setScaledContents(true);
+    label->setMaximumSize(QSize(128, 35));
+    label->setPixmap(pixmap);
+
+    QScreen *screen = QApplication::primaryScreen();
+    QSize size = screen->availableVirtualSize();
+
+    label->move(25, size.height() - label->height() - 25);
+}
+
+bool LockScreen::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
+    {
+        // - test code
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Escape)
+            ::exit(1);
+        // - end of test code
+
+        prompt();
+
+        return true;
+    }
+
+    return QObject::eventFilter(obj, event);
 }

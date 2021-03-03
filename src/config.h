@@ -26,6 +26,15 @@ public:
     unsigned int timeout() const;
     std::string background() const;
 
+    bool logoshow() const;
+    std::string logo() const;
+
+    bool promptlogoshow() const;
+    std::string promptlogo() const;
+
+    std::string promptshadow() const;
+    std::string promptbackground() const;
+
     static Config* instance(const std::string &path = "")
     {
         static Config *instance = new Config(path);

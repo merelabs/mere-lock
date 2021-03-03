@@ -40,18 +40,9 @@ LockPrompt::LockPrompt(QWidget *parent)
     QScreen *screen = QApplication::primaryScreen();
     move(screen->virtualGeometry().center() - this->rect().center());
 
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-
-    QPalette pal = palette();
-    pal.setColor(QPalette::Background, QColor(config->promptbackground().c_str()));
-    setAutoFillBackground(true);
-    setPalette(pal);
-
-    QGraphicsDropShadowEffect* dropShadowEffect = new QGraphicsDropShadowEffect(this);
-    dropShadowEffect->setColor(config->promptshadow().c_str());
-    dropShadowEffect->setOffset(10);
-    dropShadowEffect->setBlurRadius(20);
-    setGraphicsEffect(dropShadowEffect);
+    setShadow();
+    setBackground();
+    setPromptLogo();
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setAlignment(Qt::AlignCenter);
@@ -63,7 +54,7 @@ LockPrompt::LockPrompt(QWidget *parent)
 
 void LockPrompt::initUI()
 {
-    QSpacerItem *topSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
+    QSpacerItem *topSpacer = new QSpacerItem(1, 100, QSizePolicy::Fixed, QSizePolicy::Minimum);
     this->layout()->addItem(topSpacer);
 
     m_prompt = new QLabel("Enter your password and press return.", this);
@@ -79,7 +70,7 @@ void LockPrompt::initUI()
     QSpacerItem *bottomSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
     this->layout()->addItem(bottomSpacer);
 
-    m_result = new QLabel("* invalid attepmt to unlock.", this);
+    m_result = new QLabel("* sorry, incorrect attepmt to unlock screen.", this);
     m_result->setObjectName("MereLockPromptResult");
 
     QSizePolicy sizePolicy = m_result->sizePolicy();
@@ -117,6 +108,56 @@ void LockPrompt::setVisible(bool visible)
     }
 
     QWidget::setVisible(visible);
+}
+
+void LockPrompt::setShadow()
+{
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+    QString shadow(config->promptshadow().c_str());
+
+    QGraphicsDropShadowEffect* dropShadowEffect = new QGraphicsDropShadowEffect(this);
+    dropShadowEffect->setColor(shadow);
+    dropShadowEffect->setOffset(10);
+    dropShadowEffect->setBlurRadius(20);
+    setGraphicsEffect(dropShadowEffect);
+}
+
+void LockPrompt::setBackground()
+{
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+    QString background(config->promptbackground().c_str());
+
+    QPalette pal = palette();
+    if (background.startsWith("#"))
+    {
+        pal.setColor(QPalette::Window, QColor(background));
+        setAutoFillBackground(true);
+    }
+    else
+    {
+        QPixmap pixmap(background);
+        QScreen *primaryScreen = QApplication::primaryScreen();
+        pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pal.setBrush(QPalette::Window, pixmap);
+    }
+    setPalette(pal);
+}
+
+void LockPrompt::setPromptLogo()
+{
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+    if(!config->promptlogoshow()) return;
+
+    QString logo(config->promptlogo().c_str());
+    if (logo.isEmpty()) return;
+
+    QLabel *label = new QLabel(this);
+    label->setScaledContents(true);
+    label->setMinimumSize(QSize(48, 48));
+    label->setPixmap(QPixmap(logo));
+//    label->setStyleSheet("border: 1px solid black;");
+
+    label->move(this->width()/2 - label->width()/2, 30);
 }
 
 void LockPrompt::keyReleaseEvent(QKeyEvent *keyEvent)

@@ -1,5 +1,5 @@
-#ifndef LOCKVIEW_H
-#define LOCKVIEW_H
+#ifndef MERE_LOCK_LOCKPROMPT_H
+#define MERE_LOCK_LOCKPROMPT_H
 
 #include <QLabel>
 #include <QLineEdit>
@@ -22,7 +22,9 @@ protected:
     void keyReleaseEvent(QKeyEvent *keyEvent) override;
 
 private:
-    void moveToCenterScreen();
+    void setShadow();
+    void setBackground();
+    void setPromptLogo();
 
 signals:
     void verified();
@@ -39,4 +41,4 @@ private:
     QLineEdit *m_password;
 };
 
-#endif // LOCKVIEW_H
+#endif // MERE_LOCK_LOCKPROMPT_H

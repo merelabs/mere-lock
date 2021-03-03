@@ -2,6 +2,7 @@
 #include "lockscreen.h"
 #include "lockprompt.h"
 
+#include <QDebug>
 Mere::Lock::Locker::~Locker()
 {
 

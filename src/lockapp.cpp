@@ -16,6 +16,12 @@ LockApp::~LockApp()
 LockApp::LockApp(int &argc, char **argv)
     : QApplication(argc, argv)
 {
+    setObjectName("MereLockApp");
+//    setProperty("AppCode", APP_CODE);
+//    setApplicationName(APP_NAME);
+//    setApplicationVersion(APP_VERSION);
+
+
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();

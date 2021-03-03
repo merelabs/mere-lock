@@ -35,8 +35,58 @@ unsigned int Mere::Lock::Config::timeout() const
 
 std::string Mere::Lock::Config::background() const
 {
-    QVariant value = this->get("mere.lock.background");
+    QVariant value = this->get("mere.lock.screen.background");
     if (!value.isValid()) return "#0B6623";
 
     return value.toString().toStdString();
+}
+
+bool Mere::Lock::Config::logoshow() const
+{
+    QVariant value = this->get("mere.lock.screen.logo.show");
+    if (!value.isValid()) return true;
+
+    return value.toBool();
+}
+
+std::string Mere::Lock::Config::logo() const
+{
+    QVariant value = this->get("mere.lock.screen.logo");
+    if (!value.isValid()) return "/usr/local/share/mere/lock/mere-logo.png";
+
+    return value.toString().toStdString();
+}
+
+bool Mere::Lock::Config::promptlogoshow() const
+{
+    QVariant value = this->get("mere.lock.screen.prompt.logo.show");
+    if (!value.isValid()) return true;
+
+    return value.toBool();
+}
+
+std::string Mere::Lock::Config::promptlogo() const
+{
+    QVariant value = this->get("mere.lock.screen.prompt.logo");
+    if (!value.isValid()) return "/usr/local/share/mere/lock/freebsd-logo.png";
+
+    return value.toString().toStdString();
+}
+
+std::string Mere::Lock::Config::promptshadow() const
+{
+    QVariant value = this->get("mere.lock.screen.prompt.shadow");
+    if (!value.isValid()) return "#D3D3D3";
+
+    return value.toString().toStdString();
+
+}
+
+std::string Mere::Lock::Config::promptbackground() const
+{
+    QVariant value = this->get("mere.lock.screen.prompt.background");
+    if (!value.isValid()) return "#F9F9F9";
+
+    return value.toString().toStdString();
+
 }

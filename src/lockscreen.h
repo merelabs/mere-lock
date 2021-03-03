@@ -16,13 +16,13 @@ public:
     explicit LockScreen(QWidget *parent = nullptr);
 
 protected:
-//   void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *keyEvent) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
-    void mouseMoveEvent(QMouseEvent*) override
-    {
-        releaseKeyboard();
-    }
+private:
+    void prompt();
+    void setBackground();
+    void setScreenLogo();
+
 
 signals:
     void verified();
