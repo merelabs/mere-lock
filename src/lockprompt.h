@@ -20,6 +20,7 @@ protected:
 
 private:
     static const int timeoutCheckInterval;
+    static const int timeoutStartOffset;
 
     void initUI();
     void setShadow();

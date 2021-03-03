@@ -14,6 +14,7 @@
 
 //static
 const int LockPrompt::timeoutCheckInterval = 500;
+const int LockPrompt::timeoutStartOffset = 5000;
 
 LockPrompt::~LockPrompt()
 {
@@ -95,11 +96,11 @@ void LockPrompt::setTimeout()
     connect(m_timeoutTimer, &QTimer::timeout, this, [&]{
         Mere::Lock::Config *config = Mere::Lock::Config::instance();
         qint64 lapse = QDateTime::currentMSecsSinceEpoch() - m_timeoutStart;
-        if ( lapse > (config->timeout() * 1000 + timeoutCheckInterval))
+        if ( lapse > (config->timeout() * 1000 + timeoutStartOffset + timeoutCheckInterval))
         {
             setVisible(false);
         }
-        else if (lapse < timeoutCheckInterval )
+        else if (lapse < timeoutStartOffset + timeoutCheckInterval )
         {
             m_timeoutPanel->setGeometry(0, 0, 0, 2);
         }
@@ -108,7 +109,7 @@ void LockPrompt::setTimeout()
             m_timeoutPanel->setStyleSheet("background: red;");
             QPropertyAnimation *animation = new QPropertyAnimation(m_timeoutPanel, "geometry", this);
             animation->setDuration(timeoutCheckInterval);
-            animation->setEndValue(QRect(0, 0, this->width()/(config->timeout() * 2) * floor(lapse / timeoutCheckInterval), 2));
+            animation->setEndValue(QRect(0, 0, this->width()/(config->timeout() * 2) * floor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
             animation->start();
         }
     });
@@ -134,6 +135,7 @@ void LockPrompt::setVisible(bool visible)
     {
         m_timeoutStart = 0;
         m_timeoutTimer->stop();
+        m_timeoutPanel->setGeometry(0, 0, 0, 2);
 
         releaseMouse();
         m_password->releaseKeyboard();
