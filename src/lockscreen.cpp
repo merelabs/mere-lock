@@ -108,12 +108,14 @@ bool LockScreen::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
     {
+
+#ifdef QT_DEBUG
         // - test code
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if (keyEvent->key() == Qt::Key_Escape)
             ::exit(1);
         // - end of test code
-
+#endif
         prompt();
 
         return true;

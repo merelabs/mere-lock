@@ -10,6 +10,7 @@ CONFIG += c++11
 DEFINES += APP_CODE=\\\"lock\\\"
 DEFINES += APP_NAME=\\\"$$TARGET\\\"
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES += _TESTING_
 
 SOURCES += \
     src/config.cpp \

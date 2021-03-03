@@ -28,7 +28,7 @@ void Mere::Lock::Config::set(const std::string &key, const QVariant &value)
 unsigned int Mere::Lock::Config::timeout() const
 {
     QVariant value = this->get("mere.lock.timeout");
-    if (!value.isValid()) return 5;
+    if (!value.isValid()) return 10;
 
     return value.toUInt();
 }
