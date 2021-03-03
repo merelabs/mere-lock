@@ -29,16 +29,25 @@ LockApp::LockApp(int &argc, char **argv)
     QCommandLineOption configOption(QStringList() << "c" << "config", "Set the path of the configuration file",
                                     "path",
                                     "mere/lock.conf");
+
+    QCommandLineOption passwordOption(QStringList() << "p" << "password", "Set the password to be used to unlock the screen",
+                                    "password");
+
     QCommandLineOption screenOption("screen", "Set the flag to lock the system's screens.");
     QCommandLineOption systemOption("system", "Set the flag to lock the system.");
 
-    parser.addOptions({configOption, screenOption, systemOption});
+    parser.addOptions({configOption, passwordOption, screenOption, systemOption});
 
     parser.process(QCoreApplication::arguments());
 
     m_config = Mere::Lock::Config::instance(parser.value(configOption).toStdString());
 
-    m_locker = new Mere::Lock::Locker;
+    if (parser.isSet(passwordOption))
+    {
+        m_config->password(parser.value(passwordOption).toStdString());
+    }
+
+    m_locker = new Mere::Lock::Locker(this);
     connect(m_locker, &Mere::Lock::Locker::unlocked, [&](){
         quit();
     });
