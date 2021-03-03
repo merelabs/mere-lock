@@ -99,7 +99,7 @@ void LockPrompt::setTimeout()
         {
             setVisible(false);
         }
-        else if (lapse < 500 )
+        else if (lapse < timeoutCheckInterval )
         {
             m_timeoutPanel->setGeometry(0, 0, 0, 2);
         }
@@ -108,7 +108,7 @@ void LockPrompt::setTimeout()
             m_timeoutPanel->setStyleSheet("background: red;");
             QPropertyAnimation *animation = new QPropertyAnimation(m_timeoutPanel, "geometry", this);
             animation->setDuration(timeoutCheckInterval);
-            animation->setEndValue(QRect(0, 0, this->width()/(config->timeout() * 2) * floor(lapse / 500), 2));
+            animation->setEndValue(QRect(0, 0, this->width()/(config->timeout() * 2) * floor(lapse / timeoutCheckInterval), 2));
             animation->start();
         }
     });
