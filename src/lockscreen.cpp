@@ -13,18 +13,6 @@ LockScreen::~LockScreen()
 {
     releaseMouse();
     releaseKeyboard();
-
-    if (m_label)
-    {
-        delete m_label;
-        m_label = nullptr;
-    }
-
-    if (m_prompt)
-    {
-        delete m_prompt;
-        m_prompt = nullptr;
-    }
 }
 
 LockScreen::LockScreen(QWidget *parent)
@@ -34,26 +22,9 @@ LockScreen::LockScreen(QWidget *parent)
     setCursor(Qt::BlankCursor);
     setMouseTracking(true);
 
+    setMessage();
     setBackground();
     setScreenLogo();
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setAlignment(Qt::AlignCenter);
-
-    m_label = new QLabel("Press any key to get the password prompt.");
-    layout->addWidget(m_label);
-
-    m_prompt = new LockPrompt(this);
-    connect(m_prompt, &LockPrompt::keyboardReleased, [&](){
-        grabKeyboard();
-    });
-
-    connect(m_prompt, &LockPrompt::verified, [&](){
-        grabKeyboard();
-        emit verified();
-    });
-
-    m_prompt->hide();
 
     grabMouse();
     grabKeyboard();
@@ -63,8 +34,30 @@ LockScreen::LockScreen(QWidget *parent)
 
 void LockScreen::prompt()
 {
-    if (m_prompt->isHidden())
-        m_prompt->showNormal();
+    if (!m_prompt)
+    {
+        m_prompt = new LockPrompt(this);
+        connect(m_prompt, &LockPrompt::keyboardReleased, [&](){
+            grabKeyboard();
+        });
+
+        connect(m_prompt, &LockPrompt::verified, [&](){
+            grabKeyboard();
+            emit verified();
+        });
+    }
+
+    if (!m_prompt->isHidden()) return;
+
+    m_prompt->showNormal();
+}
+
+void LockScreen::setMessage()
+{
+    QScreen *screen = QApplication::primaryScreen();
+
+    QLabel *label = new QLabel("press any key or move mouse a bit", this);
+    label->move(screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
 void LockScreen::setBackground()
@@ -80,9 +73,11 @@ void LockScreen::setBackground()
     }
     else
     {
-        QPixmap pixmap(background);
         QScreen *primaryScreen = QApplication::primaryScreen();
+
+        QPixmap pixmap(background);
         pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+
         pal.setBrush(QPalette::Window, pixmap);
     }
     setPalette(pal);

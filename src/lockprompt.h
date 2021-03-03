@@ -13,15 +13,12 @@ public:
     ~LockPrompt();
     explicit LockPrompt(QWidget *parent = nullptr);
 
-    void initUI();
-
-    QString password() const;
-
 protected:
     void setVisible(bool visible) override;
-    void keyReleaseEvent(QKeyEvent *keyEvent) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
+    void initUI();
     void setShadow();
     void setBackground();
     void setPromptLogo();

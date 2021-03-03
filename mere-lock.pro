@@ -35,6 +35,8 @@ RESOURCES += \
 
 DISTFILES += \
     etc/lock.conf
+    share/mere-logo.png
+    share/freebsd-logo.png
 
 INCLUDEPATH += /usr/local/include
 
@@ -51,6 +53,9 @@ unix
     config.path = /usr/local/etc/mere/
     config.files += etc/lock.conf
 
-    INSTALLS += config target
+    share.path = /usr/local/share/mere/lock/
+    share.files += share/mere-logo.png share/freebsd-logo.png
+
+    INSTALLS += config share target
 }
 

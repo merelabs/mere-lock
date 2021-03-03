@@ -1,5 +1,5 @@
-#ifndef LOCKSCREEN_H
-#define LOCKSCREEN_H
+#ifndef MERE_LOCK_LOCKSCREEN_H
+#define MERE_LOCK_LOCKSCREEN_H
 
 #include <QLabel>
 #include <QEvent>
@@ -20,16 +20,15 @@ protected:
 
 private:
     void prompt();
+    void setMessage();
     void setBackground();
     void setScreenLogo();
-
 
 signals:
     void verified();
 
 private:
-    QLabel *m_label;
     LockPrompt *m_prompt = nullptr;
 };
 
-#endif // LOCKSCREEN_H
+#endif // MERE_LOCK_LOCKSCREEN_H

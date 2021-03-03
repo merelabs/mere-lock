@@ -10,31 +10,15 @@
 
 LockPrompt::~LockPrompt()
 {
-    if (m_prompt)
-    {
-        delete m_prompt;
-        m_prompt = nullptr;
-    }
 
-    if (m_password)
-    {
-        delete m_password;
-        m_password = nullptr;
-    }
-
-    if (m_result)
-    {
-        delete m_result;
-        m_result = nullptr;
-    }
 }
 
 LockPrompt::LockPrompt(QWidget *parent)
     : QWidget(parent)
 {
     setObjectName("MereLockPrompt");
-    setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    setWindowModality(Qt::ApplicationModal);
+    setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    setWindowModality(Qt::WindowModal);
 
     resize(500, 300);
     QScreen *screen = QApplication::primaryScreen();
@@ -50,6 +34,8 @@ LockPrompt::LockPrompt(QWidget *parent)
     layout->setSpacing(10);
 
     initUI();
+
+    installEventFilter(this);
 }
 
 void LockPrompt::initUI()
@@ -83,11 +69,6 @@ void LockPrompt::initUI()
     connect(m_password, SIGNAL(returnPressed()), this, SLOT(verify()));
 }
 
-QString LockPrompt::password() const
-{
-    return m_password->text();
-}
-
 void LockPrompt::clear()
 {
     m_password->clear();
@@ -112,14 +93,10 @@ void LockPrompt::setVisible(bool visible)
 
 void LockPrompt::setShadow()
 {
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    QString shadow(config->promptshadow().c_str());
-
-    QGraphicsDropShadowEffect* dropShadowEffect = new QGraphicsDropShadowEffect(this);
-    dropShadowEffect->setColor(shadow);
-    dropShadowEffect->setOffset(10);
-    dropShadowEffect->setBlurRadius(20);
-    setGraphicsEffect(dropShadowEffect);
+    QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
+    shadowEffect->setOffset(10);
+    shadowEffect->setBlurRadius(25);
+    setGraphicsEffect(shadowEffect);
 }
 
 void LockPrompt::setBackground()
@@ -140,6 +117,7 @@ void LockPrompt::setBackground()
         pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
         pal.setBrush(QPalette::Window, pixmap);
     }
+
     setPalette(pal);
 }
 
@@ -160,12 +138,6 @@ void LockPrompt::setPromptLogo()
     label->move(this->width()/2 - label->width()/2, 30);
 }
 
-void LockPrompt::keyReleaseEvent(QKeyEvent *keyEvent)
-{
-    if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Enter)
-        setVisible(false);
-}
-
 void LockPrompt::verify()
 {
     Mere::Auth::Service service;
@@ -177,4 +149,18 @@ void LockPrompt::verify()
     }
 
     emit verified();
+}
+
+bool LockPrompt::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Enter)
+            setVisible(false);
+
+        return true;
+    }
+
+    return QObject::eventFilter(obj, event);
 }
