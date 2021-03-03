@@ -13,7 +13,7 @@ Lock screen is quite configurable, such as
 
 TODO:
 - Restrict the number of failure attempts
-- Vertual terminal locking
+- VT locking
 - System locking
 
 ### Usage
