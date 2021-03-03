@@ -73,20 +73,10 @@ std::string Mere::Lock::Config::promptlogo() const
     return value.toString().toStdString();
 }
 
-std::string Mere::Lock::Config::promptshadow() const
-{
-    QVariant value = this->get("mere.lock.screen.prompt.shadow");
-    if (!value.isValid()) return "#D3D3D3";
-
-    return value.toString().toStdString();
-
-}
-
 std::string Mere::Lock::Config::promptbackground() const
 {
     QVariant value = this->get("mere.lock.screen.prompt.background");
     if (!value.isValid()) return "#F9F9F9";
 
     return value.toString().toStdString();
-
 }

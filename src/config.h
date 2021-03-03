@@ -32,7 +32,6 @@ public:
     bool promptlogoshow() const;
     std::string promptlogo() const;
 
-    std::string promptshadow() const;
     std::string promptbackground() const;
 
     static Config* instance(const std::string &path = "")
