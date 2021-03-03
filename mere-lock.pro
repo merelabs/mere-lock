@@ -42,7 +42,7 @@ DISTFILES += \
 INCLUDEPATH += /usr/local/include
 
 LIBS += -lX11
-LIBS += -lmere-auth -lmere-config
+LIBS += -lmere-auth -lmere-config-lite
 
 #
 # Install

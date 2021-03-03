@@ -1,7 +1,7 @@
 #ifndef MERE_DISPLAY_CONFIG_H
 #define MERE_DISPLAY_CONFIG_H
 
-#include "mere/config/config.h"
+#include "mere/config-lite/config.h"
 
 #include <QObject>
 #include <QVariant>
@@ -11,7 +11,7 @@ namespace Mere
 namespace Lock
 {
 
-class Config : public Mere::Config::Config
+class Config : public Mere::ConfigLite::Config
 {
     explicit Config(QObject *parent = nullptr);
     explicit Config(const std::string &path, QObject *parent = nullptr);
@@ -19,9 +19,6 @@ class Config : public Mere::Config::Config
     Q_OBJECT
 public:
     int init();
-
-    QVariant get(const std::string &key) const;
-    void set(const std::string &key, const QVariant &value);
 
     std::string password() const;
     void password(const std::string &password);
@@ -43,9 +40,6 @@ public:
 
         return instance;
     }
-
-private:
-    std::map<std::string, QVariant> m_properties;
 };
 
 }
