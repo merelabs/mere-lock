@@ -126,6 +126,7 @@ void LockPrompt::setVisible(bool visible)
         m_timeoutTimer->start();
 
         grabMouse();
+        m_password->setFocus();
         m_password->grabKeyboard();
         emit keyboardGrabbed();
     }
@@ -211,7 +212,8 @@ void LockPrompt::verify()
 
 bool LockPrompt::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress /*|| event->type() == QEvent::KeyRelease */ || event->type() == QEvent::MouseMove)
+    if (event->type() == QEvent::KeyPress  || event->type() == QEvent::KeyRelease ||
+        event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove)
     {
         m_timeoutStart = QDateTime::currentMSecsSinceEpoch();
 
