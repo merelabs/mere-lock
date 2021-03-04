@@ -28,7 +28,7 @@ TODO:
 ### Screenshots
 <img src="screenshots/screen.png" height="225px"> <img src="screenshots/prompt.png" height="225px">
 
-more screenshorts are available [here](screenshots).
+more screenshots are available [here](screenshots).
 
 ### Usage
 Simply invoke the 'mere-lock' command. To get out of it, enter your password.
