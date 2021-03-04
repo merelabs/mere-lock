@@ -1,12 +1,12 @@
 #include "config.h"
 
 Mere::Lock::Config::Config(QObject *parent) :
-    Mere::ConfigLite::Config("mere/lock.conf", parent)
+    Mere::Config::KVConfig("mere/lock.conf", parent)
 {
 }
 
 Mere::Lock::Config::Config(const std::string &path, QObject *parent) :
-    Mere::ConfigLite::Config(path, parent)
+    Mere::Config::KVConfig(path, parent)
 {
     load();
 }

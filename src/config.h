@@ -1,7 +1,7 @@
 #ifndef MERE_DISPLAY_CONFIG_H
 #define MERE_DISPLAY_CONFIG_H
 
-#include "mere/config-lite/config.h"
+#include "mere/config/kvconfig.h"
 
 #include <QObject>
 #include <QVariant>
@@ -11,7 +11,7 @@ namespace Mere
 namespace Lock
 {
 
-class Config : public Mere::ConfigLite::Config
+class Config : public Mere::Config::KVConfig
 {
     explicit Config(QObject *parent = nullptr);
     explicit Config(const std::string &path, QObject *parent = nullptr);
