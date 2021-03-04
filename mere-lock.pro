@@ -6,6 +6,7 @@ VERSION = 0.0.1b
 TEMPLATE= app
 
 CONFIG += c++11
+CONFIG += debug_and_release
 
 DEFINES += APP_CODE=\\\"lock\\\"
 DEFINES += APP_NAME=\\\"$$TARGET\\\"
@@ -37,6 +38,9 @@ DISTFILES += \
     etc/lock.conf
     share/mere-logo.png
     share/freebsd-logo.png
+
+OTHER_FILES += \
+    README.md
 
 INCLUDEPATH += /usr/local/include
 

@@ -113,7 +113,7 @@ bool LockScreen::eventFilter(QObject *obj, QEvent *event)
         // - test code
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if (keyEvent->key() == Qt::Key_Escape)
-            ::exit(1);
+            ::exit(0);
         // - end of test code
 #endif
         prompt();
