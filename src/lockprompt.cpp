@@ -186,11 +186,12 @@ void LockPrompt::setPromptLogo()
 
     QSize size(64, 64);
     QPixmap pixmap(logo);
-    pixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QLabel *label = new QLabel(this);
     label->setMargin(0);
     label->setContentsMargins(0, 0, 0, 0);
+    label->setAlignment(Qt::AlignCenter);
     label->setScaledContents(true);
     label->setMinimumSize(size);
     label->setPixmap(pixmap);

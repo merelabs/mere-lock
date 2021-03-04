@@ -10,7 +10,6 @@ CONFIG += c++11
 DEFINES += APP_CODE=\\\"lock\\\"
 DEFINES += APP_NAME=\\\"$$TARGET\\\"
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-DEFINES += _TESTING_
 
 SOURCES += \
     src/config.cpp \
@@ -42,7 +41,7 @@ DISTFILES += \
 INCLUDEPATH += /usr/local/include
 
 LIBS += -lX11
-LIBS += -lmere-auth -lmere-config
+LIBS += -lmere-auth -lmere-config-lite
 
 #
 # Install
