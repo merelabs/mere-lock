@@ -227,7 +227,7 @@ void LockPrompt::verify()
 
 bool LockPrompt::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress  || event->type() == QEvent::KeyRelease ||
+    if (event->type() == QEvent::KeyPress  /*|| event->type() == QEvent::KeyRelease*/ ||
         event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove)
     {
         m_timeoutStart = QDateTime::currentMSecsSinceEpoch();
