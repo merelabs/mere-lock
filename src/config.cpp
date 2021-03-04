@@ -1,28 +1,14 @@
 #include "config.h"
 
-//Config::Config(QObject *parent) :
-//    Mere::Config::Config("mere.display", parent)
-//{
-//}
+Mere::Lock::Config::Config(QObject *parent) :
+    Mere::Config::KVConfig("mere/lock.conf", parent)
+{
+}
 
 Mere::Lock::Config::Config(const std::string &path, QObject *parent) :
-    Mere::Config::Config(path, parent)
+    Mere::Config::KVConfig(path, parent)
 {
-    m_properties = this->properties();
-}
-
-QVariant Mere::Lock::Config::get(const std::string &key) const
-{
-    auto result = m_properties.find(key);
-    if (result != m_properties.end())
-        return result->second;
-
-    return QVariant();
-}
-
-void Mere::Lock::Config::set(const std::string &key, const QVariant &value)
-{
-    m_properties.insert({key, value});
+    load();
 }
 
 std::string Mere::Lock::Config::password() const

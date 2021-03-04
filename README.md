@@ -16,6 +16,10 @@ TODO:
 - VT locking
 - System locking
 
+### Screenshots
+<img src="screenshots/screen.png" height="250px"> <img src="screenshots/prompt.png" height="250px">
+<img src="screenshots/wrong.png" height="250px"> <img src="screenshots/timeout.png" height="250px">
+
 ### Usage
 Simply invoke the 'mere-lock' command. To get out of it, enter your password.
 ```
