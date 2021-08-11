@@ -31,6 +31,10 @@ HEADERS += \
     src/screelocker.h \
     src/systemlocker.h
 
+TRANSLATIONS += \
+    i18n/lock_bn.ts \
+    i18n/lock_en.ts
+
 RESOURCES += \
     res/lock.qrc
 
@@ -45,7 +49,22 @@ OTHER_FILES += \
 INCLUDEPATH += /usr/local/include
 
 LIBS += -lX11
-LIBS += -lmere-auth -lmere-config-lite
+LIBS += -lmere-auth -lmere-config-lite -lmere-utils -lmere-widgets
+
+##
+## TS file(s)
+##
+qtPrepareTool(LUPDATE, lupdate)
+command = $$LUPDATE mere-lock.pro
+system($$command)|error("Failed to run: $$command")
+
+
+#
+# Generate QM file(s) from TS file(s)
+#
+qtPrepareTool(LRELEASE, lrelease)
+command = $$LRELEASE -removeidentical i18n/*.ts
+system($$command)|error("Failed to run: $$command")
 
 #
 # Install
@@ -53,6 +72,9 @@ LIBS += -lmere-auth -lmere-config-lite
 unix
 {
     target.path = /usr/local/bin
+
+    i18n.path = /usr/local/share/mere/lock/i18n
+    i18n.files = i18n/*.qm
 
     config.path = /usr/local/etc/mere/
     config.files += etc/lock.conf

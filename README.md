@@ -21,7 +21,6 @@ The lock screen is quite configurable, such as
   - image path
 
 TODOs:
-- i18n
 - Restrict on wrong attempts
 - VT locking
 - System locking

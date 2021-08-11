@@ -1,6 +1,9 @@
 #include "lockapp.h"
 #include "lockscreen.h"
 
+#include "mere/utils/apputils.h"
+#include "mere/utils/i18nutils.h"
+
 #include <QFile>
 #include <QCommandLineParser>
 
@@ -14,13 +17,15 @@ LockApp::~LockApp()
 }
 
 LockApp::LockApp(int &argc, char **argv)
-    : QApplication(argc, argv)
+    : Mere::Widgets::DefaultApp(argc, argv)
 {
-    setObjectName("MereLockApp");
-//    setProperty("AppCode", APP_CODE);
-//    setApplicationName(APP_NAME);
-//    setApplicationVersion(APP_VERSION);
+    setObjectName("LockApp");
 
+    Mere::Utils::AppUtils::setAppCode(Mere::Lock::AppCode.toStdString());
+    setApplicationName(Mere::Lock::AppName);
+    setApplicationVersion(Mere::Lock::AppVersion);
+
+    Mere::Utils::I18nUtils::apply();
 
     QCommandLineParser parser;
     parser.addHelpOption();

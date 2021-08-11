@@ -18,6 +18,8 @@ LockScreen::~LockScreen()
 LockScreen::LockScreen(QWidget *parent)
     : QWidget(parent)
 {
+    setObjectName("LockScreen");
+
     setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setCursor(Qt::BlankCursor);
     setMouseTracking(true);
@@ -57,7 +59,7 @@ void LockScreen::setMessage()
 {
     QScreen *screen = QApplication::primaryScreen();
 
-    QLabel *label = new QLabel("press any key or move mouse a bit", this);
+    QLabel *label = new QLabel(tr("LockMessage"), this);
     label->move(screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
