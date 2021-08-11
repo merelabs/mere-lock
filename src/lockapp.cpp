@@ -4,7 +4,6 @@
 #include "mere/utils/apputils.h"
 #include "mere/utils/i18nutils.h"
 
-#include <QFile>
 #include <QCommandLineParser>
 
 LockApp::~LockApp()
