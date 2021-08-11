@@ -40,8 +40,6 @@ class LockApp : public Mere::Widgets::DefaultApp
 public:
     ~LockApp();
     LockApp(int &argc, char **argv);
-
-    int init();
     int start();
 
 private:

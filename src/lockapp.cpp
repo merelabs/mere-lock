@@ -21,7 +21,7 @@ LockApp::LockApp(int &argc, char **argv)
 {
     setObjectName("LockApp");
 
-    Mere::Utils::AppUtils::setAppCode(Mere::Lock::AppCode.toStdString());
+    setAppCode(Mere::Lock::AppCode.toStdString());
     setApplicationName(Mere::Lock::AppName);
     setApplicationVersion(Mere::Lock::AppVersion);
 
@@ -56,17 +56,6 @@ LockApp::LockApp(int &argc, char **argv)
     connect(m_locker, &Mere::Lock::Locker::unlocked, [&](){
         quit();
     });
-
-    // Apply Styles
-    QFile File(":/lock/lock.qss");
-    File.open(QFile::ReadOnly);
-    QString StyleSheet = QLatin1String(File.readAll());
-    setStyleSheet(StyleSheet);
-}
-
-int LockApp::init()
-{
-    return 0;
 }
 
 int LockApp::start()
