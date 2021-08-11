@@ -11,15 +11,16 @@ different one to unlock the screen - it can be done using `--password` argument.
 
 The lock screen is quite configurable, such as
 - change the background of the screen
-  - color code or image path can
-- change the logo used on the screen
+  - color code
+  - image path
+- change or hide the logo used on the screen
   - image path
 - change the background of the password prompt screen
   - color code or image path can
-- change the logo used in the password prompt screen
+- change or hide the logo used in the password prompt screen
   - image path
 
-TODO:
+TODOs:
 - i18n
 - Restrict on wrong attempts
 - VT locking

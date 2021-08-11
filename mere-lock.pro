@@ -6,7 +6,7 @@ VERSION = 0.0.1b
 TEMPLATE= app
 
 CONFIG += c++11
-CONFIG += debug_and_release
+#CONFIG += debug_and_release
 
 DEFINES += APP_CODE=\\\"lock\\\"
 DEFINES += APP_NAME=\\\"$$TARGET\\\"
@@ -59,6 +59,8 @@ unix
 
     share.path = /usr/local/share/mere/lock/
     share.files += share/mere-logo.png share/freebsd-logo.png
+
+    QMAKE_INSTALL_FILE = ls
 
     INSTALLS += config share target
 }

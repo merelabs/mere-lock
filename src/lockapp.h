@@ -10,7 +10,6 @@
 class LockApp : public QApplication
 {
     Q_OBJECT
-
 public:
     ~LockApp();
     LockApp(int &argc, char **argv);

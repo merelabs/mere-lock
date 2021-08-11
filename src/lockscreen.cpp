@@ -21,6 +21,7 @@ LockScreen::LockScreen(QWidget *parent)
     setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setCursor(Qt::BlankCursor);
     setMouseTracking(true);
+    setAutoFillBackground(true);
 
     setMessage();
     setBackground();
@@ -68,14 +69,23 @@ void LockScreen::setBackground()
     QPalette pal = palette();
     if (background.startsWith("#"))
     {
+background:
+        QColor color(background);
+        if (!color.isValid())
+            color.setNamedColor("#0B6623");
+
         pal.setColor(QPalette::Window, QColor(background));
-        setAutoFillBackground(true);
     }
     else
     {
-        QScreen *primaryScreen = QApplication::primaryScreen();
-
         QPixmap pixmap(background);
+        if(pixmap.isNull())
+        {
+            background = "#0B6623";
+            goto background;
+        }
+
+        QScreen *primaryScreen = QApplication::primaryScreen();
         pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
 
         pal.setBrush(QPalette::Window, pixmap);
