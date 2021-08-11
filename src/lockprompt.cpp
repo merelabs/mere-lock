@@ -6,7 +6,6 @@
 #include <QDateTime>
 #include <QScreen>
 #include <QKeyEvent>
-#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QPropertyAnimation>
