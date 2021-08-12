@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QScreen>
+#include <QWindow>
 #include <QVBoxLayout>
 #include <QApplication>
 
@@ -13,10 +14,18 @@ LockScreen::~LockScreen()
 {
     releaseMouse();
     releaseKeyboard();
+
+    if(m_prompt)
+    {
+        delete m_prompt;
+        m_prompt = nullptr;
+    }
 }
 
-LockScreen::LockScreen(QWidget *parent)
-    : QWidget(parent)
+LockScreen::LockScreen(QScreen *screen, QWidget *parent)
+    : QWidget(parent),
+      m_screen(screen),
+      m_prompt(nullptr)
 {
     setObjectName("LockScreen");
 
@@ -33,6 +42,18 @@ LockScreen::LockScreen(QWidget *parent)
     grabKeyboard();
 
     installEventFilter(this);
+}
+
+void LockScreen::lock()
+{
+    showFullScreen();
+    windowHandle()->setScreen(m_screen);
+    setVisible(true);
+}
+
+void LockScreen::unlock()
+{
+
 }
 
 void LockScreen::prompt()
