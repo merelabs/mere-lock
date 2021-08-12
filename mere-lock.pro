@@ -55,9 +55,9 @@ LIBS += -lmere-auth -lmere-config-lite -lmere-utils -lmere-widgets
 ##
 ## TS file(s)
 ##
-qtPrepareTool(LUPDATE, lupdate)
-command = $$LUPDATE mere-lock.pro
-system($$command)|error("Failed to run: $$command")
+#qtPrepareTool(LUPDATE, lupdate)
+#command = $$LUPDATE mere-lock.pro
+#system($$command)|error("Failed to run: $$command")
 
 #
 # Generate QM file(s) from TS file(s)
@@ -71,6 +71,12 @@ system($$command)|error("Failed to run: $$command")
 #
 unix
 {
+    pre.path = $${OUT_PWD}/build
+    pre.commands = echo pre-install > /dev/null
+    #pre.depends =
+
+    INSTALLS += pre
+
     target.path = /usr/local/bin
 
     i18n.path = /usr/local/share/mere/lock/i18n
@@ -82,6 +88,12 @@ unix
     share.path = /usr/local/share/mere/lock/
     share.files += share/mere-logo.png share/freebsd-logo.png
 
-    INSTALLS += config share i18n target
+    INSTALLS += config share i18n target post
+
+    post.path = $${OUT_PWD}/build
+    post.commands = chmod u+s /usr/local/bin/mere-lock
+    #post.depends =
+
+    INSTALLS += post
 }
 
