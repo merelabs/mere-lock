@@ -21,7 +21,8 @@ The lock screen is quite configurable, such as
   - image path
 
 TODOs:
-- Restrict on wrong attempts
+- Restrict on wrong attempts (but why and how?)
+  - Record the person who made false attemps? maybe capturing the face using webcam? 
 - VT locking
 - System locking
 
