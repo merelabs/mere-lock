@@ -18,9 +18,12 @@ LockScreen::~LockScreen()
 LockScreen::LockScreen(QWidget *parent)
     : QWidget(parent)
 {
+    setObjectName("LockScreen");
+
     setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setCursor(Qt::BlankCursor);
     setMouseTracking(true);
+    setAutoFillBackground(true);
 
     setMessage();
     setBackground();
@@ -56,7 +59,7 @@ void LockScreen::setMessage()
 {
     QScreen *screen = QApplication::primaryScreen();
 
-    QLabel *label = new QLabel("press any key or move mouse a bit", this);
+    QLabel *label = new QLabel(tr("LockMessage"), this);
     label->move(screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
@@ -68,14 +71,23 @@ void LockScreen::setBackground()
     QPalette pal = palette();
     if (background.startsWith("#"))
     {
+background:
+        QColor color(background);
+        if (!color.isValid())
+            color.setNamedColor("#0B6623");
+
         pal.setColor(QPalette::Window, QColor(background));
-        setAutoFillBackground(true);
     }
     else
     {
-        QScreen *primaryScreen = QApplication::primaryScreen();
-
         QPixmap pixmap(background);
+        if(pixmap.isNull())
+        {
+            background = "#0B6623";
+            goto background;
+        }
+
+        QScreen *primaryScreen = QApplication::primaryScreen();
         pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
 
         pal.setBrush(QPalette::Window, pixmap);

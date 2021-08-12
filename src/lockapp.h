@@ -4,18 +4,42 @@
 #include "locker.h"
 #include "config.h"
 
+#include "mere/widgets/defaultapp.h"
+
+
 #include <QDebug>
 #include <QApplication>
 
-class LockApp : public QApplication
+namespace Mere
+{
+    namespace Lock
+    {
+        #ifdef APP_CODE
+        const QString AppCode   = APP_CODE;
+        #else
+        const QString AppCode   = "lock";
+        #endif
+
+        #ifdef APP_NAME
+        const QString AppName   = APP_NAME;
+        #else
+        const QString AppName   = "mere-lock";
+        #endif
+
+        #ifdef APP_VERSION
+        const QString AppVersion= APP_VERSION;
+        #else
+        const QString AppVersion= "0.0.1b";
+        #endif
+    }
+}
+
+class LockApp : public Mere::Widgets::DefaultApp
 {
     Q_OBJECT
-
 public:
     ~LockApp();
     LockApp(int &argc, char **argv);
-
-    int init();
     int start();
 
 private:

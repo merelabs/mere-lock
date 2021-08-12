@@ -6,7 +6,6 @@
 #include <QDateTime>
 #include <QScreen>
 #include <QKeyEvent>
-#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QPropertyAnimation>
@@ -24,7 +23,7 @@ LockPrompt::~LockPrompt()
 LockPrompt::LockPrompt(QWidget *parent)
     : QWidget(parent)
 {
-    setObjectName("MereLockPrompt");
+    setObjectName("LockPrompt");
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setWindowModality(Qt::WindowModal);
 
@@ -55,8 +54,8 @@ void LockPrompt::initUI()
     QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
     this->layout()->addItem(topSpacer);
 
-    m_prompt = new QLabel("Enter your password and press return.", this);
-    m_prompt->setObjectName("MereLockPrompt");
+    m_prompt = new QLabel(tr("LockPrompt"), this);
+    m_prompt->setObjectName("LockPrompt");
     m_prompt->setAlignment(Qt::AlignCenter);
     this->layout()->addWidget(m_prompt);
 
@@ -68,8 +67,8 @@ void LockPrompt::initUI()
     QSpacerItem *bottomSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
     this->layout()->addItem(bottomSpacer);
 
-    m_result = new QLabel("* sorry, incorrect attepmt to unlock screen.", this);
-    m_result->setObjectName("MereLockPromptResult");
+    m_result = new QLabel(tr("LockAttempt"), this);
+    m_result->setObjectName("LockAttempt");
 
     QSizePolicy sizePolicy = m_result->sizePolicy();
     sizePolicy.setRetainSizeWhenHidden(true);
