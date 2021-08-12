@@ -15,6 +15,7 @@ public:
     ~LockScreen();
     explicit LockScreen(QScreen *screen, QWidget *parent = nullptr);
     void lock();
+    void unlock();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

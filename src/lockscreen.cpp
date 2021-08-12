@@ -14,6 +14,12 @@ LockScreen::~LockScreen()
 {
     releaseMouse();
     releaseKeyboard();
+
+    if(m_prompt)
+    {
+        delete m_prompt;
+        m_prompt = nullptr;
+    }
 }
 
 LockScreen::LockScreen(QScreen *screen, QWidget *parent)
@@ -43,6 +49,11 @@ void LockScreen::lock()
     showFullScreen();
     windowHandle()->setScreen(m_screen);
     setVisible(true);
+}
+
+void LockScreen::unlock()
+{
+
 }
 
 void LockScreen::prompt()

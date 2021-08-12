@@ -31,6 +31,9 @@ int Mere::Lock::Locker::lock()
 
 int Mere::Lock::Locker::unlock()
 {
+    for(auto *screen : m_screens)
+        screen->unlock();
+
     emit unlocked();
 
     return 0;
