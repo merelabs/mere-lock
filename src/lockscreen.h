@@ -13,7 +13,8 @@ class LockScreen : public QWidget
     Q_OBJECT
 public:
     ~LockScreen();
-    explicit LockScreen(QWidget *parent = nullptr);
+    explicit LockScreen(QScreen *screen, QWidget *parent = nullptr);
+    void lock();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -28,7 +29,8 @@ signals:
     void verified();
 
 private:
-    LockPrompt *m_prompt = nullptr;
+    QScreen *m_screen;
+    LockPrompt *m_prompt;
 };
 
 #endif // MERE_LOCK_LOCKSCREEN_H

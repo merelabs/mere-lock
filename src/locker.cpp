@@ -1,25 +1,31 @@
 #include "locker.h"
 #include "lockscreen.h"
-#include "lockprompt.h"
 
-#include <QDebug>
+#include <QApplication>
 Mere::Lock::Locker::~Locker()
 {
-
+    for(auto *screen : m_screens)
+        delete screen;
 }
 
 Mere::Lock::Locker::Locker(QObject *parent)
     : QObject(parent)
 {
-    m_screen = new LockScreen;
-    connect(m_screen, &LockScreen::verified, this, [&](){
-        unlock();
-    });
+    for(QScreen *screen : QApplication::screens())
+    {
+        auto *s = new LockScreen(screen);
+        connect(s, &LockScreen::verified, this, [&](){
+            unlock();
+        });
+        m_screens.push_back(s);
+    }
 }
 
 int Mere::Lock::Locker::lock()
 {
-    m_screen->showFullScreen();
+    for(auto *screen : m_screens)
+        screen->lock();
+
     return 0;
 }
 
