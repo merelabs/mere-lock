@@ -5,11 +5,11 @@
     <name>LockPrompt</name>
     <message>
         <source>LockPrompt</source>
-        <translation>আপনার পাসওয়ার্ড লিখুন এবং রিটার্ন চাঁপুন</translation>
+        <translation>আপনার পাসওয়ার্ড লিখে রিটার্ন চাঁপুন</translation>
     </message>
     <message>
         <source>LockAttempt</source>
-        <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা</translation>
+        <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা করেছেন, আবার চেষ্টা করেন</translation>
     </message>
 </context>
 <context>

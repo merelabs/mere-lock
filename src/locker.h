@@ -24,7 +24,7 @@ signals:
     void unlocked();
 
 private:
-    LockScreen *m_screen = nullptr;
+    std::vector<LockScreen *> m_screens;
 };
 
 }
