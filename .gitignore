@@ -1,5 +1,6 @@
 i18n/*.qm
 .qmake.stash
 Makefile*
-mere-lock*
+mere-lock
+mere-lock.pro.*
 moc_*
