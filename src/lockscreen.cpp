@@ -78,10 +78,8 @@ void LockScreen::prompt()
 
 void LockScreen::setMessage()
 {
-    QScreen *screen = QApplication::primaryScreen();
-
     QLabel *label = new QLabel(tr("LockMessage"), this);
-    label->move(screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
+    label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
 void LockScreen::setBackground()
@@ -108,8 +106,7 @@ background:
             goto background;
         }
 
-        QScreen *primaryScreen = QApplication::primaryScreen();
-        pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
 
         pal.setBrush(QPalette::Window, pixmap);
     }
@@ -131,8 +128,7 @@ void LockScreen::setScreenLogo()
     label->setMaximumSize(QSize(128, 35));
     label->setPixmap(pixmap);
 
-    QScreen *screen = QApplication::primaryScreen();
-    QSize size = screen->availableVirtualSize();
+    QSize size = m_screen->availableVirtualSize();
 
     label->move(25, size.height() - label->height() - 25);
 }
