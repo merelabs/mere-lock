@@ -31,10 +31,6 @@ HEADERS += \
     src/screelocker.h \
     src/systemlocker.h
 
-TRANSLATIONS += \
-    i18n/lock_bn.ts \
-    i18n/lock_en.ts
-
 RESOURCES += \
     res/lock.qrc
 
@@ -43,8 +39,13 @@ DISTFILES += \
     share/mere-logo.png
     share/freebsd-logo.png
 
+TRANSLATIONS += \
+    i18n/lock_bn.ts \
+    i18n/lock_en.ts
+
 OTHER_FILES += \
     README.md
+
 
 INCLUDEPATH += /usr/local/include
 
@@ -57,7 +58,6 @@ LIBS += -lmere-auth -lmere-config-lite -lmere-utils -lmere-widgets
 qtPrepareTool(LUPDATE, lupdate)
 command = $$LUPDATE mere-lock.pro
 system($$command)|error("Failed to run: $$command")
-
 
 #
 # Generate QM file(s) from TS file(s)
@@ -82,8 +82,6 @@ unix
     share.path = /usr/local/share/mere/lock/
     share.files += share/mere-logo.png share/freebsd-logo.png
 
-    QMAKE_INSTALL_FILE = ls
-
-    INSTALLS += config share target
+    INSTALLS += config share i18n target
 }
 

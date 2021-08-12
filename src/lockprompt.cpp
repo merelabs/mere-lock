@@ -55,7 +55,7 @@ void LockPrompt::initUI()
     this->layout()->addItem(topSpacer);
 
     m_prompt = new QLabel(tr("LockPrompt"), this);
-//    m_prompt->setObjectName("LockPrompt");
+    m_prompt->setObjectName("LockPrompt");
     m_prompt->setAlignment(Qt::AlignCenter);
     this->layout()->addWidget(m_prompt);
 
@@ -68,7 +68,7 @@ void LockPrompt::initUI()
     this->layout()->addItem(bottomSpacer);
 
     m_result = new QLabel(tr("LockAttempt"), this);
-//    m_result->setObjectName("LockAttempt");
+    m_result->setObjectName("LockAttempt");
 
     QSizePolicy sizePolicy = m_result->sizePolicy();
     sizePolicy.setRetainSizeWhenHidden(true);
