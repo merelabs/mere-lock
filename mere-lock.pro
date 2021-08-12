@@ -6,7 +6,7 @@ VERSION = 0.0.1b
 TEMPLATE= app
 
 CONFIG += c++11
-CONFIG += debug_and_release
+#CONFIG += debug_and_release
 
 DEFINES += APP_CODE=\\\"lock\\\"
 DEFINES += APP_NAME=\\\"$$TARGET\\\"
@@ -39,13 +39,32 @@ DISTFILES += \
     share/mere-logo.png
     share/freebsd-logo.png
 
+TRANSLATIONS += \
+    i18n/lock_bn.ts \
+    i18n/lock_en.ts
+
 OTHER_FILES += \
     README.md
+
 
 INCLUDEPATH += /usr/local/include
 
 LIBS += -lX11
-LIBS += -lmere-auth -lmere-config-lite
+LIBS += -lmere-auth -lmere-config-lite -lmere-utils -lmere-widgets
+
+##
+## TS file(s)
+##
+qtPrepareTool(LUPDATE, lupdate)
+command = $$LUPDATE mere-lock.pro
+system($$command)|error("Failed to run: $$command")
+
+#
+# Generate QM file(s) from TS file(s)
+#
+qtPrepareTool(LRELEASE, lrelease)
+command = $$LRELEASE -removeidentical i18n/*.ts
+system($$command)|error("Failed to run: $$command")
 
 #
 # Install
@@ -54,12 +73,15 @@ unix
 {
     target.path = /usr/local/bin
 
+    i18n.path = /usr/local/share/mere/lock/i18n
+    i18n.files = i18n/*.qm
+
     config.path = /usr/local/etc/mere/
     config.files += etc/lock.conf
 
     share.path = /usr/local/share/mere/lock/
     share.files += share/mere-logo.png share/freebsd-logo.png
 
-    INSTALLS += config share target
+    INSTALLS += config share i18n target
 }
 
