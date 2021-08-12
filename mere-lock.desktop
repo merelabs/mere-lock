@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Exec=mere-lock
+Icon=mere-lock
+Terminal=false
+Categories=System;Screensaver;Utility
+OnlyShowIn=mere;
+
+Name=Mere Lock
+Name[bn]=mere সম্পর্কে
+GenericName=Lock the current session
+GenericName[bn]=বর্তমান সেশন লক করুন
+Comment=A simple screen and system locking utility
+Comment[bn]=একটি সহজ পর্দা এবং সিস্টেম লকিং ইউটিলিটি
+
