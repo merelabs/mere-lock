@@ -3,7 +3,7 @@
 #include "locker.h"
 #include "config.h"
 
-#include <QDebug>
+#include <iostream>
 #include <QTimer>
 #include <QScreen>
 #include <QWindow>
@@ -122,6 +122,11 @@ void LockScreen::setScreenLogo()
     if (logo.isEmpty()) return;
 
     QPixmap pixmap(logo);
+    if (pixmap.isNull())
+    {
+        std::cout << "Unable to create image for screen logo; please check the image path." << logo.toStdString() << std::endl;
+        return;
+    }
 
     QLabel *label = new QLabel(this);
     label->setScaledContents(true);

@@ -3,6 +3,7 @@
 
 #include "mere/auth/service.h"
 
+#include <iostream>
 #include <QDateTime>
 #include <QScreen>
 #include <QKeyEvent>
@@ -183,8 +184,14 @@ void LockPrompt::setPromptLogo()
     QString logo(config->promptlogo().c_str());
     if (logo.isEmpty()) return;
 
-    QSize size(64, 64);
     QPixmap pixmap(logo);
+    if (pixmap.isNull())
+    {
+        std::cout << "Unable to create image for prompt logo; please check the image path." << logo.toStdString() << std::endl;
+        return;
+    }
+
+    QSize size(64, 64);
     pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QLabel *label = new QLabel(this);
