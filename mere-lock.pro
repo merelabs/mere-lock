@@ -82,13 +82,16 @@ unix
     i18n.path = /usr/local/share/mere/lock/i18n
     i18n.files = i18n/*.qm
 
+    desktop.path  = /usr/local/share/applications/
+    desktop.files = mere-lock.desktop
+
     config.path = /usr/local/etc/mere/
     config.files += etc/lock.conf
 
     share.path = /usr/local/share/mere/lock/
     share.files += share/mere-logo.png share/freebsd-logo.png
 
-    INSTALLS += config share i18n target post
+    INSTALLS += config share i18n desktop target
 
     post.path = $${OUT_PWD}/build
     post.commands = chmod u+s /usr/local/bin/mere-lock
