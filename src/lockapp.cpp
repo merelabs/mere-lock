@@ -39,16 +39,16 @@ LockApp::LockApp(int &argc, char **argv)
     QCommandLineOption screenOption("screen", "Set the flag to lock the system's screens only.");
     //QCommandLineOption systemOption("system", "Set the flag to lock the system.");
 
-    QCommandLineOption parserOption("strict", "Set the flag to validate the loking configuration.");
+    QCommandLineOption strictOption("strict", "Set the flag to validate the loking configuration.");
 
-    parser.addOptions({configOption, passwordOption, screenOption, parserOption});
+    parser.addOptions({configOption, passwordOption, screenOption, strictOption});
 
     parser.process(QCoreApplication::arguments());
 
     m_config = Mere::Lock::Config::instance(parser.value(configOption).toStdString());
     std::cout << "Applying following configuration - " << m_config->path() << std::endl;
 
-    if (parser.isSet(parserOption) && m_config->validate())
+    if (parser.isSet(strictOption) && m_config->validate())
     {
         std::cout << "Check the configuration and try again" << std::endl;
         std::exit(1);
