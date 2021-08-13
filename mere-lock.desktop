@@ -7,7 +7,7 @@ Categories=System;Screensaver;Utility
 OnlyShowIn=mere;
 
 Name=Mere Lock
-Name[bn]=mere সম্পর্কে
+Name[bn]=মেয়ার লক
 GenericName=Lock the current session
 GenericName[bn]=বর্তমান সেশন লক করুন
 Comment=A simple screen and system locking utility
