@@ -17,20 +17,30 @@ class Config : public Mere::Config::KVConfig
 
 public:
     int init();
+    int validate() const;
 
     std::string password() const;
     void password(const std::string &password);
 
     unsigned int timeout() const;
-    std::string background() const;
+
+    std::string screenBackground() const;
+    bool checkScreenBackground() const;
 
     bool logoshow() const;
+    bool checkScreenLogoShow() const;
+
     std::string logo() const;
+    bool checkScreenLogo() const;
 
     bool promptlogoshow() const;
-    std::string promptlogo() const;
+    bool checkPromptLogoShow() const;
 
-    std::string promptbackground() const;
+    std::string promptlogo() const;
+    bool checkPromptLogo() const;
+
+    std::string promptBackground() const;
+    bool checkPromptBackground() const;
 
     static Config* instance(const std::string &path = "")
     {
@@ -38,6 +48,16 @@ public:
 
         return instance;
     }
+
+private:
+    bool checkBackground(const std::string &key) const;
+    bool checkColor(const std::string &key, const std::string &color) const;
+
+    bool checkLogo(const std::string &key) const;
+    bool checkImage(const std::string &key, const std::string &path) const;
+
+    bool checkBool(const std::string &key) const;
+    bool checkKey(const std::string &key, std::string &value, bool &set) const;
 };
 
 }

@@ -157,7 +157,7 @@ void LockPrompt::setShadow()
 void LockPrompt::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    QString background(config->promptbackground().c_str());
+    QString background(config->promptBackground().c_str());
 
     QPalette pal = palette();
     if (background.startsWith("#"))

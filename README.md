@@ -35,14 +35,14 @@ more screenshots are available [here](screenshots).
 Simply invoke the 'mere-lock' command. To get out of it, enter your password.
 
 ```shell
-$ mere-lock
+$ mere-lock --strict
 ```
 
 If the user wishes to use a temporary password, then the invocation command 
 would be:
 
 ```shell
-$ mere-lock --password secret
+$ mere-lock --strict --password secret
 ```
 
 Tips: you can generate a password while invoking, and pass it using xargs!

@@ -85,7 +85,7 @@ void LockScreen::setMessage()
 void LockScreen::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    QString background(config->background().c_str());
+    QString background(config->screenBackground().c_str());
 
     QPalette pal = palette();
     if (background.startsWith("#"))

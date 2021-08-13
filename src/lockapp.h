@@ -29,7 +29,7 @@ namespace Mere
         #ifdef APP_VERSION
         const QString AppVersion= APP_VERSION;
         #else
-        const QString AppVersion= "0.0.1b";
+        const QString AppVersion= "0.0.0b";
         #endif
     }
 }

@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>LockAttempt</source>
-        <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা করেছেন, আবার চেষ্টা করেন।</translation>
+        <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা করেছেন, আবার চেষ্টা করুন।</translation>
     </message>
 </context>
 <context>
