@@ -28,6 +28,8 @@ private:
     void setPromptLogo();
     void setTimeout();
 
+    void initMessageUI();
+
 signals:
     void verified();
     void keyboardGrabbed();
@@ -40,7 +42,7 @@ private slots:
     void verify();
 
 private:
-    QLabel *m_prompt;
+//    QLabel *m_prompt;
     QLabel *m_result;
     QLineEdit *m_password;
 

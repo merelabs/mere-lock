@@ -56,10 +56,7 @@ void LockPrompt::initUI()
     QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
     this->layout()->addItem(topSpacer);
 
-    m_prompt = new QLabel(tr("LockPrompt"), this);
-    m_prompt->setObjectName("LockPrompt");
-    m_prompt->setAlignment(Qt::AlignCenter);
-    this->layout()->addWidget(m_prompt);
+    initMessageUI();
 
     m_password = new QLineEdit(this);
     m_password->setAlignment(Qt::AlignCenter);
@@ -80,6 +77,26 @@ void LockPrompt::initUI()
 
     m_result->setVisible(false);
     connect(m_password, SIGNAL(returnPressed()), this, SLOT(verify()));
+}
+
+void LockPrompt::initMessageUI()
+{
+    QLabel *label = new QLabel(tr("LockPrompt"), this);
+    label->setObjectName("LockPrompt");
+    label->setAlignment(Qt::AlignCenter);
+    this->layout()->addWidget(label);
+
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+
+    QPalette palette = label->palette();
+    palette.setColor(QPalette::WindowText, config->promptMessageColor());
+    label->setPalette(palette);
+
+    QFont font = label->font();
+    font.setPointSize(config->promptMessageSize());
+    label->setFont(font);
+
+    label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
 void LockPrompt::clear()

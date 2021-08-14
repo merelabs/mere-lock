@@ -28,17 +28,25 @@ public:
 
     std::string screenBackground() const;
     bool checkScreenBackground() const;
-    bool checkScreenBackgroundColor() const;
-    bool checkScreenBackgroundImage() const;
 
     QColor screenBackgroundColor() const;
+    bool checkScreenBackgroundColor() const;
+
     QPixmap screenBackgroundImage() const;
+    bool checkScreenBackgroundImage() const;
+
+    QColor screenMessageColor() const;
+    bool checkScreenMessageColor() const;
+
+    int screenMessageSize() const;
+    bool checkScreenMessageSize() const;
 
     bool logoshow() const;
     bool checkScreenLogoShow() const;
 
     std::string logo() const;
     bool checkScreenLogo() const;
+
 
     bool promptlogoshow() const;
     bool checkPromptLogoShow() const;
@@ -54,6 +62,12 @@ public:
     QColor promptBackgroundColor() const;
     QPixmap promptBackgroundImage() const;
 
+    QColor promptMessageColor() const;
+    bool checkPromptMessageColor() const;
+
+    int promptMessageSize() const;
+    bool checkPromptMessageSize() const;
+
     static Config* instance(const std::string &path = "")
     {
         static Config *instance = new Config(path);
@@ -68,6 +82,7 @@ private:
     bool checkLogo(const std::string &key) const;
     bool checkImage(const std::string &key, const std::string &path) const;
 
+    bool checkInt(const std::string &key) const;
     bool checkBool(const std::string &key) const;
     bool checkKey(const std::string &key, std::string &value, bool &set) const;
 

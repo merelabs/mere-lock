@@ -27,12 +27,16 @@ int Mere::Lock::Config::validate() const
     err = checkScreenBackground()      ? err : 1;
     err = checkScreenBackgroundColor() ? err : 1;
     err = checkScreenBackgroundImage() ? err : 1;
+    err = checkScreenMessageColor()    ? err : 1;
+    err = checkScreenMessageSize()     ? err : 1;
 
     err = checkPromptLogo()            ? err : 1;
     err = checkPromptLogoShow()        ? err : 1;
     err = checkPromptBackground()      ? err : 1;
     err = checkPromptBackgroundColor() ? err : 1;
     err = checkPromptBackgroundImage() ? err : 1;
+    err = checkPromptMessageColor()    ? err : 1;
+    err = checkPromptMessageSize()     ? err : 1;
 
     return err;
 }
@@ -110,6 +114,37 @@ QPixmap Mere::Lock::Config::screenBackgroundImage() const
 bool Mere::Lock::Config::checkScreenBackgroundImage() const
 {
     return checkImage("mere.lock.screen.background.image");
+}
+
+QColor Mere::Lock::Config::screenMessageColor() const
+{
+    std::string value = this->get("mere.lock.screen.message.font.color");
+
+    if (value.empty() || value.at(0) != '#')
+        return QColor("#000");
+
+    QColor color(QString::fromStdString(value));
+    if(!color.isValid()) return QColor("#000");
+
+    return color;
+}
+
+bool Mere::Lock::Config::checkScreenMessageColor() const
+{
+    return checkColor("mere.lock.screen.message.font.color");
+}
+
+int Mere::Lock::Config::screenMessageSize() const
+{
+    std::string value = this->get("mere.lock.screen.message.font.size");
+    if (value.empty()) return 10;
+
+    return Mere::Utils::StringUtils::toInt(value);
+}
+
+bool Mere::Lock::Config::checkScreenMessageSize() const
+{
+    return checkInt("mere.lock.screen.message.font.size");
 }
 
 bool Mere::Lock::Config::logoshow() const
@@ -221,6 +256,39 @@ bool Mere::Lock::Config::checkPromptBackgroundImage() const
     return checkImage("mere.lock.screen.prompt.background.image");
 }
 
+
+QColor Mere::Lock::Config::promptMessageColor() const
+{
+    std::string value = this->get("mere.lock.screen.prompt.message.font.color");
+
+    if (value.empty() || value.at(0) != '#')
+        return QColor("#000");
+
+    QColor color(QString::fromStdString(value));
+    if(!color.isValid()) return QColor("#000");
+
+    return color;
+}
+
+bool Mere::Lock::Config::checkPromptMessageColor() const
+{
+    return checkColor("mere.lock.screen.prompt.message.font.color");
+}
+
+int Mere::Lock::Config::promptMessageSize() const
+{
+    std::string value = this->get("mere.lock.screen.prompt.message.font.size");
+    if (value.empty()) return 10;
+
+    return Mere::Utils::StringUtils::toInt(value);
+}
+
+bool Mere::Lock::Config::checkPromptMessageSize() const
+{
+    return checkInt("mere.lock.screen.prompt.message.font.size");
+}
+
+
 bool Mere::Lock::Config::checkBackground(const std::string &key) const
 {
     bool set =false;
@@ -279,6 +347,18 @@ bool Mere::Lock::Config::checkImage(const std::string &key, const std::string &p
     }
 
     return true;
+}
+
+bool Mere::Lock::Config::checkInt(const std::string &key) const
+{
+    bool set;
+    std::string value;
+    if(!checkKey(key, value, set))
+        return false;
+
+    if (!set) return true;
+
+    return Mere::Utils::StringUtils::toInt(value);
 }
 
 bool Mere::Lock::Config::checkBool(const std::string &key) const

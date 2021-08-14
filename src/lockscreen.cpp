@@ -86,6 +86,16 @@ void LockScreen::setMessage()
     QLabel *label = new QLabel(tr("LockMessage"), this);
     label->setObjectName("LockMessage");
 
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+
+    QPalette palette = label->palette();
+    palette.setColor(QPalette::WindowText, config->screenMessageColor());
+    label->setPalette(palette);
+
+    QFont font = label->font();
+    font.setPointSize(config->screenMessageSize());
+    label->setFont(font);
+
     label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
