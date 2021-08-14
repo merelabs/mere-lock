@@ -5,18 +5,18 @@
     <name>LockPrompt</name>
     <message>
         <source>LockPrompt</source>
-        <translation>Enter your password and press return</translation>
+        <translation>Enter your password and press return.</translation>
     </message>
     <message>
         <source>LockAttempt</source>
-        <translation>* sorry, incorrect attempt to unlock the screen</translation>
+        <translation>* sorry, incorrect attempt to unlock the screen.</translation>
     </message>
 </context>
 <context>
     <name>LockScreen</name>
     <message>
         <source>LockMessage</source>
-        <translation>press any key or the move mouse a bit</translation>
+        <translation>press any key or move the mouse a bit.</translation>
     </message>
 </context>
 </TS>
