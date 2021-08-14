@@ -117,7 +117,7 @@ bool Mere::Lock::Config::logoshow() const
     std::string value = this->get("mere.lock.screen.logo.show");
     if (value.empty()) return true;
 
-    return value.compare("false");
+    return value == "true" || value == "yes" || value == "1" ;
 }
 
 bool Mere::Lock::Config::checkScreenLogoShow() const
@@ -143,7 +143,7 @@ bool Mere::Lock::Config::promptlogoshow() const
     std::string value = this->get("mere.lock.screen.prompt.logo.show");
     if (value.empty()) return true;
 
-    return value.compare("false");
+    return value == "true" || value == "yes" || value == "1" ;
 }
 
 bool Mere::Lock::Config::checkPromptLogoShow() const
