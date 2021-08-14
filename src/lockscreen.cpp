@@ -60,7 +60,7 @@ void LockScreen::prompt()
 {
     if (!m_prompt)
     {
-        m_prompt = new LockPrompt(this);
+        m_prompt = new LockPrompt(m_screen, this);
         connect(m_prompt, &LockPrompt::keyboardReleased, [&](){
             grabKeyboard();
         });
@@ -69,47 +69,43 @@ void LockScreen::prompt()
             grabKeyboard();
             emit verified();
         });
+
+        connect(m_prompt, &LockPrompt::closed, [&](){
+            showMessage();
+        });
     }
 
     if (!m_prompt->isHidden()) return;
 
+    hideMessage();
     m_prompt->showNormal();
 }
 
 void LockScreen::setMessage()
 {
     QLabel *label = new QLabel(tr("LockMessage"), this);
+    label->setObjectName("LockMessage");
+
     label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
 void LockScreen::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    QString background(config->screenBackground().c_str());
 
     QPalette pal = palette();
-    if (background.startsWith("#"))
+    QPixmap pixmap = config->screenBackgroundImage();
+    if (!pixmap.isNull())
     {
-background:
-        QColor color(background);
-        if (!color.isValid())
-            color.setNamedColor("#0B6623");
-
-        pal.setColor(QPalette::Window, QColor(background));
+        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pal.setBrush(QPalette::Window, pixmap);
     }
     else
     {
-        QPixmap pixmap(background);
-        if(pixmap.isNull())
-        {
-            background = "#0B6623";
-            goto background;
-        }
-
-        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
-
-        pal.setBrush(QPalette::Window, pixmap);
+        QColor color = config->screenBackgroundColor();
+        pal.setColor(QPalette::Window, QColor(color));
     }
+
     setPalette(pal);
 }
 
@@ -136,6 +132,18 @@ void LockScreen::setScreenLogo()
     QSize size = m_screen->availableVirtualSize();
 
     label->move(25, size.height() - label->height() - 25);
+}
+
+void LockScreen::hideMessage()
+{
+  QLabel *message = findChild<QLabel *>("LockMessage");
+  message->hide();
+}
+
+void LockScreen::showMessage()
+{
+  QLabel *message = findChild<QLabel *>("LockMessage");
+  message->show();
 }
 
 bool LockScreen::eventFilter(QObject *obj, QEvent *event)

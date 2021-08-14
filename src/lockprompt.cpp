@@ -21,8 +21,9 @@ LockPrompt::~LockPrompt()
 
 }
 
-LockPrompt::LockPrompt(QWidget *parent)
-    : QWidget(parent)
+LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
+    : QWidget(parent),
+      m_screen(screen)
 {
     setObjectName("LockPrompt");
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -30,9 +31,9 @@ LockPrompt::LockPrompt(QWidget *parent)
 
     setCursor(Qt::BlankCursor);
     setMouseTracking(true);
+    setAutoFillBackground(true);
 
     resize(500, 300);
-    QScreen *screen = QApplication::primaryScreen();
     move(screen->virtualGeometry().center() - this->rect().center());
 
     setShadow();
@@ -141,6 +142,7 @@ void LockPrompt::setVisible(bool visible)
         m_password->releaseKeyboard();
         emit keyboardReleased();
 
+        emit closed();
     }
 
     QWidget::setVisible(visible);
@@ -157,20 +159,18 @@ void LockPrompt::setShadow()
 void LockPrompt::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    QString background(config->promptBackground().c_str());
 
     QPalette pal = palette();
-    if (background.startsWith("#"))
+    QPixmap pixmap = config->promptBackgroundImage();
+    if (!pixmap.isNull())
     {
-        pal.setColor(QPalette::Window, QColor(background));
-        setAutoFillBackground(true);
+        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pal.setBrush(QPalette::Window, pixmap);
     }
     else
     {
-        QPixmap pixmap(background);
-        QScreen *primaryScreen = QApplication::primaryScreen();
-        pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
-        pal.setBrush(QPalette::Window, pixmap);
+        QColor color = config->promptBackgroundColor();
+        pal.setColor(QPalette::Window, QColor(color));
     }
 
     setPalette(pal);

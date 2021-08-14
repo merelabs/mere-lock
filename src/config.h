@@ -4,6 +4,8 @@
 #include "mere/config/kvconfig.h"
 
 #include <QObject>
+#include <QColor>
+#include <QPixmap>
 
 namespace Mere
 {
@@ -26,6 +28,11 @@ public:
 
     std::string screenBackground() const;
     bool checkScreenBackground() const;
+    bool checkScreenBackgroundColor() const;
+    bool checkScreenBackgroundImage() const;
+
+    QColor screenBackgroundColor() const;
+    QPixmap screenBackgroundImage() const;
 
     bool logoshow() const;
     bool checkScreenLogoShow() const;
@@ -41,6 +48,11 @@ public:
 
     std::string promptBackground() const;
     bool checkPromptBackground() const;
+    bool checkPromptBackgroundColor() const;
+    bool checkPromptBackgroundImage() const;
+
+    QColor promptBackgroundColor() const;
+    QPixmap promptBackgroundImage() const;
 
     static Config* instance(const std::string &path = "")
     {
@@ -58,6 +70,9 @@ private:
 
     bool checkBool(const std::string &key) const;
     bool checkKey(const std::string &key, std::string &value, bool &set) const;
+
+    bool checkColor(const std::string &key) const;
+    bool checkImage(const std::string &key) const;
 };
 
 }
