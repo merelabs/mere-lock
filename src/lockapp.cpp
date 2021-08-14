@@ -51,8 +51,10 @@ LockApp::LockApp(int &argc, char **argv)
                                             parser.isSet(strictOption)
                                                 ? Mere::Config::Spec::Strict::Hard
                                                 : Mere::Config::Spec::Strict::Soft);
-
-    std::cout << "Applying following configuration - " << m_config->path() << std::endl;
+    Mere::Utils::I18nUtils::apply();
+//    std::cout << "Applying following configuration - " << m_config->path() << std::endl;
+    std::cout << LockApp::tr("LockMessage").toStdString() << m_config->path() << std::endl;
+//    std::exit(1);
     try
     {
         m_config->load();
@@ -73,8 +75,6 @@ LockApp::LockApp(int &argc, char **argv)
     {
         m_config->password(parser.value(passwordOption).toStdString());
     }
-
-    Mere::Utils::I18nUtils::apply();
 
     m_locker = new Mere::Lock::Locker(this);
     connect(m_locker, &Mere::Lock::Locker::unlocked, [&](){
