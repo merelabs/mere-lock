@@ -26,6 +26,9 @@ private:
     void setBackground();
     void setScreenLogo();
 
+    void hideMessage();
+    void showMessage();
+
 signals:
     void verified();
 

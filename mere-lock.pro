@@ -99,4 +99,3 @@ unix
 
     INSTALLS += post
 }
-

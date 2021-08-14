@@ -2,11 +2,11 @@
 `mere-lock` is a utility program to lock screen ( and system wise locking is in
 the plan). When the user invoked the program, it locks the screen and wais for 
 user interaction - any key press or mouse activity. The program then prompts 
-for the user's password to unlock the screen. When the program is invoked 
-without `--password` argument, it will match the password with the logged-in 
-user password using the *pam* service. 
+for the secret, usually the user's password, to unlock the screen. When the 
+program is invoked without `--password` argument, it will match the password 
+with the logged-in user password using the *pam* service. 
 
-User may wish to NOT using the system's user password, instead of using a 
+User may wish to NOT using the system's user password, instead using a
 different one to unlock the screen - it can be done using `--password` argument.
 
 The lock screen is quite configurable, such as
@@ -35,14 +35,14 @@ more screenshots are available [here](screenshots).
 Simply invoke the 'mere-lock' command. To get out of it, enter your password.
 
 ```shell
-$ mere-lock
+$ mere-lock --strict
 ```
 
 If the user wishes to use a temporary password, then the invocation command 
 would be:
 
 ```shell
-$ mere-lock --password secret
+$ mere-lock --strict --password secret
 ```
 
 Tips: you can generate a password while invoking, and pass it using xargs!

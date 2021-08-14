@@ -1,8 +1,6 @@
 #include "lockapp.h"
 
-#include <QDebug>
 #include <QApplication>
-
 int main(int argc, char *argv[])
 {
     QCoreApplication::setSetuidAllowed(true);
