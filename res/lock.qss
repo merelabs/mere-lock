@@ -1,16 +1,9 @@
-#MereLockWin
+#LockWin
 {
     background-color: #0B6623;
 }
 
-#MereLockPrompt
-{
-    color: gray;
-    font: 12pt "Sans Serif";
-    font-weight: 120;
-}
-
-#MereLockPromptResult
+#LockAttempt
 {
     color : red;
     font-size: 10px;

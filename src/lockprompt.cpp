@@ -3,6 +3,7 @@
 
 #include "mere/auth/service.h"
 
+#include <iostream>
 #include <QDateTime>
 #include <QScreen>
 #include <QKeyEvent>
@@ -20,8 +21,9 @@ LockPrompt::~LockPrompt()
 
 }
 
-LockPrompt::LockPrompt(QWidget *parent)
-    : QWidget(parent)
+LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
+    : QWidget(parent),
+      m_screen(screen)
 {
     setObjectName("LockPrompt");
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -29,9 +31,9 @@ LockPrompt::LockPrompt(QWidget *parent)
 
     setCursor(Qt::BlankCursor);
     setMouseTracking(true);
+    setAutoFillBackground(true);
 
     resize(500, 300);
-    QScreen *screen = QApplication::primaryScreen();
     move(screen->virtualGeometry().center() - this->rect().center());
 
     setShadow();
@@ -54,10 +56,7 @@ void LockPrompt::initUI()
     QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
     this->layout()->addItem(topSpacer);
 
-    m_prompt = new QLabel(tr("LockPrompt"), this);
-    m_prompt->setObjectName("LockPrompt");
-    m_prompt->setAlignment(Qt::AlignCenter);
-    this->layout()->addWidget(m_prompt);
+    initMessageUI();
 
     m_password = new QLineEdit(this);
     m_password->setAlignment(Qt::AlignCenter);
@@ -78,6 +77,26 @@ void LockPrompt::initUI()
 
     m_result->setVisible(false);
     connect(m_password, SIGNAL(returnPressed()), this, SLOT(verify()));
+}
+
+void LockPrompt::initMessageUI()
+{
+    QLabel *label = new QLabel(tr("LockPrompt"), this);
+    label->setObjectName("LockPrompt");
+    label->setAlignment(Qt::AlignCenter);
+    this->layout()->addWidget(label);
+
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+
+    QPalette palette = label->palette();
+    palette.setColor(QPalette::WindowText, config->promptMessageColor());
+    label->setPalette(palette);
+
+    QFont font = label->font();
+    font.setPointSize(config->promptMessageSize());
+    label->setFont(font);
+
+    label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
 void LockPrompt::clear()
@@ -140,6 +159,7 @@ void LockPrompt::setVisible(bool visible)
         m_password->releaseKeyboard();
         emit keyboardReleased();
 
+        emit closed();
     }
 
     QWidget::setVisible(visible);
@@ -156,20 +176,18 @@ void LockPrompt::setShadow()
 void LockPrompt::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    QString background(config->promptbackground().c_str());
 
     QPalette pal = palette();
-    if (background.startsWith("#"))
+    QPixmap pixmap = config->promptBackgroundImage();
+    if (!pixmap.isNull())
     {
-        pal.setColor(QPalette::Window, QColor(background));
-        setAutoFillBackground(true);
+        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pal.setBrush(QPalette::Window, pixmap);
     }
     else
     {
-        QPixmap pixmap(background);
-        QScreen *primaryScreen = QApplication::primaryScreen();
-        pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
-        pal.setBrush(QPalette::Window, pixmap);
+        QColor color = config->promptBackgroundColor();
+        pal.setColor(QPalette::Window, QColor(color));
     }
 
     setPalette(pal);
@@ -183,8 +201,14 @@ void LockPrompt::setPromptLogo()
     QString logo(config->promptlogo().c_str());
     if (logo.isEmpty()) return;
 
-    QSize size(64, 64);
     QPixmap pixmap(logo);
+    if (pixmap.isNull())
+    {
+        std::cout << "Unable to create image for prompt logo; please check the image path." << logo.toStdString() << std::endl;
+        return;
+    }
+
+    QSize size(64, 64);
     pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QLabel *label = new QLabel(this);

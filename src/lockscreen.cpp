@@ -3,7 +3,7 @@
 #include "locker.h"
 #include "config.h"
 
-#include <QDebug>
+#include <iostream>
 #include <QTimer>
 #include <QScreen>
 #include <QWindow>
@@ -60,7 +60,7 @@ void LockScreen::prompt()
 {
     if (!m_prompt)
     {
-        m_prompt = new LockPrompt(this);
+        m_prompt = new LockPrompt(m_screen, this);
         connect(m_prompt, &LockPrompt::keyboardReleased, [&](){
             grabKeyboard();
         });
@@ -69,50 +69,53 @@ void LockScreen::prompt()
             grabKeyboard();
             emit verified();
         });
+
+        connect(m_prompt, &LockPrompt::closed, [&](){
+            showMessage();
+        });
     }
 
     if (!m_prompt->isHidden()) return;
 
+    hideMessage();
     m_prompt->showNormal();
 }
 
 void LockScreen::setMessage()
 {
-    QScreen *screen = QApplication::primaryScreen();
-
     QLabel *label = new QLabel(tr("LockMessage"), this);
-    label->move(screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
+    label->setObjectName("LockMessage");
+
+    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+
+    QPalette palette = label->palette();
+    palette.setColor(QPalette::WindowText, config->screenMessageColor());
+    label->setPalette(palette);
+
+    QFont font = label->font();
+    font.setPointSize(config->screenMessageSize());
+    label->setFont(font);
+
+    label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
 void LockScreen::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    QString background(config->background().c_str());
 
     QPalette pal = palette();
-    if (background.startsWith("#"))
+    QPixmap pixmap = config->screenBackgroundImage();
+    if (!pixmap.isNull())
     {
-background:
-        QColor color(background);
-        if (!color.isValid())
-            color.setNamedColor("#0B6623");
-
-        pal.setColor(QPalette::Window, QColor(background));
+        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pal.setBrush(QPalette::Window, pixmap);
     }
     else
     {
-        QPixmap pixmap(background);
-        if(pixmap.isNull())
-        {
-            background = "#0B6623";
-            goto background;
-        }
-
-        QScreen *primaryScreen = QApplication::primaryScreen();
-        pixmap = pixmap.scaled(primaryScreen->availableVirtualSize(), Qt::IgnoreAspectRatio);
-
-        pal.setBrush(QPalette::Window, pixmap);
+        QColor color = config->screenBackgroundColor();
+        pal.setColor(QPalette::Window, QColor(color));
     }
+
     setPalette(pal);
 }
 
@@ -125,16 +128,32 @@ void LockScreen::setScreenLogo()
     if (logo.isEmpty()) return;
 
     QPixmap pixmap(logo);
+    if (pixmap.isNull())
+    {
+        std::cout << "Unable to create image for screen logo; please check the image path." << logo.toStdString() << std::endl;
+        return;
+    }
 
     QLabel *label = new QLabel(this);
     label->setScaledContents(true);
     label->setMaximumSize(QSize(128, 35));
     label->setPixmap(pixmap);
 
-    QScreen *screen = QApplication::primaryScreen();
-    QSize size = screen->availableVirtualSize();
+    QSize size = m_screen->availableVirtualSize();
 
     label->move(25, size.height() - label->height() - 25);
+}
+
+void LockScreen::hideMessage()
+{
+  QLabel *message = findChild<QLabel *>("LockMessage");
+  message->hide();
+}
+
+void LockScreen::showMessage()
+{
+  QLabel *message = findChild<QLabel *>("LockMessage");
+  message->show();
 }
 
 bool LockScreen::eventFilter(QObject *obj, QEvent *event)
