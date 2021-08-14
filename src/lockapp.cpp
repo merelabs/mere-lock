@@ -17,7 +17,8 @@ LockApp::~LockApp()
 }
 
 LockApp::LockApp(int &argc, char **argv)
-    : Mere::Widgets::DefaultApp(argc, argv)
+    : Mere::Widgets::DefaultApp(argc, argv),
+      m_config(nullptr)
 {
     setObjectName("LockApp");
 
@@ -45,8 +46,22 @@ LockApp::LockApp(int &argc, char **argv)
 
     parser.process(QCoreApplication::arguments());
 
-    m_config = Mere::Lock::Config::instance(parser.value(configOption).toStdString());
+
+    m_config = Mere::Lock::Config::instance(parser.value(configOption).toStdString(),
+                                            parser.isSet(strictOption)
+                                                ? Mere::Config::Spec::Strict::Hard
+                                                : Mere::Config::Spec::Strict::Soft);
+
     std::cout << "Applying following configuration - " << m_config->path() << std::endl;
+    try
+    {
+        m_config->load();
+    }
+    catch (const std::exception &ex)
+    {
+        std::cout << "Malformed configuration, check the configuration and try again" << m_config->path() << std::endl;
+        std::exit(1);
+    }
 
     if (parser.isSet(strictOption) && m_config->validate())
     {

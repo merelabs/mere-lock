@@ -1,6 +1,7 @@
 #ifndef MERE_LOCK_CONFIG_H
 #define MERE_LOCK_CONFIG_H
 
+#include "mere/config/spec/base.h"
 #include "mere/config/kvconfig.h"
 
 #include <QObject>
@@ -15,7 +16,7 @@ namespace Lock
 class Config : public Mere::Config::KVConfig
 {
     explicit Config();
-    explicit Config(const std::string &path);
+    explicit Config(const std::string &path, const Mere::Config::Spec::Strict &strict = Mere::Config::Spec::Strict::Soft);
 
 public:
     int init();
@@ -68,9 +69,9 @@ public:
     int promptMessageSize() const;
     bool checkPromptMessageSize() const;
 
-    static Config* instance(const std::string &path = "")
+    static Config* instance(const std::string &path = "", const Mere::Config::Spec::Strict &strict = Mere::Config::Spec::Strict::Soft)
     {
-        static Config *instance = new Config(path);
+        static Config *instance = new Config(path, strict);
 
         return instance;
     }

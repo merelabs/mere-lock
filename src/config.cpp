@@ -1,19 +1,20 @@
 #include "config.h"
 
+#include "mere/config/spec/base.h"
+
 #include "mere/utils/stringutils.h"
 #include "mere/utils/fileutils.h"
 
 #include <iostream>
 
 Mere::Lock::Config::Config() :
-    Mere::Lock::Config::Config("mere/lock.conf")
+    Mere::Lock::Config::Config("mere/lock.conf", Mere::Config::Spec::Strict::Soft)
 {
 }
 
-Mere::Lock::Config::Config(const std::string &path) :
-    Mere::Config::KVConfig(path)
+Mere::Lock::Config::Config(const std::string &path, const Mere::Config::Spec::Strict &strict) :
+    Mere::Config::KVConfig(path, strict)
 {
-    load();
 }
 
 int Mere::Lock::Config::validate() const
