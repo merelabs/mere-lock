@@ -27,24 +27,27 @@ LockApp::LockApp(int &argc, char **argv)
     setApplicationName(Mere::Lock::AppName);
     setApplicationVersion(Mere::Lock::AppVersion);
 
+    Mere::Utils::I18nUtils::apply();
+
     QCommandLineParser parser;
+    parser.setApplicationDescription(QCoreApplication::translate("LockApp", "LockAppDescription"));
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption configOption(QStringList() << "c" << "config", "Set the path of the configuration file",
+    QCommandLineOption configOption(QStringList() << "c" << "config", QCoreApplication::translate("LockArg", "LockArgConfig"),
                                     "path",
                                     "mere/lock.conf");
 
-    QCommandLineOption passwordOption(QStringList() << "p" << "password", "Set the password to be used to unlock the screen",
+    QCommandLineOption passwordOption(QStringList() << "p" << "password", QCoreApplication::translate("LockArg", "LockArgPassword"),
                                     "password");
 
-    QCommandLineOption timeoutOption(QStringList() << "t" << "timeout", "Set the timeout to be used to unlock the screen",
+    QCommandLineOption timeoutOption(QStringList() << "t" << "timeout", QCoreApplication::translate("LockArg", "LockArgTimeout"),
                                     "timeout");
 
-    QCommandLineOption screenOption("screen", "Set the flag to lock the system's screens only.");
+    QCommandLineOption screenOption("screen", QCoreApplication::translate("LockArg", "LockArgScreen"));
     //QCommandLineOption systemOption("system", "Set the flag to lock the system.");
 
-    QCommandLineOption strictOption("strict", "Set the flag to validate the loking configuration.");
+    QCommandLineOption strictOption("strict", QCoreApplication::translate("LockArg", "LockArgStrict"));
 
     parser.addOptions({configOption, passwordOption, timeoutOption, screenOption, strictOption});
 
@@ -55,7 +58,6 @@ LockApp::LockApp(int &argc, char **argv)
                                             parser.isSet(strictOption)
                                                 ? Mere::Config::Spec::Strict::Hard
                                                 : Mere::Config::Spec::Strict::Soft);
-    Mere::Utils::I18nUtils::apply();
     std::cout << LockApp::tr("LockConfigApply").toStdString() << "\n - " << m_config->path() << std::endl;
 
     try

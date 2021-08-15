@@ -4,6 +4,10 @@
 <context>
     <name>LockApp</name>
     <message>
+        <source>LockAppDescription</source>
+        <translation>একটি সহজ পর্দা এবং সিস্টেম লকিং ইউটিলিটি।</translation>
+    </message>
+    <message>
         <source>LockConfigApply</source>
         <translation>নিম্নলিখিত কনফিগারেশন প্রয়োগ করা হচ্ছে :</translation>
     </message>
@@ -16,6 +20,30 @@
         <translation>ভুল মান (গুলি) এর জন্য কনফিগারেশন প্রয়োগ করা যায়নি। কনফিগারেশনের মান (গুলি) চেক করুন।</translation>
     </message>
 </context>
+<context>
+    <name>LockArg</name>
+    <message>
+        <source>LockArgConfig</source>
+        <translation>কনফিগারেশন ফাইলের পাথ সেট করুন।</translation>
+    </message>
+    <message>
+        <source>LockArgPassword</source>
+        <translation>স্ক্রিন আনলক করার জন্য পাসওয়ার্ড সেট করুন।</translation>
+    </message>
+    <message>
+        <source>LockArgTimeout</source>
+        <translation>স্ক্রিন আনলক করার জন্য ব্যবহৃত সময়সীমা সেট করুন।</translation>
+    </message>
+    <message>
+        <source>LockArgScreen</source>
+        <translation>শুধুমাত্র সিস্টেমের পর্দা লক করার জন্য পতাকা সেট করুন।</translation>
+    </message>
+    <message>
+        <source>LockArgStrict</source>
+        <translation>লকিং কনফিগারেশন যাচাই করতে পতাকা সেট করুন।</translation>
+    </message>
+</context>
+
 <context>
     <name>LockConfig</name>
     <message>
