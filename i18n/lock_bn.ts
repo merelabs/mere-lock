@@ -2,6 +2,52 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="bn_BD">
 <context>
+    <name>LockApp</name>
+    <message>
+        <source>LockConfigApply</source>
+        <translation>নিম্নলিখিত কনফিগারেশন প্রয়োগ করা হচ্ছে :</translation>
+    </message>
+    <message>
+        <source>LockConfigLoadFailed</source>
+        <translation>কনফিগারেশন লোড করা যায়নি। কনফিগারেশনের সিনট্যাক্স চেক করুন।</translation>
+    </message>
+    <message>
+        <source>LockConfigValidCheckFailed</source>
+        <translation>ভুল মান (গুলি) এর জন্য কনফিগারেশন প্রয়োগ করা যায়নি। কনফিগারেশনের মান (গুলি) চেক করুন।</translation>
+    </message>
+</context>
+<context>
+    <name>LockConfig</name>
+    <message>
+        <source>LockConfigValueCheck</source>
+        <translation>কনফিগারেশনের মান (গুলি) পরীক্ষা করা হচ্ছে।</translation>
+    </message>
+    <message>
+        <source>LockConfigValueCheckFailed</source>
+        <translation>কনফিগারেশনের উপরে ভুল মান (গুলি) রয়েছে। কনফিগারেশনের মান(গুলি) চেক করুন।</translation>
+    </message>
+    <message>
+        <source>LockConfigValueEmpty</source>
+        <translation> - %1 এর জন্য খালি মান সেট করা আছে!</translation>
+    </message>
+    <message>
+        <source>LockConfigValueInvalid</source>
+        <translation> - %1 এর জন্য একটি ভুল মান সেট করা আছে - %2</translation>
+    </message>
+    <message>
+        <source>LockConfigValueInvalidColor</source>
+        <translation> - %1 এর জন্য অবৈধ রঙ কোড সেট করা আছে - %2</translation>
+    </message>
+    <message>
+        <source>LockConfigValueInvalidFile</source>
+        <translation> - %1 এর জন্য একটি অবৈধ ফাইল পাথ সেট করা আছে - %2</translation>
+    </message>
+    <message>
+        <source>LockConfigValueInvalidImage</source>
+        <translation> - %1 এর জন্য একটি অবৈধ ইমেজ পাথ সেট করা আছে - %2</translation>
+    </message>
+</context>
+<context>
     <name>LockPrompt</name>
     <message>
         <source>LockPrompt</source>
