@@ -28,6 +28,7 @@ LockApp::LockApp(int &argc, char **argv)
     setApplicationVersion(Mere::Lock::AppVersion);
 
     QCommandLineParser parser;
+    parser.setApplicationDescription("A simple screen and system locking utility.");
     parser.addHelpOption();
     parser.addVersionOption();
 
