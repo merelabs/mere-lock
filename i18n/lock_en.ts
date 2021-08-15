@@ -4,6 +4,10 @@
 <context>
     <name>LockApp</name>
     <message>
+        <source>LockAppDescription</source>
+        <translation>A simple screen and system locking utility.</translation>
+    </message>
+    <message>
         <source>LockConfigApply</source>
         <translation>Applying the following configuration :</translation>
     </message>
@@ -14,6 +18,29 @@
     <message>
         <source>LockConfigValidCheckFailed</source>
         <translation>Could not apply configuration for wrong value(s). Please check the value(s) of the configuration.</translation>
+    </message>
+</context>
+<context>
+    <name>LockArg</name>
+    <message>
+        <source>LockArgConfig</source>
+        <translation>Set the path of the configuration file.</translation>
+    </message>
+    <message>
+        <source>LockArgPassword</source>
+        <translation>Set the password to be used to unlock the screen.</translation>
+    </message>
+    <message>
+        <source>LockArgTimeout</source>
+        <translation>Set the timeout to be used to unlock the screen.</translation>
+    </message>
+    <message>
+        <source>LockArgScreen</source>
+        <translation>Set the flag to lock the system's screens only.</translation>
+    </message>
+    <message>
+        <source>LockArgStrict</source>
+        <translation>Set the flag to validate the locking configuration.</translation>
     </message>
 </context>
 <context>
