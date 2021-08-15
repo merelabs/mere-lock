@@ -33,17 +33,31 @@ TODOs:
 more screenshots are available [here](screenshots).
 
 ### Usage
-Simply invoke the 'mere-lock' command. To get out of it, enter your password.
+Simply invoke the 'mere-lock' command. To get out of it, use your current login password.
 
 ```shell
 $ mere-lock --strict
 ```
+*note:* --strict option will force to validate the configuration used.
 
 If the user wishes to use a temporary password, then the invocation command 
 would be:
 
 ```shell
 $ mere-lock --strict --password secret
+```
+
+If the user wishes to use a onetime password requested by screen locker, then the invocation command would be:
+
+```shell
+$ mere-lock --strict --password
+```
+*note:* onetime password is helpful for indirect invocation using any shortcut keys.
+
+If the user wish to lock the screen for 15 minutes, and require the user's login password to unlock:
+
+```shell
+$ mere-lock --strict --timeout 15
 ```
 
 Tips: you can generate a password while invoking, and pass it using xargs!
