@@ -26,7 +26,10 @@ public:
     void password(const std::string &password);
 
     unsigned int timeout() const;
-    bool checkTimeout() const;
+    void timeout(unsigned int timeout);
+
+    unsigned int promptTimeout() const;
+    bool checkPromptTimeout() const;
 
     std::string screenBackground() const;
     bool checkScreenBackground() const;
