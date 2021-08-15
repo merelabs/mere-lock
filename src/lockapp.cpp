@@ -5,6 +5,7 @@
 #include "mere/utils/i18nutils.h"
 
 #include <iostream>
+#include <QTimer>
 #include <QCommandLineParser>
 
 LockApp::~LockApp()
@@ -37,12 +38,15 @@ LockApp::LockApp(int &argc, char **argv)
     QCommandLineOption passwordOption(QStringList() << "p" << "password", "Set the password to be used to unlock the screen",
                                     "password");
 
+    QCommandLineOption timeoutOption(QStringList() << "t" << "timeout", "Set the timeout to be used to unlock the screen",
+                                    "timeout");
+
     QCommandLineOption screenOption("screen", "Set the flag to lock the system's screens only.");
     //QCommandLineOption systemOption("system", "Set the flag to lock the system.");
 
     QCommandLineOption strictOption("strict", "Set the flag to validate the loking configuration.");
 
-    parser.addOptions({configOption, passwordOption, screenOption, strictOption});
+    parser.addOptions({configOption, passwordOption, timeoutOption, screenOption, strictOption});
 
     parser.process(QCoreApplication::arguments());
 
@@ -52,9 +56,8 @@ LockApp::LockApp(int &argc, char **argv)
                                                 ? Mere::Config::Spec::Strict::Hard
                                                 : Mere::Config::Spec::Strict::Soft);
     Mere::Utils::I18nUtils::apply();
-
     std::cout << LockApp::tr("LockConfigApply").toStdString() << "\n - " << m_config->path() << std::endl;
-//    std::exit(1);
+
     try
     {
         m_config->load();
@@ -74,6 +77,16 @@ LockApp::LockApp(int &argc, char **argv)
     if (parser.isSet(passwordOption))
     {
         m_config->password(parser.value(passwordOption).toStdString());
+    }
+
+    if (parser.isSet(timeoutOption))
+    {
+        unsigned int timeout = parser.value(timeoutOption).toInt();
+        if (timeout)
+        {
+            m_config->timeout(timeout);
+            QTimer::singleShot(timeout * 1000 * 60, this, SLOT(quit()));
+        }
     }
 
     m_locker = new Mere::Lock::Locker(this);

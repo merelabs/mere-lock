@@ -8,9 +8,6 @@
 #include <QApplication>
 #include <iostream>
 
-static const std::string KEY_TIMEOUT                 = "mere.lock.timeout";
-static const std::string VAL_TIMEOUT                 = "10";
-
 static const std::string KEY_SCREEN_LOGO             = "mere.lock.screen.logo";
 static const std::string VAL_SCREEN_LOGO             = "/usr/local/share/mere/lock/mere-logo.png";
 
@@ -28,6 +25,9 @@ static const std::string VAL_SCREEN_MESSAGE_SIZE     = "10";
 
 static const std::string KEY_SCREEN_MESSAGE_COLOR    = "mere.lock.screen.message.font.color";
 static const std::string VAL_SCREEN_MESSAGE_COLOR    = "#000";
+
+static const std::string KEY_PROMPT_TIMEOUT          = "mere.lock.screen.prompt.timeout";
+static const std::string VAL_PROMPT_TIMEOUT          = "10";
 
 static const std::string KEY_PROMPT_LOGO             = "mere.lock.screen.prompt.logo";
 static const std::string VAL_PROMPT_LOGO             = "/usr/local/share/mere/lock/freebsd-logo.png";
@@ -63,7 +63,6 @@ int Mere::Lock::Config::validate() const
 
     std::cout << qApp->translate("LockConfig", "LockConfigValueCheck").toStdString() << std::endl,
 
-    err = checkTimeout()               ? err : 1;
     err = checkScreenLogo()            ? err : 1;
     err = checkScreenLogoShow()        ? err : 1;
     err = checkScreenBackground()      ? err : 1;
@@ -79,6 +78,7 @@ int Mere::Lock::Config::validate() const
     err = checkPromptBackgroundImage() ? err : 1;
     err = checkPromptMessageColor()    ? err : 1;
     err = checkPromptMessageSize()     ? err : 1;
+    err = checkPromptTimeout()         ? err : 1;
 
     if(err)
         std::cout << qApp->translate("LockConfig", "LockConfigValueCheckFailed").toStdString() << std::endl;
@@ -98,15 +98,28 @@ void Mere::Lock::Config::password(const std::string &password)
 
 unsigned int Mere::Lock::Config::timeout() const
 {
-    std::string value = this->get(KEY_TIMEOUT);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_TIMEOUT);
+    std::string value = this->get("mere.lock.timeout");
+    if (value.empty()) return 0;
 
     return Mere::Utils::StringUtils::toInt(value);
 }
 
-bool Mere::Lock::Config::checkTimeout() const
+void Mere::Lock::Config::timeout(unsigned int timeout)
 {
-    return checkInt(KEY_TIMEOUT);
+    this->set("mere.lock.timeout", std::to_string(timeout));
+}
+
+unsigned int Mere::Lock::Config::promptTimeout() const
+{
+    std::string value = this->get(KEY_PROMPT_TIMEOUT);
+    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_PROMPT_TIMEOUT);
+
+    return Mere::Utils::StringUtils::toInt(value);
+}
+
+bool Mere::Lock::Config::checkPromptTimeout() const
+{
+    return checkInt(KEY_PROMPT_TIMEOUT);
 }
 
 std::string Mere::Lock::Config::screenBackground() const

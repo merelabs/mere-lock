@@ -114,7 +114,7 @@ void LockPrompt::setTimeout()
     connect(m_timeoutTimer, &QTimer::timeout, this, [&]{
         Mere::Lock::Config *config = Mere::Lock::Config::instance();
         qint64 lapse = QDateTime::currentMSecsSinceEpoch() - m_timeoutStart;
-        if ( lapse > (config->timeout() * 1000 + timeoutStartOffset + timeoutCheckInterval))
+        if ( lapse > (config->promptTimeout() * 1000 + timeoutStartOffset + timeoutCheckInterval))
         {
             setVisible(false);
         }
@@ -127,7 +127,7 @@ void LockPrompt::setTimeout()
             m_timeoutPanel->setStyleSheet("background: red;");
             QPropertyAnimation *animation = new QPropertyAnimation(m_timeoutPanel, "geometry", this);
             animation->setDuration(timeoutCheckInterval);
-            animation->setEndValue(QRect(0, 0, this->width()/(config->timeout() * 2) * floor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
+            animation->setEndValue(QRect(0, 0, this->width()/(config->promptTimeout() * 2) * floor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
             animation->start();
         }
     });
