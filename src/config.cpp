@@ -5,6 +5,7 @@
 #include "mere/utils/stringutils.h"
 #include "mere/utils/fileutils.h"
 
+#include <QApplication>
 #include <iostream>
 
 static const std::string KEY_TIMEOUT                 = "mere.lock.timeout";
@@ -60,7 +61,7 @@ int Mere::Lock::Config::validate() const
 {
     int err = 0;
 
-    std::cout << "Checking configuration..." << std::endl;
+    std::cout << qApp->translate("LockConfig", "LockConfigValueCheck").toStdString() << std::endl,
 
     err = checkTimeout()               ? err : 1;
     err = checkScreenLogo()            ? err : 1;
@@ -78,6 +79,9 @@ int Mere::Lock::Config::validate() const
     err = checkPromptBackgroundImage() ? err : 1;
     err = checkPromptMessageColor()    ? err : 1;
     err = checkPromptMessageSize()     ? err : 1;
+
+    if(err)
+        std::cout << qApp->translate("LockConfig", "LockConfigValueCheckFailed").toStdString() << std::endl;
 
     return err;
 }
@@ -198,7 +202,7 @@ bool Mere::Lock::Config::logoshow() const
     std::string value = this->get(KEY_SCREEN_LOGO_SHOW);
     if (value.empty()) return true;
 
-    return value == "true" || value == "yes" || value == "1" ;
+    return Mere::Utils::StringUtils::isTrue(value);
 }
 
 bool Mere::Lock::Config::checkScreenLogoShow() const
@@ -224,7 +228,7 @@ bool Mere::Lock::Config::promptlogoshow() const
     std::string value = this->get(KEY_PROMPT_LOGO_SHOW);
     if (value.empty()) return true;
 
-    return value == "true" || value == "yes" || value == "1" ;
+    return Mere::Utils::StringUtils::isTrue(value);
 }
 
 bool Mere::Lock::Config::checkPromptLogoShow() const
@@ -347,7 +351,8 @@ bool Mere::Lock::Config::checkBackground(const std::string &key) const
     else if(value.at(0) == '/')
         return checkImage(key, value);
 
-    std::cout << "  - " << key << " is set to invalid value - " << value << std::endl;
+    std::cout << qApp->translate("LockConfig", "LockConfigValueInvalid").arg(key.c_str()).arg(value.c_str()).toStdString() << std::endl;
+
     return false;
 }
 
@@ -356,7 +361,8 @@ bool Mere::Lock::Config::checkColor(const std::string &key, const std::string &c
     QColor c(QString::fromStdString(color));
     if (!c.isValid())
     {
-        std::cout << "  - " << key << " is set to invalid color code - " << color << std::endl;
+        std::cout << qApp->translate("LockConfig", "LockConfigValueInvalidColor").arg(key.c_str()).arg(color.c_str()).toStdString() << std::endl;
+
         return false;
     }
 
@@ -379,14 +385,16 @@ bool Mere::Lock::Config::checkImage(const std::string &key, const std::string &p
 {
     if(Mere::Utils::FileUtils::isNotExist(path))
     {
-        std::cout << "  - " << key << " is set to invalid file path - " << path << std::endl;
+        std::cout << qApp->translate("LockConfig", "LockConfigValueInvalidFile").arg(key.c_str()).arg(path.c_str()).toStdString() << std::endl;
+
         return false;
     }
 
     QPixmap pixmap(QString::fromStdString(path));
     if(pixmap.isNull())
     {
-        std::cout << "  - " << key << " is set to invalid image path- " << path << std::endl;
+        std::cout << qApp->translate("LockConfig", "LockConfigValueInvalidImage").arg(key.c_str()).arg(path.c_str()).toStdString() << std::endl;
+
         return false;
     }
 
@@ -414,7 +422,7 @@ bool Mere::Lock::Config::checkBool(const std::string &key) const
 
     if (!set) return true;
 
-    return value == "true" || value == "false" || value == "yes" || value == "no" || value == "1" || value == "0";
+    return Mere::Utils::StringUtils::isBoolean(value);
 }
 
 bool Mere::Lock::Config::checkColor(const std::string &key) const
@@ -458,7 +466,8 @@ bool Mere::Lock::Config::checkKey(const std::string &key, std::string &value, bo
         value = Mere::Utils::StringUtils::trim(value);
         if (value.empty())
         {
-            std::cout << "  - " << key << " is set to empty!" << std::endl;
+            std::cout << qApp->translate("LockConfig", "LockConfigValueEmpty").arg(key.c_str()).toStdString() << std::endl;
+
             return false;
         }
     }

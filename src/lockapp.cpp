@@ -52,8 +52,8 @@ LockApp::LockApp(int &argc, char **argv)
                                                 ? Mere::Config::Spec::Strict::Hard
                                                 : Mere::Config::Spec::Strict::Soft);
     Mere::Utils::I18nUtils::apply();
-//    std::cout << "Applying following configuration - " << m_config->path() << std::endl;
-    std::cout << LockApp::tr("LockMessage").toStdString() << m_config->path() << std::endl;
+
+    std::cout << LockApp::tr("LockConfigApply").toStdString() << "\n - " << m_config->path() << std::endl;
 //    std::exit(1);
     try
     {
@@ -61,13 +61,13 @@ LockApp::LockApp(int &argc, char **argv)
     }
     catch (const std::exception &ex)
     {
-        std::cout << "Malformed configuration, check the configuration and try again" << m_config->path() << std::endl;
+        std::cout << LockApp::tr("LockConfigLoadFailed").toStdString() << "\n - " << m_config->path() << std::endl;
         std::exit(1);
     }
 
     if (parser.isSet(strictOption) && m_config->validate())
     {
-        std::cout << "Check the configuration and try again" << std::endl;
+        std::cout << LockApp::tr("LockConfigValidCheckFailed").toStdString() << "\n - " << m_config->path() << std::endl;
         std::exit(1);
     }
 
