@@ -6,10 +6,6 @@
 
 #include "mere/widgets/defaultapp.h"
 
-
-#include <QDebug>
-#include <QApplication>
-
 namespace Mere
 {
     namespace Lock
