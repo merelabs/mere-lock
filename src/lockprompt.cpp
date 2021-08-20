@@ -208,7 +208,7 @@ void LockPrompt::setPromptLogo()
         return;
     }
 
-    QSize size(64, 64);
+    QSize size(96, 94);
     pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QLabel *label = new QLabel(this);
