@@ -113,7 +113,7 @@ void LockScreen::setBackground()
     else
     {
         QColor color = config->screenBackgroundColor();
-        pal.setColor(QPalette::Window, QColor(color));
+        pal.setColor(QPalette::Window, color);
     }
 
     setPalette(pal);
