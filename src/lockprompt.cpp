@@ -11,6 +11,7 @@
 #include <QApplication>
 #include <QPropertyAnimation>
 #include <QGraphicsDropShadowEffect>
+#include <QtMath>
 
 //static
 const int LockPrompt::timeoutCheckInterval = 500;
@@ -127,7 +128,7 @@ void LockPrompt::setTimeout()
             m_timeoutPanel->setStyleSheet("background: red;");
             QPropertyAnimation *animation = new QPropertyAnimation(m_timeoutPanel, "geometry", this);
             animation->setDuration(timeoutCheckInterval);
-            animation->setEndValue(QRect(0, 0, this->width()/(config->promptTimeout() * 2) * floor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
+            animation->setEndValue(QRect(0, 0, this->width()/(config->promptTimeout() * 2) * qFloor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
             animation->start();
         }
     });
