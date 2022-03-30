@@ -13,7 +13,7 @@ namespace Mere
         #ifdef APP_CODE
         const std::string AppCode   = APP_CODE;
         #else
-        const QString AppCode   = "lock";
+        const std::string AppCode   = "lock";
         #endif
 
         #ifdef APP_NAME
