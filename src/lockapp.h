@@ -11,7 +11,7 @@ namespace Mere
     namespace Lock
     {
         #ifdef APP_CODE
-        const QString AppCode   = APP_CODE;
+        const std::string AppCode   = APP_CODE;
         #else
         const QString AppCode   = "lock";
         #endif
