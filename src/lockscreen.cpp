@@ -7,7 +7,6 @@
 #include <QTimer>
 #include <QScreen>
 #include <QWindow>
-#include <QVBoxLayout>
 #include <QApplication>
 
 Mere::Lock::LockScreen::~LockScreen()
