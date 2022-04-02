@@ -14,26 +14,22 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
     : QObject(parent),
       m_prompt(nullptr)
 {
-    int screenNumber = 0;
     for(QScreen *screen : QApplication::screens())
     {
         auto *lockScreen = new Mere::Lock::LockScreen(screen);
-        lockScreen->installEventFilter(this);
         connect(lockScreen, &Mere::Lock::LockScreen::verified, this, [&](){
             emit verified();
         });
-        if (screen == QApplication::screenAt(QCursor::pos()))
-            screenNumber = m_screens.size();
 
         m_screens.push_back(lockScreen);
     }
 
-    m_screen = m_screens.at(screenNumber);
+    m_screen = m_screens.at(0);
+    m_screen->installEventFilter(this);
 }
 
 int Mere::Lock::ScreenLocker::lock()
 {
-
     for(auto *screen : m_screens)
         screen->lock();
 
@@ -70,7 +66,6 @@ void Mere::Lock::ScreenLocker::release()
     m_screen->releaseMouse();
     m_screen->releaseKeyboard();
 }
-
 
 void Mere::Lock::ScreenLocker::prompt()
 {
@@ -128,4 +123,3 @@ bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
 
     return false;
 }
-
