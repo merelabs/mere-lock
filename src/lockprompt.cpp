@@ -35,7 +35,9 @@ LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
     setAutoFillBackground(true);
 
     resize(500, 300);
-    move(screen->virtualGeometry().center() - this->rect().center());
+    QRect rect = m_screen->geometry();
+    QRect geometry(0, 0, rect.width(), rect.height());
+    move(geometry.center() - this->rect().center());
 
     setShadow();
     setBackground();
