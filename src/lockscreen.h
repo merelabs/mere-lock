@@ -23,6 +23,9 @@ public:
     void lock();
     void unlock();
 
+    void hideMessage();
+    void showMessage();
+
 private:
     void setMessage();
     void setBackground();

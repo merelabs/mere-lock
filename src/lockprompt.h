@@ -40,6 +40,7 @@ signals:
     void keyboardGrabbed();
     void keyboardReleased();
 
+    void opened();
     void closed();
 
 private slots:

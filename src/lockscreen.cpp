@@ -112,3 +112,15 @@ void Mere::Lock::LockScreen::setScreenLogo()
 
     label->move(25, m_screen->size().height() - label->height() - 25);
 }
+
+void Mere::Lock::LockScreen::hideMessage()
+{
+  QLabel *message = findChild<QLabel *>("LockMessage");
+  message->hide();
+}
+
+void Mere::Lock::LockScreen::showMessage()
+{
+  QLabel *message = findChild<QLabel *>("LockMessage");
+  message->show();
+}

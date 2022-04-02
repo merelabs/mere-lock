@@ -39,8 +39,8 @@ int Mere::Lock::ScreenLocker::lock()
 
     m_screen->setFocusPolicy(Qt::StrongFocus);
     m_screen->setFocus(Qt::ActiveWindowFocusReason);
-    m_screen->grabMouse();
-    m_screen->grabKeyboard();
+
+    capture();
 
     emit locked();
 
@@ -52,12 +52,23 @@ int Mere::Lock::ScreenLocker::unlock()
     for(auto *screen : m_screens)
         screen->unlock();
 
-    m_screen->releaseMouse();
-    m_screen->releaseKeyboard();
+    release();
 
     emit unlocked();
 
     return 0;
+}
+
+void Mere::Lock::ScreenLocker::capture()
+{
+    m_screen->grabMouse();
+    m_screen->grabKeyboard();
+}
+
+void Mere::Lock::ScreenLocker::release()
+{
+    m_screen->releaseMouse();
+    m_screen->releaseKeyboard();
 }
 
 
@@ -66,17 +77,36 @@ void Mere::Lock::ScreenLocker::prompt()
     if (!m_prompt)
     {
         m_prompt = new Mere::Lock::LockPrompt(m_screen);
+        connect(m_prompt, &Mere::Lock::LockPrompt::opened, [&](){
+            hideTextPrompt();
+        });
+        connect(m_prompt, &Mere::Lock::LockPrompt::closed, [&](){
+            showTextPrompt();
+        });
+
         connect(m_prompt, &Mere::Lock::LockPrompt::keyboardReleased, [&](){
-            m_screen->grabKeyboard();
+            capture();
         });
 
         connect(m_prompt, &Mere::Lock::LockPrompt::verified, [&](){
-            m_screen->grabKeyboard();
+            release();
             emit verified();
         });
     }
 
     m_prompt->showNormal();
+}
+
+void Mere::Lock::ScreenLocker::hideTextPrompt()
+{
+    for(auto *screen : m_screens)
+        screen->hideMessage();
+}
+
+void Mere::Lock::ScreenLocker::showTextPrompt()
+{
+    for(auto *screen : m_screens)
+        screen->showMessage();
 }
 
 bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)

@@ -27,7 +27,12 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
+    void capture();
+    void release();
+
     void prompt();
+    void hideTextPrompt();
+    void showTextPrompt();
 
 signals:
     void locked();

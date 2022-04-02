@@ -151,6 +151,8 @@ void Mere::Lock::LockPrompt::setVisible(bool visible)
         m_password->setFocus();
         m_password->grabKeyboard();
         emit keyboardGrabbed();
+
+        emit opened();
     }
     else
     {
