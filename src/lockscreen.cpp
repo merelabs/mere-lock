@@ -97,7 +97,9 @@ void LockScreen::setMessage()
     font.setPointSize(config->screenMessageSize());
     label->setFont(font);
 
-    label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
+    QRect rect = m_screen->geometry();
+    QRect geometry(0, 0, rect.width(), rect.height());
+    label->move(geometry.center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
 void LockScreen::setBackground()
