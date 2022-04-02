@@ -93,9 +93,11 @@ unix
 
     INSTALLS += config share i18n desktop target
 
-    post.path = $${OUT_PWD}/build
-    post.commands = chmod u+s /usr/local/bin/mere-lock
-    #post.depends =
+    !linux-g++ {
+        post.path = $${OUT_PWD}/build
+        post.commands = chmod u+s /usr/local/bin/mere-lock
+        #post.depends =
 
-    INSTALLS += post
+        INSTALLS += post
+    }
 }

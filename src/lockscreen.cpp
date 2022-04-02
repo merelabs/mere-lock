@@ -23,13 +23,12 @@ Mere::Lock::LockScreen::~LockScreen()
 }
 
 Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
-    : QWidget(parent),
+    : QWidget(parent, Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint),
       m_screen(screen),
       m_prompt(nullptr)
 {
     setObjectName("LockScreen");
 
-    setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setCursor(Qt::BlankCursor);
     setMouseTracking(true);
     setAutoFillBackground(true);
@@ -61,17 +60,17 @@ void Mere::Lock::LockScreen::prompt()
 {
     if (!m_prompt)
     {
-        m_prompt = new LockPrompt(m_screen, this);
-        connect(m_prompt, &LockPrompt::keyboardReleased, [&](){
+        m_prompt = new Mere::Lock::LockPrompt(m_screen, this);
+        connect(m_prompt, &Mere::Lock::LockPrompt::keyboardReleased, [&](){
             grabKeyboard();
         });
 
-        connect(m_prompt, &LockPrompt::verified, [&](){
+        connect(m_prompt, &Mere::Lock::LockPrompt::verified, [&](){
             grabKeyboard();
             emit verified();
         });
 
-        connect(m_prompt, &LockPrompt::closed, [&](){
+        connect(m_prompt, &Mere::Lock::LockPrompt::closed, [&](){
             showMessage();
         });
     }
