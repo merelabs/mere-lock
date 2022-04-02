@@ -23,17 +23,10 @@ public:
     void lock();
     void unlock();
 
-protected:
-    bool eventFilter(QObject *obj, QEvent *event) override;
-
 private:
-    void prompt();
     void setMessage();
     void setBackground();
     void setScreenLogo();
-
-    void hideMessage();
-    void showMessage();
 
 signals:
     void verified();

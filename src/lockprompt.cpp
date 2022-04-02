@@ -22,9 +22,8 @@ Mere::Lock::LockPrompt::~LockPrompt()
 
 }
 
-Mere::Lock::LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
-    : QWidget(parent),
-      m_screen(screen)
+Mere::Lock::LockPrompt::LockPrompt(QWidget *parent)
+    : QWidget(parent)
 {
     setObjectName("LockPrompt");
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -35,7 +34,8 @@ Mere::Lock::LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
     setAutoFillBackground(true);
 
     resize(500, 300);
-    QRect rect = m_screen->geometry();
+
+    QRect rect = parent->geometry();
     QRect geometry(0, 0, rect.width(), rect.height());
     move(geometry.center() - this->rect().center());
 
@@ -99,7 +99,7 @@ void Mere::Lock::LockPrompt::initMessageUI()
     font.setPointSize(config->promptMessageSize());
     label->setFont(font);
 
-    label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
+    label->move(geometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
 void Mere::Lock::LockPrompt::clear()
@@ -184,7 +184,7 @@ void Mere::Lock::LockPrompt::setBackground()
     QPixmap pixmap = config->promptBackgroundImage();
     if (!pixmap.isNull())
     {
-        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
         pal.setBrush(QPalette::Window, pixmap);
     }
     else

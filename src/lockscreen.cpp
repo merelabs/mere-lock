@@ -22,24 +22,19 @@ Mere::Lock::LockScreen::~LockScreen()
 }
 
 Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
-    : QWidget(parent, Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint),
+    : QWidget(parent, Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint),
       m_screen(screen),
       m_prompt(nullptr)
 {
-    setObjectName("LockScreen");
+    setObjectName("LockScreen-" + screen->name());
 
-    setCursor(Qt::BlankCursor);
+//    setCursor(Qt::BlankCursor);
     setMouseTracking(true);
     setAutoFillBackground(true);
 
     setMessage();
     setBackground();
     setScreenLogo();
-
-    grabMouse();
-    grabKeyboard();
-
-    installEventFilter(this);
 }
 
 void Mere::Lock::LockScreen::lock()
@@ -52,32 +47,7 @@ void Mere::Lock::LockScreen::lock()
 
 void Mere::Lock::LockScreen::unlock()
 {
-
-}
-
-void Mere::Lock::LockScreen::prompt()
-{
-    if (!m_prompt)
-    {
-        m_prompt = new Mere::Lock::LockPrompt(m_screen, this);
-        connect(m_prompt, &Mere::Lock::LockPrompt::keyboardReleased, [&](){
-            grabKeyboard();
-        });
-
-        connect(m_prompt, &Mere::Lock::LockPrompt::verified, [&](){
-            grabKeyboard();
-            emit verified();
-        });
-
-        connect(m_prompt, &Mere::Lock::LockPrompt::closed, [&](){
-            showMessage();
-        });
-    }
-
-    if (!m_prompt->isHidden()) return;
-
-    hideMessage();
-    m_prompt->showNormal();
+    setVisible(false);
 }
 
 void Mere::Lock::LockScreen::setMessage()
@@ -141,36 +111,4 @@ void Mere::Lock::LockScreen::setScreenLogo()
     label->setPixmap(pixmap);
 
     label->move(25, m_screen->size().height() - label->height() - 25);
-}
-
-void Mere::Lock::LockScreen::hideMessage()
-{
-  QLabel *message = findChild<QLabel *>("LockMessage");
-  message->hide();
-}
-
-void Mere::Lock::LockScreen::showMessage()
-{
-  QLabel *message = findChild<QLabel *>("LockMessage");
-  message->show();
-}
-
-bool Mere::Lock::LockScreen::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
-    {
-
-#ifdef QT_DEBUG
-        // - test code
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Escape)
-            ::exit(0);
-        // - end of test code
-#endif
-        prompt();
-
-        return true;
-    }
-
-    return QObject::eventFilter(obj, event);
 }
