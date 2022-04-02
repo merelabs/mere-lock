@@ -19,7 +19,7 @@ SOURCES += \
     src/lockscreen.cpp \
     src/main.cpp \
     src/lockapp.cpp \
-    src/screelocker.cpp \
+    src/screenlocker.cpp \
     src/systemlocker.cpp
 
 HEADERS += \
@@ -28,7 +28,7 @@ HEADERS += \
     src/locker.h \
     src/lockprompt.h \
     src/lockscreen.h \
-    src/screelocker.h \
+    src/screenlocker.h \
     src/systemlocker.h
 
 RESOURCES += \

@@ -3,11 +3,11 @@
 
 #include <QObject>
 
-class ScreeLocker : public QObject
+class ScreenLocker : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScreeLocker(QObject *parent = nullptr);
+    explicit ScreenLocker(QObject *parent = nullptr);
 
 signals:
 
