@@ -7,6 +7,11 @@
 #include <QEvent>
 #include <QWidget>
 
+namespace Mere
+{
+namespace Lock
+{
+
 class LockPrompt : public QWidget
 {
     Q_OBJECT
@@ -52,5 +57,8 @@ private:
 
     QScreen *m_screen;
 };
+
+}
+}
 
 #endif // MERE_LOCK_LOCKPROMPT_H

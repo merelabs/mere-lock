@@ -14,15 +14,15 @@
 #include <QtMath>
 
 //static
-const int LockPrompt::timeoutCheckInterval = 500;
-const int LockPrompt::timeoutStartOffset = 5000;
+const int Mere::Lock::LockPrompt::timeoutCheckInterval = 500;
+const int Mere::Lock::LockPrompt::timeoutStartOffset = 5000;
 
-LockPrompt::~LockPrompt()
+Mere::Lock::LockPrompt::~LockPrompt()
 {
 
 }
 
-LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
+Mere::Lock::LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
     : QWidget(parent),
       m_screen(screen)
 {
@@ -54,7 +54,7 @@ LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
     installEventFilter(this);
 }
 
-void LockPrompt::initUI()
+void Mere::Lock::LockPrompt::initUI()
 {
     QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
     this->layout()->addItem(topSpacer);
@@ -82,7 +82,7 @@ void LockPrompt::initUI()
     connect(m_password, SIGNAL(returnPressed()), this, SLOT(verify()));
 }
 
-void LockPrompt::initMessageUI()
+void Mere::Lock::LockPrompt::initMessageUI()
 {
     QLabel *label = new QLabel(tr("LockPrompt"), this);
     label->setObjectName("LockPrompt");
@@ -102,12 +102,12 @@ void LockPrompt::initMessageUI()
     label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
-void LockPrompt::clear()
+void Mere::Lock::LockPrompt::clear()
 {
     m_password->clear();
 }
 
-void LockPrompt::setTimeout()
+void Mere::Lock::LockPrompt::setTimeout()
 {
     if (m_timeoutTimer) return;
 
@@ -139,7 +139,7 @@ void LockPrompt::setTimeout()
     m_timeoutPanel->setGeometry(0, 0, 0, 2);
 }
 
-void LockPrompt::setVisible(bool visible)
+void Mere::Lock::LockPrompt::setVisible(bool visible)
 {
     if (visible)
     {
@@ -168,7 +168,7 @@ void LockPrompt::setVisible(bool visible)
     QWidget::setVisible(visible);
 }
 
-void LockPrompt::setShadow()
+void Mere::Lock::LockPrompt::setShadow()
 {
     QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
     shadowEffect->setOffset(10);
@@ -176,7 +176,7 @@ void LockPrompt::setShadow()
     setGraphicsEffect(shadowEffect);
 }
 
-void LockPrompt::setBackground()
+void Mere::Lock::LockPrompt::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
 
@@ -196,7 +196,7 @@ void LockPrompt::setBackground()
     setPalette(pal);
 }
 
-void LockPrompt::setPromptLogo()
+void Mere::Lock::LockPrompt::setPromptLogo()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
     if(!config->promptlogoshow()) return;
@@ -226,7 +226,7 @@ void LockPrompt::setPromptLogo()
     label->move(this->width()/2 - label->width()/2, 30);
 }
 
-void LockPrompt::verify()
+void Mere::Lock::LockPrompt::verify()
 {
     bool ok = false;
 
@@ -251,7 +251,7 @@ void LockPrompt::verify()
     emit verified();
 }
 
-bool LockPrompt::eventFilter(QObject *obj, QEvent *event)
+bool Mere::Lock::LockPrompt::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress  /*|| event->type() == QEvent::KeyRelease*/ ||
         event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove)

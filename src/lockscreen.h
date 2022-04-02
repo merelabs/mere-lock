@@ -6,6 +6,12 @@
 #include <QKeyEvent>
 #include <QWidget>
 
+
+namespace Mere
+{
+namespace Lock
+{
+
 class LockPrompt;
 
 class LockScreen : public QWidget
@@ -37,4 +43,6 @@ private:
     LockPrompt *m_prompt;
 };
 
+}
+}
 #endif // MERE_LOCK_LOCKSCREEN_H

@@ -10,7 +10,7 @@
 #include <QVBoxLayout>
 #include <QApplication>
 
-LockScreen::~LockScreen()
+Mere::Lock::LockScreen::~LockScreen()
 {
     releaseMouse();
     releaseKeyboard();
@@ -22,7 +22,7 @@ LockScreen::~LockScreen()
     }
 }
 
-LockScreen::LockScreen(QScreen *screen, QWidget *parent)
+Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
     : QWidget(parent),
       m_screen(screen),
       m_prompt(nullptr)
@@ -44,7 +44,7 @@ LockScreen::LockScreen(QScreen *screen, QWidget *parent)
     installEventFilter(this);
 }
 
-void LockScreen::lock()
+void Mere::Lock::LockScreen::lock()
 {
     showFullScreen();
     setGeometry(m_screen->geometry());
@@ -52,12 +52,12 @@ void LockScreen::lock()
     setVisible(true);
 }
 
-void LockScreen::unlock()
+void Mere::Lock::LockScreen::unlock()
 {
 
 }
 
-void LockScreen::prompt()
+void Mere::Lock::LockScreen::prompt()
 {
     if (!m_prompt)
     {
@@ -82,7 +82,7 @@ void LockScreen::prompt()
     m_prompt->showNormal();
 }
 
-void LockScreen::setMessage()
+void Mere::Lock::LockScreen::setMessage()
 {
     QLabel *label = new QLabel(tr("LockMessage"), this);
     label->setObjectName("LockMessage");
@@ -102,7 +102,7 @@ void LockScreen::setMessage()
     label->move(geometry.center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
-void LockScreen::setBackground()
+void Mere::Lock::LockScreen::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
 
@@ -122,7 +122,7 @@ void LockScreen::setBackground()
     setPalette(pal);
 }
 
-void LockScreen::setScreenLogo()
+void Mere::Lock::LockScreen::setScreenLogo()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
     if(!config->logoshow()) return;
@@ -145,19 +145,19 @@ void LockScreen::setScreenLogo()
     label->move(25, m_screen->size().height() - label->height() - 25);
 }
 
-void LockScreen::hideMessage()
+void Mere::Lock::LockScreen::hideMessage()
 {
   QLabel *message = findChild<QLabel *>("LockMessage");
   message->hide();
 }
 
-void LockScreen::showMessage()
+void Mere::Lock::LockScreen::showMessage()
 {
   QLabel *message = findChild<QLabel *>("LockMessage");
   message->show();
 }
 
-bool LockScreen::eventFilter(QObject *obj, QEvent *event)
+bool Mere::Lock::LockScreen::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
     {
