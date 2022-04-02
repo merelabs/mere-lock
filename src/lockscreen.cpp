@@ -47,6 +47,7 @@ LockScreen::LockScreen(QScreen *screen, QWidget *parent)
 void LockScreen::lock()
 {
     showFullScreen();
+    setGeometry(m_screen->geometry());
     windowHandle()->setScreen(m_screen);
     setVisible(true);
 }
@@ -139,9 +140,7 @@ void LockScreen::setScreenLogo()
     label->setMaximumSize(QSize(128, 35));
     label->setPixmap(pixmap);
 
-    QSize size = m_screen->availableVirtualSize();
-
-    label->move(25, size.height() - label->height() - 25);
+    label->move(25, m_screen->size().height() - label->height() - 25);
 }
 
 void LockScreen::hideMessage()
