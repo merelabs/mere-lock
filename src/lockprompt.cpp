@@ -79,6 +79,7 @@ void Mere::Lock::LockPrompt::initUI()
     this->layout()->addWidget(m_result);
 
     m_result->setVisible(false);
+
     connect(m_password, SIGNAL(returnPressed()), this, SLOT(verify()));
 }
 
@@ -105,6 +106,7 @@ void Mere::Lock::LockPrompt::initMessageUI()
 void Mere::Lock::LockPrompt::clear()
 {
     m_password->clear();
+    m_result->setVisible(false);
     m_timeoutPanel->setGeometry(0, 0, 0, 2);
 }
 
