@@ -105,6 +105,7 @@ void Mere::Lock::LockPrompt::initMessageUI()
 void Mere::Lock::LockPrompt::clear()
 {
     m_password->clear();
+    m_timeoutPanel->setGeometry(0, 0, 0, 2);
 }
 
 void Mere::Lock::LockPrompt::setTimeout()
