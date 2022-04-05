@@ -99,6 +99,5 @@ LockApp::LockApp(int &argc, char **argv)
 
 int LockApp::start()
 {
-    m_locker->lock();
-    return 0;
+    return m_locker->lock();
 }
