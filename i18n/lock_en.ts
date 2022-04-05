@@ -75,7 +75,7 @@
     </message>
 </context>
 <context>
-    <name>LockPrompt</name>
+    <name>Mere::Lock::LockPrompt</name>
     <message>
         <source>LockPrompt</source>
         <translation>Enter your password and press return.</translation>
@@ -86,7 +86,7 @@
     </message>
 </context>
 <context>
-    <name>LockScreen</name>
+    <name>Mere::Lock::LockScreen</name>
     <message>
         <source>LockMessage</source>
         <translation>press any key or move the mouse a bit.</translation>

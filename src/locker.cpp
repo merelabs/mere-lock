@@ -1,38 +1,35 @@
 #include "locker.h"
-#include "lockscreen.h"
+#include "screenlocker.h"
 
-#include <QApplication>
 Mere::Lock::Locker::~Locker()
 {
-    for(auto *screen : m_screens)
-        delete screen;
+    if (m_locker)
+    {
+        delete m_locker;
+        m_locker = nullptr;
+    }
 }
 
 Mere::Lock::Locker::Locker(QObject *parent)
     : QObject(parent)
 {
-    for(QScreen *screen : QApplication::screens())
-    {
-        auto *s = new LockScreen(screen);
-        connect(s, &LockScreen::verified, this, [&](){
-            unlock();
-        });
-        m_screens.push_back(s);
-    }
+    m_locker = new Mere::Lock::ScreenLocker(this);
+    connect(m_locker, &Mere::Lock::ScreenLocker::verified, this, [&](){
+        unlock();
+    });
 }
 
 int Mere::Lock::Locker::lock()
 {
-    for(auto *screen : m_screens)
-        screen->lock();
+    m_locker->lock();
+    emit locked();
 
     return 0;
 }
 
 int Mere::Lock::Locker::unlock()
 {
-    for(auto *screen : m_screens)
-        screen->unlock();
+    m_locker->unlock();
 
     emit unlocked();
 

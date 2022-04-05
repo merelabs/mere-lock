@@ -6,30 +6,26 @@
 
 #include "mere/widgets/defaultapp.h"
 
-
-#include <QDebug>
-#include <QApplication>
-
 namespace Mere
 {
     namespace Lock
     {
         #ifdef APP_CODE
-        const QString AppCode   = APP_CODE;
+        const std::string AppCode   = APP_CODE;
         #else
-        const QString AppCode   = "lock";
+        const std::string AppCode   = "lock";
         #endif
 
         #ifdef APP_NAME
-        const QString AppName   = APP_NAME;
+        const std::string AppName   = APP_NAME;
         #else
-        const QString AppName   = "mere-lock";
+        const std::string AppName   = "mere-lock";
         #endif
 
         #ifdef APP_VERSION
-        const QString AppVersion= APP_VERSION;
+        const std::string AppVersion= APP_VERSION;
         #else
-        const QString AppVersion= "0.0.0b";
+        const std::string AppVersion= "0.0.0b";
         #endif
     }
 }

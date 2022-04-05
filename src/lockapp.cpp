@@ -23,7 +23,7 @@ LockApp::LockApp(int &argc, char **argv)
 {
     setObjectName("LockApp");
 
-    setAppCode(Mere::Lock::AppCode.toStdString());
+    setAppCode(Mere::Lock::AppCode);
     setApplicationName(Mere::Lock::AppName);
     setApplicationVersion(Mere::Lock::AppVersion);
 
@@ -99,6 +99,5 @@ LockApp::LockApp(int &argc, char **argv)
 
 int LockApp::start()
 {
-    m_locker->lock();
-    return 0;
+    return m_locker->lock();
 }

@@ -1,7 +1,5 @@
 #include "config.h"
 
-#include "mere/config/spec/base.h"
-
 #include "mere/utils/stringutils.h"
 #include "mere/utils/fileutils.h"
 
