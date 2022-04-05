@@ -7,10 +7,9 @@
 #include <QTimer>
 #include <QScreen>
 #include <QWindow>
-#include <QVBoxLayout>
 #include <QApplication>
 
-LockScreen::~LockScreen()
+Mere::Lock::LockScreen::~LockScreen()
 {
     releaseMouse();
     releaseKeyboard();
@@ -22,66 +21,36 @@ LockScreen::~LockScreen()
     }
 }
 
-LockScreen::LockScreen(QScreen *screen, QWidget *parent)
-    : QWidget(parent),
+Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
+    : QWidget(parent, Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint),
       m_screen(screen),
       m_prompt(nullptr)
 {
-    setObjectName("LockScreen");
+    setObjectName("LockScreen-" + screen->name());
 
-    setWindowFlags (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    setCursor(Qt::BlankCursor);
+//    setCursor(Qt::BlankCursor);
     setMouseTracking(true);
     setAutoFillBackground(true);
 
     setMessage();
     setBackground();
     setScreenLogo();
-
-    grabMouse();
-    grabKeyboard();
-
-    installEventFilter(this);
 }
 
-void LockScreen::lock()
+void Mere::Lock::LockScreen::lock()
 {
     showFullScreen();
+    setGeometry(m_screen->geometry());
     windowHandle()->setScreen(m_screen);
     setVisible(true);
 }
 
-void LockScreen::unlock()
+void Mere::Lock::LockScreen::unlock()
 {
-
+    setVisible(false);
 }
 
-void LockScreen::prompt()
-{
-    if (!m_prompt)
-    {
-        m_prompt = new LockPrompt(m_screen, this);
-        connect(m_prompt, &LockPrompt::keyboardReleased, [&](){
-            grabKeyboard();
-        });
-
-        connect(m_prompt, &LockPrompt::verified, [&](){
-            grabKeyboard();
-            emit verified();
-        });
-
-        connect(m_prompt, &LockPrompt::closed, [&](){
-            showMessage();
-        });
-    }
-
-    if (!m_prompt->isHidden()) return;
-
-    hideMessage();
-    m_prompt->showNormal();
-}
-
-void LockScreen::setMessage()
+void Mere::Lock::LockScreen::setMessage()
 {
     QLabel *label = new QLabel(tr("LockMessage"), this);
     label->setObjectName("LockMessage");
@@ -96,10 +65,12 @@ void LockScreen::setMessage()
     font.setPointSize(config->screenMessageSize());
     label->setFont(font);
 
-    label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
+    QRect rect = m_screen->geometry();
+    QRect geometry(0, 0, rect.width(), rect.height());
+    label->move(geometry.center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
-void LockScreen::setBackground()
+void Mere::Lock::LockScreen::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
 
@@ -113,13 +84,13 @@ void LockScreen::setBackground()
     else
     {
         QColor color = config->screenBackgroundColor();
-        pal.setColor(QPalette::Window, QColor(color));
+        pal.setColor(QPalette::Window, color);
     }
 
     setPalette(pal);
 }
 
-void LockScreen::setScreenLogo()
+void Mere::Lock::LockScreen::setScreenLogo()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
     if(!config->logoshow()) return;
@@ -139,39 +110,17 @@ void LockScreen::setScreenLogo()
     label->setMaximumSize(QSize(128, 35));
     label->setPixmap(pixmap);
 
-    QSize size = m_screen->availableVirtualSize();
-
-    label->move(25, size.height() - label->height() - 25);
+    label->move(25, m_screen->size().height() - label->height() - 25);
 }
 
-void LockScreen::hideMessage()
+void Mere::Lock::LockScreen::hideMessage()
 {
   QLabel *message = findChild<QLabel *>("LockMessage");
   message->hide();
 }
 
-void LockScreen::showMessage()
+void Mere::Lock::LockScreen::showMessage()
 {
   QLabel *message = findChild<QLabel *>("LockMessage");
   message->show();
-}
-
-bool LockScreen::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
-    {
-
-#ifdef QT_DEBUG
-        // - test code
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Escape)
-            ::exit(0);
-        // - end of test code
-#endif
-        prompt();
-
-        return true;
-    }
-
-    return QObject::eventFilter(obj, event);
 }

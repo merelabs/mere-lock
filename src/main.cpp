@@ -1,6 +1,5 @@
 #include "lockapp.h"
 
-#include <QApplication>
 int main(int argc, char *argv[])
 {
     QCoreApplication::setSetuidAllowed(true);
@@ -13,5 +12,3 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
-
-

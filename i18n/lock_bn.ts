@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>LockPrompt</name>
+    <name>Mere::Lock::LockPrompt</name>
     <message>
         <source>LockPrompt</source>
         <translation>আপনার পাসওয়ার্ড লিখে রিটার্ন চাঁপুন।</translation>
@@ -87,7 +87,7 @@
     </message>
 </context>
 <context>
-    <name>LockScreen</name>
+    <name>Mere::Lock::LockScreen</name>
     <message>
         <source>LockMessage</source>
         <translation>যে কোনো কী চাপুন বা মাউস একটু সরান।</translation>

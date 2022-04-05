@@ -3,12 +3,12 @@
 
 #include <QObject>
 
-class LockScreen;
-
 namespace Mere
 {
 namespace Lock
 {
+
+class ScreenLocker;
 
 class Locker : public QObject
 {
@@ -21,10 +21,11 @@ public:
     int unlock();
 
 signals:
+    void locked();
     void unlocked();
 
 private:
-    std::vector<LockScreen *> m_screens;
+    ScreenLocker *m_locker;
 };
 
 }

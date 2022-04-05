@@ -1,10 +1,8 @@
 #ifndef MERE_LOCK_CONFIG_H
 #define MERE_LOCK_CONFIG_H
 
-#include "mere/config/spec/base.h"
 #include "mere/config/kvconfig.h"
 
-#include <QObject>
 #include <QColor>
 #include <QPixmap>
 

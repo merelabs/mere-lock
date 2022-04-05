@@ -6,6 +6,12 @@
 #include <QKeyEvent>
 #include <QWidget>
 
+
+namespace Mere
+{
+namespace Lock
+{
+
 class LockPrompt;
 
 class LockScreen : public QWidget
@@ -17,17 +23,13 @@ public:
     void lock();
     void unlock();
 
-protected:
-    bool eventFilter(QObject *obj, QEvent *event) override;
+    void hideMessage();
+    void showMessage();
 
 private:
-    void prompt();
     void setMessage();
     void setBackground();
     void setScreenLogo();
-
-    void hideMessage();
-    void showMessage();
 
 signals:
     void verified();
@@ -37,4 +39,6 @@ private:
     LockPrompt *m_prompt;
 };
 
+}
+}
 #endif // MERE_LOCK_LOCKSCREEN_H

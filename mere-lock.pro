@@ -19,7 +19,7 @@ SOURCES += \
     src/lockscreen.cpp \
     src/main.cpp \
     src/lockapp.cpp \
-    src/screelocker.cpp \
+    src/screenlocker.cpp \
     src/systemlocker.cpp
 
 HEADERS += \
@@ -28,7 +28,7 @@ HEADERS += \
     src/locker.h \
     src/lockprompt.h \
     src/lockscreen.h \
-    src/screelocker.h \
+    src/screenlocker.h \
     src/systemlocker.h
 
 RESOURCES += \
@@ -93,9 +93,11 @@ unix
 
     INSTALLS += config share i18n desktop target
 
-    post.path = $${OUT_PWD}/build
-    post.commands = chmod u+s /usr/local/bin/mere-lock
-    #post.depends =
+    !linux-g++ {
+        post.path = $${OUT_PWD}/build
+        post.commands = chmod u+s /usr/local/bin/mere-lock
+        #post.depends =
 
-    INSTALLS += post
+        INSTALLS += post
+    }
 }

@@ -11,19 +11,19 @@
 #include <QApplication>
 #include <QPropertyAnimation>
 #include <QGraphicsDropShadowEffect>
+#include <QtMath>
 
 //static
-const int LockPrompt::timeoutCheckInterval = 500;
-const int LockPrompt::timeoutStartOffset = 5000;
+const int Mere::Lock::LockPrompt::timeoutCheckInterval = 500;
+const int Mere::Lock::LockPrompt::timeoutStartOffset = 5000;
 
-LockPrompt::~LockPrompt()
+Mere::Lock::LockPrompt::~LockPrompt()
 {
 
 }
 
-LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
-    : QWidget(parent),
-      m_screen(screen)
+Mere::Lock::LockPrompt::LockPrompt(QWidget *parent)
+    : QWidget(parent)
 {
     setObjectName("LockPrompt");
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -34,7 +34,10 @@ LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
     setAutoFillBackground(true);
 
     resize(500, 300);
-    move(screen->virtualGeometry().center() - this->rect().center());
+
+    QRect rect = parent->geometry();
+    QRect geometry(0, 0, rect.width(), rect.height());
+    move(geometry.center() - this->rect().center());
 
     setShadow();
     setBackground();
@@ -51,7 +54,7 @@ LockPrompt::LockPrompt(QScreen *screen, QWidget *parent)
     installEventFilter(this);
 }
 
-void LockPrompt::initUI()
+void Mere::Lock::LockPrompt::initUI()
 {
     QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
     this->layout()->addItem(topSpacer);
@@ -76,10 +79,11 @@ void LockPrompt::initUI()
     this->layout()->addWidget(m_result);
 
     m_result->setVisible(false);
+
     connect(m_password, SIGNAL(returnPressed()), this, SLOT(verify()));
 }
 
-void LockPrompt::initMessageUI()
+void Mere::Lock::LockPrompt::initMessageUI()
 {
     QLabel *label = new QLabel(tr("LockPrompt"), this);
     label->setObjectName("LockPrompt");
@@ -96,15 +100,17 @@ void LockPrompt::initMessageUI()
     font.setPointSize(config->promptMessageSize());
     label->setFont(font);
 
-    label->move(m_screen->virtualGeometry().center() - label->fontMetrics().boundingRect(label->text()).center());
+    label->move(geometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
-void LockPrompt::clear()
+void Mere::Lock::LockPrompt::clear()
 {
     m_password->clear();
+    m_result->setVisible(false);
+    m_timeoutPanel->setGeometry(0, 0, 0, 2);
 }
 
-void LockPrompt::setTimeout()
+void Mere::Lock::LockPrompt::setTimeout()
 {
     if (m_timeoutTimer) return;
 
@@ -127,7 +133,7 @@ void LockPrompt::setTimeout()
             m_timeoutPanel->setStyleSheet("background: red;");
             QPropertyAnimation *animation = new QPropertyAnimation(m_timeoutPanel, "geometry", this);
             animation->setDuration(timeoutCheckInterval);
-            animation->setEndValue(QRect(0, 0, this->width()/(config->promptTimeout() * 2) * floor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
+            animation->setEndValue(QRect(0, 0, this->width()/(config->promptTimeout() * 2) * qFloor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
             animation->start();
         }
     });
@@ -136,7 +142,7 @@ void LockPrompt::setTimeout()
     m_timeoutPanel->setGeometry(0, 0, 0, 2);
 }
 
-void LockPrompt::setVisible(bool visible)
+void Mere::Lock::LockPrompt::setVisible(bool visible)
 {
     if (visible)
     {
@@ -148,6 +154,8 @@ void LockPrompt::setVisible(bool visible)
         m_password->setFocus();
         m_password->grabKeyboard();
         emit keyboardGrabbed();
+
+        emit opened();
     }
     else
     {
@@ -165,7 +173,7 @@ void LockPrompt::setVisible(bool visible)
     QWidget::setVisible(visible);
 }
 
-void LockPrompt::setShadow()
+void Mere::Lock::LockPrompt::setShadow()
 {
     QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
     shadowEffect->setOffset(10);
@@ -173,7 +181,7 @@ void LockPrompt::setShadow()
     setGraphicsEffect(shadowEffect);
 }
 
-void LockPrompt::setBackground()
+void Mere::Lock::LockPrompt::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
 
@@ -181,7 +189,7 @@ void LockPrompt::setBackground()
     QPixmap pixmap = config->promptBackgroundImage();
     if (!pixmap.isNull())
     {
-        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
         pal.setBrush(QPalette::Window, pixmap);
     }
     else
@@ -193,7 +201,7 @@ void LockPrompt::setBackground()
     setPalette(pal);
 }
 
-void LockPrompt::setPromptLogo()
+void Mere::Lock::LockPrompt::setPromptLogo()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
     if(!config->promptlogoshow()) return;
@@ -208,7 +216,7 @@ void LockPrompt::setPromptLogo()
         return;
     }
 
-    QSize size(64, 64);
+    QSize size(96, 94);
     pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QLabel *label = new QLabel(this);
@@ -223,7 +231,7 @@ void LockPrompt::setPromptLogo()
     label->move(this->width()/2 - label->width()/2, 30);
 }
 
-void LockPrompt::verify()
+void Mere::Lock::LockPrompt::verify()
 {
     bool ok = false;
 
@@ -248,7 +256,7 @@ void LockPrompt::verify()
     emit verified();
 }
 
-bool LockPrompt::eventFilter(QObject *obj, QEvent *event)
+bool Mere::Lock::LockPrompt::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress  /*|| event->type() == QEvent::KeyRelease*/ ||
         event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove)
