@@ -1,4 +1,6 @@
 #include "screenlocker.h"
+#include "config.h"
+#include "locker.h"
 #include "lockscreen.h"
 #include "lockprompt.h"
 
@@ -76,16 +78,25 @@ void Mere::Lock::ScreenLocker::prompt()
             hideTextPrompt();
         });
         connect(m_prompt, &Mere::Lock::LockPrompt::closed, [&](){
-            showTextPrompt();
-        });
-
-        connect(m_prompt, &Mere::Lock::LockPrompt::keyboardReleased, [&](){
             capture();
+            showTextPrompt();
         });
 
         connect(m_prompt, &Mere::Lock::LockPrompt::verified, [&](){
             release();
+            Mere::Lock::Locker::Attempts = 0;
             emit verified();
+        });
+
+        connect(m_prompt, &Mere::Lock::LockPrompt::attempted, [&](){
+            if (++Mere::Lock::Locker::Attempts == 3)
+            {
+                m_prompt->close();
+                Mere::Lock::Config *config = Mere::Lock::Config::instance();
+                QTimer::singleShot(config->blocktime() * 1000 * 60, this, [&](){
+                    Mere::Lock::Locker::Attempts = 0;
+                });
+            }
         });
     }
 
@@ -115,8 +126,9 @@ bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
             ::exit(0);
         // - end of test code
 #endif
-
-        prompt();
+        Mere::Lock::Config *config = Mere::Lock::Config::instance();
+        if (Mere::Lock::Locker::Attempts < config->attempts())
+            prompt();
 
         return true;
     }

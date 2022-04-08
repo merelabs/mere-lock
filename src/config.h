@@ -26,6 +26,12 @@ public:
     unsigned int timeout() const;
     void timeout(unsigned int timeout);
 
+    unsigned int attempts() const;
+    bool checkUnlockAttempts() const;
+
+    unsigned int blocktime() const;
+    bool checkUnlockBlocktime() const;
+
     unsigned int promptTimeout() const;
     bool checkPromptTimeout() const;
 

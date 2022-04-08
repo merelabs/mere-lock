@@ -150,10 +150,8 @@ void Mere::Lock::LockPrompt::setVisible(bool visible)
         m_timeoutStart = QDateTime::currentMSecsSinceEpoch();
         m_timeoutTimer->start();
 
-        grabMouse();
         m_password->setFocus();
         m_password->grabKeyboard();
-        emit keyboardGrabbed();
 
         emit opened();
     }
@@ -163,9 +161,7 @@ void Mere::Lock::LockPrompt::setVisible(bool visible)
         m_timeoutTimer->stop();
         m_timeoutPanel->setGeometry(0, 0, 0, 2);
 
-        releaseMouse();
         m_password->releaseKeyboard();
-        emit keyboardReleased();
 
         emit closed();
     }
@@ -250,6 +246,7 @@ void Mere::Lock::LockPrompt::verify()
     if (!ok)
     {
         m_result->setVisible(true);
+        emit attempted();
         return;
     }
 
