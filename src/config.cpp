@@ -45,6 +45,12 @@ static const std::string VAL_PROMPT_MESSAGE_SIZE     = "10";
 static const std::string KEY_PROMPT_MESSAGE_COLOR    = "mere.lock.screen.prompt.message.font.color";
 static const std::string VAL_PROMPT_MESSAGE_COLOR    = "#000";
 
+static const std::string KEY_LOCK_UNLOCK_ATTEMPTS    = "mere.lock.unlock.attempts";
+static const std::string VAL_LOCK_UNLOCK_ATTEMPTS    = "3";
+
+static const std::string KEY_LOCK_UNLOCK_BLOCKTIME    = "mere.lock.unlock.blocktime";
+static const std::string VAL_LOCK_UNLOCK_BLOCKTIME    = "3";
+
 Mere::Lock::Config::Config() :
     Mere::Lock::Config::Config("mere/lock.conf", Mere::Config::Spec::Strict::Soft)
 {
@@ -77,6 +83,8 @@ int Mere::Lock::Config::validate() const
     err = checkPromptMessageColor()    ? err : 1;
     err = checkPromptMessageSize()     ? err : 1;
     err = checkPromptTimeout()         ? err : 1;
+    err = checkUnlockAttempts()        ? err : 1;
+    err = checkUnlockBlocktime()       ? err : 1;
 
     if(err)
         std::cout << qApp->translate("LockConfig", "LockConfigValueCheckFailed").toStdString() << std::endl;
@@ -105,6 +113,32 @@ unsigned int Mere::Lock::Config::timeout() const
 void Mere::Lock::Config::timeout(unsigned int timeout)
 {
     this->set("mere.lock.timeout", std::to_string(timeout));
+}
+
+unsigned int Mere::Lock::Config::attempts() const
+{
+    std::string value = this->get(KEY_LOCK_UNLOCK_ATTEMPTS);
+    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_LOCK_UNLOCK_ATTEMPTS);
+
+    return Mere::Utils::StringUtils::toInt(value);
+}
+
+bool Mere::Lock::Config::checkUnlockAttempts() const
+{
+    return checkInt(KEY_LOCK_UNLOCK_ATTEMPTS);
+}
+
+unsigned int Mere::Lock::Config::blocktime() const
+{
+    std::string value = this->get(KEY_LOCK_UNLOCK_BLOCKTIME);
+    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_LOCK_UNLOCK_BLOCKTIME);
+
+    return Mere::Utils::StringUtils::toInt(value);
+}
+
+bool Mere::Lock::Config::checkUnlockBlocktime() const
+{
+    return checkInt(KEY_LOCK_UNLOCK_BLOCKTIME);
 }
 
 unsigned int Mere::Lock::Config::promptTimeout() const
@@ -421,7 +455,7 @@ bool Mere::Lock::Config::checkInt(const std::string &key) const
 
     if (!set) return true;
 
-    return Mere::Utils::StringUtils::toInt(value);
+    return Mere::Utils::StringUtils::isUInt(value);;
 }
 
 bool Mere::Lock::Config::checkBool(const std::string &key) const

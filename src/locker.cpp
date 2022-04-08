@@ -1,6 +1,8 @@
 #include "locker.h"
 #include "screenlocker.h"
 
+uint Mere::Lock::Locker::Attempts = 0;
+
 Mere::Lock::Locker::~Locker()
 {
     if (m_locker)

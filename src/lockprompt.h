@@ -37,8 +37,7 @@ private:
 
 signals:
     void verified();
-    void keyboardGrabbed();
-    void keyboardReleased();
+    void attempted();
 
     void opened();
     void closed();
