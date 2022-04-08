@@ -19,6 +19,8 @@ public:
     ~LockPrompt();
     explicit LockPrompt(QWidget *parent = nullptr);
 
+    std::string input() const;
+
 protected:
     void setVisible(bool visible) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -36,15 +38,11 @@ private:
     void initMessageUI();
 
 signals:
-    void verified();
     void attempted();
-
-    void opened();
-    void closed();
+    void cancelled();
 
 private slots:
     void clear();
-    void verify();
 
 private:
     QLabel *m_result;

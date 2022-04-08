@@ -1,8 +1,6 @@
 #include "lockprompt.h"
 #include "config.h"
 
-#include "mere/auth/service.h"
-
 #include <iostream>
 #include <QDateTime>
 #include <QScreen>
@@ -80,7 +78,9 @@ void Mere::Lock::LockPrompt::initUI()
 
     m_result->setVisible(false);
 
-    connect(m_password, SIGNAL(returnPressed()), this, SLOT(verify()));
+    connect(m_password, &QLineEdit::returnPressed, this, [&](){
+        emit attempted();
+    });
 }
 
 void Mere::Lock::LockPrompt::initMessageUI()
@@ -152,8 +152,6 @@ void Mere::Lock::LockPrompt::setVisible(bool visible)
 
         m_password->setFocus();
         m_password->grabKeyboard();
-
-        emit opened();
     }
     else
     {
@@ -162,8 +160,6 @@ void Mere::Lock::LockPrompt::setVisible(bool visible)
         m_timeoutPanel->setGeometry(0, 0, 0, 2);
 
         m_password->releaseKeyboard();
-
-        emit closed();
     }
 
     QWidget::setVisible(visible);
@@ -222,50 +218,27 @@ void Mere::Lock::LockPrompt::setPromptLogo()
     label->setScaledContents(true);
     label->setMinimumSize(size);
     label->setPixmap(pixmap);
-    //label->setStyleSheet("border: 1px solid black;");
 
     label->move(this->width()/2 - label->width()/2, 30);
 }
 
-void Mere::Lock::LockPrompt::verify()
+std::string Mere::Lock::LockPrompt::input() const
 {
-    bool ok = false;
-
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    std::string password = config->password();
-    if (!password.empty())
-    {
-        ok = (password.compare(m_password->text().toStdString()) == 0);
-    }
-    else
-    {
-        Mere::Auth::Service service;
-        ok = service.verify(m_password->text().toStdString());
-    }
-
-    if (!ok)
-    {
-        m_result->setVisible(true);
-        emit attempted();
-        return;
-    }
-
-    emit verified();
+    return m_password->text().toStdString();
 }
 
 bool Mere::Lock::LockPrompt::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress  /*|| event->type() == QEvent::KeyRelease*/ ||
-        event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove)
+    if (event->type() == QEvent::KeyPress )
     {
         m_timeoutStart = QDateTime::currentMSecsSinceEpoch();
 
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Enter)
-            setVisible(false);
+        if (keyEvent->key() == Qt::Key_Escape)
+            emit cancelled();
 
         return true;
     }
 
-    return QObject::eventFilter(obj, event);
+    return false;
 }
