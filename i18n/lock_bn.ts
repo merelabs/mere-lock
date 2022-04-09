@@ -89,14 +89,6 @@
 <context>
     <name>Mere::Lock::LockScreen</name>
     <message>
-        <source>LockTime</source>
-        <translation>%1</translation>
-    </message>
-    <message>
-        <source>LockTimeUnit</source>
-        <translation>সে</translation>
-    </message>
-    <message>
         <source>LockMessage</source>
         <translation>যে কোনো কী চাপুন বা মাউস একটু সরান।</translation>
     </message>

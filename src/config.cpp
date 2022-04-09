@@ -51,6 +51,12 @@ static const std::string VAL_LOCK_UNLOCK_ATTEMPTS    = "3";
 static const std::string KEY_LOCK_UNLOCK_BLOCKTIME    = "mere.lock.unlock.blocktime";
 static const std::string VAL_LOCK_UNLOCK_BLOCKTIME    = "3";
 
+static const std::string KEY_LOCK_SCREEN_ELAPSE_SIZE     = "mere.lock.screen.elapse.font.size";
+static const std::string VAL_LOCK_SCREEN_ELAPSE_SIZE     = "92";
+
+static const std::string KEY_LOCK_SCREEN_ELAPSE_COLOR    = "mere.lock.screen.elapse.font.color";
+static const std::string VAL_LOCK_SCREEN_ELAPSE_COLOR    = "#FFF";
+
 Mere::Lock::Config::Config() :
     Mere::Lock::Config::Config("mere/lock.conf", Mere::Config::Spec::Strict::Soft)
 {
@@ -74,6 +80,8 @@ int Mere::Lock::Config::validate() const
     err = checkScreenBackgroundImage() ? err : 1;
     err = checkScreenMessageColor()    ? err : 1;
     err = checkScreenMessageSize()     ? err : 1;
+    err = checkScreenElapseColor()     ? err : 1;
+    err = checkScreenElapseSize()      ? err : 1;
 
     err = checkPromptLogo()            ? err : 1;
     err = checkPromptLogoShow()        ? err : 1;
@@ -240,6 +248,37 @@ int Mere::Lock::Config::screenMessageSize() const
 bool Mere::Lock::Config::checkScreenMessageSize() const
 {
     return checkInt(KEY_SCREEN_MESSAGE_SIZE);
+}
+
+QColor Mere::Lock::Config::screenElapseColor() const
+{
+    std::string value = this->get(KEY_LOCK_SCREEN_ELAPSE_COLOR);
+
+    if (value.empty() || value.at(0) != '#')
+        return QColor(QString::fromStdString(VAL_LOCK_SCREEN_ELAPSE_COLOR));
+
+    QColor color(QString::fromStdString(value));
+    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_SCREEN_ELAPSE_COLOR));
+
+    return color;
+}
+
+bool Mere::Lock::Config::checkScreenElapseColor() const
+{
+    return checkColor(KEY_LOCK_SCREEN_ELAPSE_COLOR);
+}
+
+int Mere::Lock::Config::screenElapseSize() const
+{
+    std::string value = this->get(KEY_LOCK_SCREEN_ELAPSE_SIZE);
+    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_LOCK_SCREEN_ELAPSE_SIZE);
+
+    return Mere::Utils::StringUtils::toInt(value);
+}
+
+bool Mere::Lock::Config::checkScreenElapseSize() const
+{
+    return checkInt(KEY_LOCK_SCREEN_ELAPSE_SIZE);
 }
 
 bool Mere::Lock::Config::logoshow() const

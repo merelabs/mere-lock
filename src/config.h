@@ -77,6 +77,12 @@ public:
     int promptMessageSize() const;
     bool checkPromptMessageSize() const;
 
+    QColor screenElapseColor() const;
+    bool checkScreenElapseColor() const;
+
+    int screenElapseSize() const;
+    bool checkScreenElapseSize() const;
+
     static Config* instance(const std::string &path = "", const Mere::Config::Spec::Strict &strict = Mere::Config::Spec::Strict::Soft)
     {
         static Config *instance = new Config(path, strict);

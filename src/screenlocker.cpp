@@ -1,5 +1,6 @@
 #include "screenlocker.h"
 #include "config.h"
+#include "ticker.h"
 #include "locker.h"
 #include "lockscreen.h"
 #include "unlockprompt.h"
@@ -11,10 +12,17 @@ Mere::Lock::ScreenLocker::~ScreenLocker()
 {
     for(auto *screen : m_screens)
         delete screen;
+
+    if (m_ticker)
+    {
+        delete m_ticker;
+        m_ticker = nullptr;
+    }
 }
 
 Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
     : QObject(parent),
+      m_ticker(new Mere::Lock::Ticker(1, this)),
       m_config(Mere::Lock::Config::instance())
 {
     for(QScreen *screen : QApplication::screens())
@@ -26,18 +34,23 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
     m_screen = m_screens.at(0);
 
     m_unlocker = new Mere::Lock::ScreenUnlocker(m_screen, this);
-    connect(m_unlocker, &Mere::Lock::Unlocker::blocked, [&](){
+    connect(m_unlocker, &Mere::Lock::Unlocker::blocked, this, [&](){
         capture();
         block();
     });
-    connect(m_unlocker, &Mere::Lock::Unlocker::unlocked, [&](){
+    connect(m_unlocker, &Mere::Lock::Unlocker::unlocked, this, [&](){
         release();
         emit unlocked();
     });
-    connect(m_unlocker, &Mere::Lock::Unlocker::cancelled, [&](){
+    connect(m_unlocker, &Mere::Lock::Unlocker::cancelled, this, [&](){
         capture();
         showTextPrompt();
     });
+
+    connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
+        ticker();
+    });
+
 
     m_screen->installEventFilter(this);
 }
@@ -51,6 +64,8 @@ int Mere::Lock::ScreenLocker::lock()
     m_screen->setFocus(Qt::ActiveWindowFocusReason);
 
     capture();
+
+    m_ticker->start();
 
     emit locked();
 
@@ -75,6 +90,12 @@ int Mere::Lock::ScreenLocker::block()
         screen->block();
 
     return 0;
+}
+
+void Mere::Lock::ScreenLocker::ticker()
+{
+    for(auto *screen : m_screens)
+        screen->tick();
 }
 
 void Mere::Lock::ScreenLocker::capture()

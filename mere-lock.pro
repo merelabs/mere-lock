@@ -21,6 +21,7 @@ SOURCES += \
     src/screenlocker.cpp \
     src/screenunlocker.cpp \
     src/systemlocker.cpp \
+    src/ticker.cpp \
     src/unlocker.cpp \
     src/unlockprompt.cpp
 
@@ -32,6 +33,7 @@ HEADERS += \
     src/screenlocker.h \
     src/screenunlocker.h \
     src/systemlocker.h \
+    src/ticker.h \
     src/unlocker.h \
     src/unlockprompt.h
 

@@ -1,11 +1,11 @@
 #ifndef MERE_LOCK_LOCKSCREEN_H
 #define MERE_LOCK_LOCKSCREEN_H
 
+#include <QTime>
 #include <QLabel>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QWidget>
-
 
 namespace Mere
 {
@@ -25,6 +25,8 @@ public:
     void unlock();
     void block();
 
+    void tick();
+
     void hideMessage();
     void showMessage();
 
@@ -40,10 +42,10 @@ signals:
 private:
     QLabel *m_time;
     QLabel *m_text;
-
     QScreen *m_screen;
     UnlockPrompt *m_prompt;
 
+    QTime m_timer;
     Mere::Lock::Config *m_config;
 };
 

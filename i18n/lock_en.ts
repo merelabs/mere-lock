@@ -88,14 +88,6 @@
 <context>
     <name>Mere::Lock::LockScreen</name>
     <message>
-        <source>LockTime</source>
-        <translation>%1</translation>
-    </message>
-    <message>
-        <source>LockTimeUnit</source>
-        <translation>s</translation>
-    </message>
-    <message>
         <source>LockMessage</source>
         <translation>press any key or move the mouse a bit.</translation>
     </message>

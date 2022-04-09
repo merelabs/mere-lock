@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QEvent>
+#include <QTimer>
 
 namespace Mere
 {
@@ -11,6 +12,7 @@ namespace Lock
 {
 
 class Config;
+class Ticker;
 class Unlocker;
 class LockScreen;
 class UnlockPrompt;
@@ -33,6 +35,8 @@ private:
     void capture();
     void release();
 
+    void ticker();
+
     void hideTextPrompt();
     void showTextPrompt();
 
@@ -41,6 +45,8 @@ signals:
     void unlocked();
 
 private:
+    Mere::Lock::Ticker *m_ticker;
+
     Mere::Lock::Unlocker *m_unlocker;
     Mere::Lock::LockScreen *m_screen;
     std::vector<Mere::Lock::LockScreen *> m_screens;
