@@ -1,7 +1,7 @@
 #include "screenunlocker.h"
 #include "config.h"
 #include "lockscreen.h"
-#include "lockprompt.h"
+#include "unlockprompt.h"
 
 #include "mere/auth/service.h"
 
@@ -27,8 +27,8 @@ void Mere::Lock::ScreenUnlocker::prompt()
 {
     if (!m_prompt)
     {
-        m_prompt = new Mere::Lock::LockPrompt(m_screen);
-        connect(m_prompt, &Mere::Lock::LockPrompt::attempted, [&](){
+        m_prompt = new Mere::Lock::UnlockPrompt(m_screen);
+        connect(m_prompt, &Mere::Lock::UnlockPrompt::attempted, [&](){
             bool ok = verify();
             if (ok)
             {
@@ -49,12 +49,11 @@ void Mere::Lock::ScreenUnlocker::prompt()
                     QTimer::singleShot(m_config->blocktime() * 1000 * 60, this, [&](){
                         attempt(0);
                     });
-                    qDebug() << "BLOCKED";
                     emit blocked();
                 }
             }
         });
-        connect(m_prompt, &Mere::Lock::LockPrompt::cancelled, [&](){
+        connect(m_prompt, &Mere::Lock::UnlockPrompt::cancelled, [&](){
             state(0);
             m_prompt->close();
             emit cancelled();

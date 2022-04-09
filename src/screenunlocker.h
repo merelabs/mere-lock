@@ -1,5 +1,5 @@
-#ifndef SCREENUNLOCKER_H
-#define SCREENUNLOCKER_H
+#ifndef MERE_LOCK_SCREENUNLOCKER_H
+#define MERE_LOCK_SCREENUNLOCKER_H
 
 #include "unlocker.h"
 
@@ -10,9 +10,9 @@ namespace Mere
 namespace Lock
 {
 
-class LockPrompt;
-class LockScreen;
 class Config;
+class LockScreen;
+class UnlockPrompt;
 
 class ScreenUnlocker : public Unlocker
 {
@@ -27,7 +27,7 @@ private:
 
 private:
     Mere::Lock::LockScreen *m_screen;
-    Mere::Lock::LockPrompt *m_prompt;
+    Mere::Lock::UnlockPrompt *m_prompt;
 
     Mere::Lock::Config *m_config;
 };
@@ -35,4 +35,4 @@ private:
 }
 }
 
-#endif // SCREENUNLOCKER_H
+#endif // MERE_LOCK_SCREENUNLOCKER_H

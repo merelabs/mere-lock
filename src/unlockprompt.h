@@ -1,5 +1,5 @@
-#ifndef MERE_LOCK_LOCKPROMPT_H
-#define MERE_LOCK_LOCKPROMPT_H
+#ifndef MERE_LOCK_UNLOCKPROMPT_H
+#define MERE_LOCK_UNLOCKPROMPT_H
 
 #include <QTimer>
 #include <QLabel>
@@ -12,12 +12,12 @@ namespace Mere
 namespace Lock
 {
 
-class LockPrompt : public QWidget
+class UnlockPrompt : public QWidget
 {
     Q_OBJECT
 public:
-    ~LockPrompt();
-    explicit LockPrompt(QWidget *parent = nullptr);
+    ~UnlockPrompt();
+    explicit UnlockPrompt(QWidget *parent = nullptr);
 
     std::string input() const;
 
@@ -56,4 +56,4 @@ private:
 }
 }
 
-#endif // MERE_LOCK_LOCKPROMPT_H
+#endif // MERE_LOCK_UNLOCKPROMPT_H

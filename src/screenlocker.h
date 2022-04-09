@@ -1,5 +1,5 @@
-#ifndef SCREELOCKER_H
-#define SCREELOCKER_H
+#ifndef MERE_LOCK_SCREELOCKER_H
+#define MERE_LOCK_SCREELOCKER_H
 
 #include <QObject>
 #include <QDebug>
@@ -10,10 +10,10 @@ namespace Mere
 namespace Lock
 {
 
-class LockScreen;
-class LockPrompt;
-class Unlocker;
 class Config;
+class Unlocker;
+class LockScreen;
+class UnlockPrompt;
 
 class ScreenLocker : public QObject
 {
@@ -50,4 +50,4 @@ private:
 
 }
 }
-#endif // SCREELOCKER_H
+#endif // MERE_LOCK_SCREELOCKER_H

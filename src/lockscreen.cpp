@@ -1,5 +1,5 @@
 #include "lockscreen.h"
-#include "lockprompt.h"
+#include "unlockprompt.h"
 #include "locker.h"
 #include "config.h"
 
@@ -33,6 +33,7 @@ Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
     setMouseTracking(true);
     setAutoFillBackground(true);
 
+//    setTime();
     setMessage();
     setBackground();
     setScreenLogo();
@@ -57,6 +58,23 @@ void Mere::Lock::LockScreen::block()
 {
     m_text->setText(tr("BlockMessage").arg(m_config->attempts()));
     m_text->show();
+}
+
+void Mere::Lock::LockScreen::setTime()
+{
+    m_time = new QLabel(tr("LockTime").arg(0), this);
+
+    QPalette palette = m_time->palette();
+    palette.setColor(QPalette::WindowText, m_config->screenMessageColor());
+    m_time->setPalette(palette);
+
+    QFont font = m_time->font();
+    font.setPointSize(48);
+    m_time->setFont(font);
+
+    QRect rect = m_screen->geometry();
+    QRect geometry(0, 0, rect.width(), rect.height() - 240);
+    m_time->move(geometry.center() - m_time->fontMetrics().boundingRect(m_time->text()).center());
 }
 
 void Mere::Lock::LockScreen::setMessage()
@@ -118,10 +136,12 @@ void Mere::Lock::LockScreen::setScreenLogo()
 
 void Mere::Lock::LockScreen::hideMessage()
 {
-  m_text->hide();
+//    m_time->hide();
+    m_text->hide();
 }
 
 void Mere::Lock::LockScreen::showMessage()
 {
-  m_text->show();
+//    m_time->show();
+    m_text->show();
 }

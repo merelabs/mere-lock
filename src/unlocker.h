@@ -1,5 +1,5 @@
-#ifndef UNLOCKER_H
-#define UNLOCKER_H
+#ifndef MERE_LOCK_UNLOCKER_H
+#define MERE_LOCK_UNLOCKER_H
 
 #include <QObject>
 
@@ -35,4 +35,4 @@ private:
 
 }
 }
-#endif // UNLOCKER_H
+#endif // MERE_LOCK_UNLOCKER_H

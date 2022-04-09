@@ -2,7 +2,7 @@
 #include "config.h"
 #include "locker.h"
 #include "lockscreen.h"
-#include "lockprompt.h"
+#include "unlockprompt.h"
 #include "screenunlocker.h"
 
 #include <QApplication>
