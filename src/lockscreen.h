@@ -12,7 +12,8 @@ namespace Mere
 namespace Lock
 {
 
-class LockPrompt;
+class Config;
+class UnlockPrompt;
 
 class LockScreen : public QWidget
 {
@@ -22,11 +23,13 @@ public:
     explicit LockScreen(QScreen *screen, QWidget *parent = nullptr);
     void lock();
     void unlock();
+    void block();
 
     void hideMessage();
     void showMessage();
 
 private:
+    void setTime();
     void setMessage();
     void setBackground();
     void setScreenLogo();
@@ -35,8 +38,13 @@ signals:
     void verified();
 
 private:
+    QLabel *m_time;
+    QLabel *m_text;
+
     QScreen *m_screen;
-    LockPrompt *m_prompt;
+    UnlockPrompt *m_prompt;
+
+    Mere::Lock::Config *m_config;
 };
 
 }

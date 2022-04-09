@@ -24,8 +24,8 @@ LockApp::LockApp(int &argc, char **argv)
     setObjectName("LockApp");
 
     setAppCode(Mere::Lock::AppCode);
-    setApplicationName(Mere::Lock::AppName);
-    setApplicationVersion(Mere::Lock::AppVersion);
+    setAppName(Mere::Lock::AppName);
+    setAppVersion(Mere::Lock::AppVersion);
 
     Mere::Utils::I18nUtils::apply();
 
