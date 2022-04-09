@@ -13,6 +13,7 @@ namespace Lock
 class LockScreen;
 class LockPrompt;
 class Unlocker;
+class Config;
 
 class ScreenLocker : public QObject
 {
@@ -23,6 +24,7 @@ public:
 
     int lock();
     int unlock();
+    int block();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -42,6 +44,8 @@ private:
     Mere::Lock::Unlocker *m_unlocker;
     Mere::Lock::LockScreen *m_screen;
     std::vector<Mere::Lock::LockScreen *> m_screens;
+
+    Mere::Lock::Config *m_config;
 };
 
 }

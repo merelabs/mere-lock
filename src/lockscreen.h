@@ -13,6 +13,7 @@ namespace Lock
 {
 
 class LockPrompt;
+class Config;
 
 class LockScreen : public QWidget
 {
@@ -22,6 +23,7 @@ public:
     explicit LockScreen(QScreen *screen, QWidget *parent = nullptr);
     void lock();
     void unlock();
+    void block();
 
     void hideMessage();
     void showMessage();
@@ -35,8 +37,11 @@ signals:
     void verified();
 
 private:
+    QLabel *m_text;
     QScreen *m_screen;
     LockPrompt *m_prompt;
+
+    Mere::Lock::Config *m_config;
 };
 
 }

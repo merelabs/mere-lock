@@ -10,7 +10,8 @@
 Mere::Lock::ScreenUnlocker::ScreenUnlocker(LockScreen *screen, QObject *parent)
     : Unlocker(parent),
       m_screen(screen),
-      m_prompt(nullptr)
+      m_prompt(nullptr),
+      m_config(Mere::Lock::Config::instance())
 {
 }
 
@@ -41,14 +42,15 @@ void Mere::Lock::ScreenUnlocker::prompt()
                 ++_attempt;
                 attempt(_attempt);
 
-                Mere::Lock::Config *config = Mere::Lock::Config::instance();
-                if (attempt() == config->attempts())
+                if (attempt() == m_config->attempts())
                 {
                     state(0);
                     m_prompt->close();
-                    QTimer::singleShot(config->blocktime() * 1000 * 60, this, [&](){
+                    QTimer::singleShot(m_config->blocktime() * 1000 * 60, this, [&](){
                         attempt(0);
                     });
+                    qDebug() << "BLOCKED";
+                    emit blocked();
                 }
             }
         });
@@ -67,8 +69,7 @@ bool Mere::Lock::ScreenUnlocker::verify()
 {
     std::string input = m_prompt->input();
 
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    std::string password = config->password();
+    std::string password = m_config->password();
     if (!password.empty())
         return (password.compare(input) == 0);
 

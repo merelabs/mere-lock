@@ -23,6 +23,7 @@ public:
     static int InProgress;
 
 signals:
+    void blocked();
     void unlocked();
     void attempted();
     void cancelled();

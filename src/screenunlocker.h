@@ -12,6 +12,7 @@ namespace Lock
 
 class LockPrompt;
 class LockScreen;
+class Config;
 
 class ScreenUnlocker : public Unlocker
 {
@@ -22,11 +23,13 @@ public:
 
 private:
     void prompt();
-    bool verify();
+    bool verify();    
 
 private:
     Mere::Lock::LockScreen *m_screen;
     Mere::Lock::LockPrompt *m_prompt;
+
+    Mere::Lock::Config *m_config;
 };
 
 }

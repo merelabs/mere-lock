@@ -92,5 +92,9 @@
         <source>LockMessage</source>
         <translation>যে কোনো কী চাপুন বা মাউস একটু সরান।</translation>
     </message>
+    <message>
+        <source>BlockMessage</source>
+        <translation>অতিরিক্ত ব্যর্থ প্রচেষ্টার কারণে, %1 মিনিটের জন্য অবরুদ্ধ</translation>
+    </message>
 </context>
 </TS>

@@ -14,7 +14,8 @@ Mere::Lock::ScreenLocker::~ScreenLocker()
 }
 
 Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      m_config(Mere::Lock::Config::instance())
 {
     for(QScreen *screen : QApplication::screens())
     {
@@ -25,6 +26,10 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
     m_screen = m_screens.at(0);
 
     m_unlocker = new Mere::Lock::ScreenUnlocker(m_screen, this);
+    connect(m_unlocker, &Mere::Lock::Unlocker::blocked, [&](){
+        capture();
+        block();
+    });
     connect(m_unlocker, &Mere::Lock::Unlocker::unlocked, [&](){
         release();
         emit unlocked();
@@ -60,6 +65,14 @@ int Mere::Lock::ScreenLocker::unlock()
     release();
 
 //    emit unlocked();
+
+    return 0;
+}
+
+int Mere::Lock::ScreenLocker::block()
+{
+    for(auto *screen : m_screens)
+        screen->block();
 
     return 0;
 }
@@ -101,8 +114,7 @@ bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
         // - end of test code
 #endif
 
-        Mere::Lock::Config *config = Mere::Lock::Config::instance();
-        if (m_unlocker->attempt() < config->attempts())
+        if (m_unlocker->attempt() < m_config->attempts())
         {
             m_unlocker->unlock();
             hideTextPrompt();

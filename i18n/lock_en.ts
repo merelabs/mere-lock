@@ -91,5 +91,9 @@
         <source>LockMessage</source>
         <translation>press any key or move the mouse a bit.</translation>
     </message>
+    <message>
+        <source>BlockMessage</source>
+        <translation>due to excess failed attempt, blocked for %1 minute(s)</translation>
+    </message>
 </context>
 </TS>
