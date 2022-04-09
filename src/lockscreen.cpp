@@ -1,10 +1,10 @@
 #include "lockscreen.h"
-#include "lockprompt.h"
+#include "unlockprompt.h"
 #include "locker.h"
 #include "config.h"
 
 #include <iostream>
-#include <QTimer>
+#include <QTime>
 #include <QScreen>
 #include <QWindow>
 #include <QApplication>
@@ -24,7 +24,9 @@ Mere::Lock::LockScreen::~LockScreen()
 Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
     : QWidget(parent, Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint),
       m_screen(screen),
-      m_prompt(nullptr)
+      m_prompt(nullptr),
+      m_timer(0,0,0,0),
+      m_config(Mere::Lock::Config::instance())
 {
     setObjectName("LockScreen-" + screen->name());
 
@@ -32,6 +34,7 @@ Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
     setMouseTracking(true);
     setAutoFillBackground(true);
 
+    setTime();
     setMessage();
     setBackground();
     setScreenLogo();
@@ -43,6 +46,8 @@ void Mere::Lock::LockScreen::lock()
     setGeometry(m_screen->geometry());
     windowHandle()->setScreen(m_screen);
     setVisible(true);
+
+    m_text->setText(tr("LockMessage"));
 }
 
 void Mere::Lock::LockScreen::unlock()
@@ -50,32 +55,68 @@ void Mere::Lock::LockScreen::unlock()
     setVisible(false);
 }
 
+void Mere::Lock::LockScreen::block()
+{
+    m_text->setText(tr("BlockMessage").arg(m_config->attempts()));
+    m_text->show();
+}
+
+void Mere::Lock::LockScreen::tick()
+{
+    m_timer = m_timer.addSecs(1);
+    m_time->setText(m_timer.toString("hh:mm:ss"));
+}
+
+void Mere::Lock::LockScreen::setTime()
+{
+    m_time = new QLabel("00:00:00", this);
+
+    QPalette palette = m_time->palette();
+    palette.setColor(QPalette::WindowText, m_config->screenElapseColor());
+    m_time->setPalette(palette);
+
+    QFont font = m_time->font();
+    font.setPointSize(m_config->screenElapseSize());
+    m_time->setFont(font);
+
+    QRect screenRect = m_screen->geometry();
+    QRect screenGeometry(0, 0, screenRect.width(), screenRect.height());
+
+    QRect elapseRect = m_time->fontMetrics().boundingRect(m_time->text());
+    QRect elapseGeometry(0, 0, elapseRect.width(), elapseRect.height());
+
+    m_time->move(screenGeometry.center()
+                 - elapseGeometry.center()
+                 - QPoint(0, elapseGeometry.height()/2 + 15));
+}
+
 void Mere::Lock::LockScreen::setMessage()
 {
-    QLabel *label = new QLabel(tr("LockMessage"), this);
-    label->setObjectName("LockMessage");
+    m_text = new QLabel(tr("LockMessage"), this);
 
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
+    QPalette palette = m_text->palette();
+    palette.setColor(QPalette::WindowText, m_config->screenMessageColor());
+    m_text->setPalette(palette);
 
-    QPalette palette = label->palette();
-    palette.setColor(QPalette::WindowText, config->screenMessageColor());
-    label->setPalette(palette);
+    QFont font = m_text->font();
+    font.setPointSize(m_config->screenMessageSize());
+    m_text->setFont(font);
 
-    QFont font = label->font();
-    font.setPointSize(config->screenMessageSize());
-    label->setFont(font);
+    QRect screenRect = m_screen->geometry();
+    QRect screenGeometry(0, 0, screenRect.width(), screenRect.height());
 
-    QRect rect = m_screen->geometry();
-    QRect geometry(0, 0, rect.width(), rect.height());
-    label->move(geometry.center() - label->fontMetrics().boundingRect(label->text()).center());
+    QRect messageRect = m_text->fontMetrics().boundingRect(m_text->text());
+    QRect messageGeometry(0, 0, messageRect.width(), messageRect.height());
+
+    m_text->move(screenGeometry.center()
+                 - messageGeometry.center()
+                 + QPoint(0, messageRect.height()/2 + 15));
 }
 
 void Mere::Lock::LockScreen::setBackground()
 {
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-
     QPalette pal = palette();
-    QPixmap pixmap = config->screenBackgroundImage();
+    QPixmap pixmap = m_config->screenBackgroundImage();
     if (!pixmap.isNull())
     {
         pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
@@ -83,7 +124,7 @@ void Mere::Lock::LockScreen::setBackground()
     }
     else
     {
-        QColor color = config->screenBackgroundColor();
+        QColor color = m_config->screenBackgroundColor();
         pal.setColor(QPalette::Window, color);
     }
 
@@ -92,10 +133,9 @@ void Mere::Lock::LockScreen::setBackground()
 
 void Mere::Lock::LockScreen::setScreenLogo()
 {
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    if(!config->logoshow()) return;
+    if(!m_config->logoshow()) return;
 
-    QString logo(config->logo().c_str());
+    QString logo(m_config->logo().c_str());
     if (logo.isEmpty()) return;
 
     QPixmap pixmap(logo);
@@ -115,12 +155,12 @@ void Mere::Lock::LockScreen::setScreenLogo()
 
 void Mere::Lock::LockScreen::hideMessage()
 {
-  QLabel *message = findChild<QLabel *>("LockMessage");
-  message->hide();
+    m_time->hide();
+    m_text->hide();
 }
 
 void Mere::Lock::LockScreen::showMessage()
 {
-  QLabel *message = findChild<QLabel *>("LockMessage");
-  message->show();
+    m_time->show();
+    m_text->show();
 }

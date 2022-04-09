@@ -26,6 +26,12 @@ public:
     unsigned int timeout() const;
     void timeout(unsigned int timeout);
 
+    unsigned int attempts() const;
+    bool checkUnlockAttempts() const;
+
+    unsigned int blocktime() const;
+    bool checkUnlockBlocktime() const;
+
     unsigned int promptTimeout() const;
     bool checkPromptTimeout() const;
 
@@ -70,6 +76,12 @@ public:
 
     int promptMessageSize() const;
     bool checkPromptMessageSize() const;
+
+    QColor screenElapseColor() const;
+    bool checkScreenElapseColor() const;
+
+    int screenElapseSize() const;
+    bool checkScreenElapseSize() const;
 
     static Config* instance(const std::string &path = "", const Mere::Config::Spec::Strict &strict = Mere::Config::Spec::Strict::Soft)
     {

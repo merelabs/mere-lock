@@ -75,13 +75,13 @@
     </message>
 </context>
 <context>
-    <name>Mere::Lock::LockPrompt</name>
+    <name>Mere::Lock::UnlockPrompt</name>
     <message>
-        <source>LockPrompt</source>
+        <source>UnlockPrompt</source>
         <translation>Enter your password and press return.</translation>
     </message>
     <message>
-        <source>LockAttempt</source>
+        <source>UnlockAttempt</source>
         <translation>* sorry, incorrect attempt to unlock the screen.</translation>
     </message>
 </context>
@@ -90,6 +90,18 @@
     <message>
         <source>LockMessage</source>
         <translation>press any key or move the mouse a bit.</translation>
+    </message>
+    <message>
+        <source>BlockTime</source>
+        <translation>%1</translation>
+    </message>
+    <message>
+        <source>BlockTimeUnit</source>
+        <translation>s</translation>
+    </message>
+    <message>
+        <source>BlockMessage</source>
+        <translation>due to excess failed attempt, blocked for %1 minute(s)</translation>
     </message>
 </context>
 </TS>

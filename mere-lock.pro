@@ -15,21 +15,27 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 SOURCES += \
     src/config.cpp \
     src/locker.cpp \
-    src/lockprompt.cpp \
     src/lockscreen.cpp \
     src/main.cpp \
     src/lockapp.cpp \
     src/screenlocker.cpp \
-    src/systemlocker.cpp
+    src/screenunlocker.cpp \
+    src/systemlocker.cpp \
+    src/ticker.cpp \
+    src/unlocker.cpp \
+    src/unlockprompt.cpp
 
 HEADERS += \
     src/config.h \
     src/lockapp.h \
     src/locker.h \
-    src/lockprompt.h \
     src/lockscreen.h \
     src/screenlocker.h \
-    src/systemlocker.h
+    src/screenunlocker.h \
+    src/systemlocker.h \
+    src/ticker.h \
+    src/unlocker.h \
+    src/unlockprompt.h
 
 RESOURCES += \
     res/lock.qrc

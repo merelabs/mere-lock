@@ -76,13 +76,13 @@
     </message>
 </context>
 <context>
-    <name>Mere::Lock::LockPrompt</name>
+    <name>Mere::Lock::UnlockPrompt</name>
     <message>
-        <source>LockPrompt</source>
+        <source>UnlockPrompt</source>
         <translation>আপনার পাসওয়ার্ড লিখে রিটার্ন চাঁপুন।</translation>
     </message>
     <message>
-        <source>LockAttempt</source>
+        <source>UnlockAttempt</source>
         <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা করেছেন, আবার চেষ্টা করুন।</translation>
     </message>
 </context>
@@ -91,6 +91,18 @@
     <message>
         <source>LockMessage</source>
         <translation>যে কোনো কী চাপুন বা মাউস একটু সরান।</translation>
+    </message>
+    <message>
+        <source>BlockTime</source>
+        <translation>%1</translation>
+    </message>
+    <message>
+        <source>BlockTimeUnit</source>
+        <translation>সে</translation>
+    </message>
+    <message>
+        <source>BlockMessage</source>
+        <translation>অতিরিক্ত ব্যর্থ প্রচেষ্টার কারণে, %1 মিনিটের জন্য অবরুদ্ধ</translation>
     </message>
 </context>
 </TS>
