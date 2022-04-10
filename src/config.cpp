@@ -48,11 +48,11 @@ static const std::string VAL_BLOCK_SCREEN_MESSAGE_COLOR              = "#000";
 static const std::string KEY_BLOCK_SCREEN_MESSAGE_SIZE               = "mere.lock.block.screen.message.font.size";
 static const std::string VAL_BLOCK_SCREEN_MESSAGE_SIZE               = "10";
 
-static const std::string KEY_BLOCK_SCREEN_TIME_COLOR                 = "mere.lock.block.screen.time.font.size";
-static const std::string VAL_BLOCK_SCREEN_TIME_COLOR                 = "92";
+static const std::string KEY_BLOCK_SCREEN_TIME_COLOR                 = "mere.lock.block.screen.time.font.color";
+static const std::string VAL_BLOCK_SCREEN_TIME_COLOR                 = "#D6ED17";
 
-static const std::string KEY_BLOCK_SCREEN_TIME_SIZE                 = "mere.lock.block.screen.time.font.color";
-static const std::string VAL_BLOCK_SCREEN_TIME_SIZE                 = "#D6ED17";
+static const std::string KEY_BLOCK_SCREEN_TIME_SIZE                 = "mere.lock.block.screen.time.font.size";
+static const std::string VAL_BLOCK_SCREEN_TIME_SIZE                 = "92";
 
 static const std::string KEY_LOCK_BLOCK_TIMEOUT                        = "mere.lock.block.timeout";
 static const std::string VAL_LOCK_BLOCK_TIMEOUT                        = "1";
@@ -100,26 +100,37 @@ int Mere::Lock::Config::validate() const
 
     std::cout << qApp->translate("LockConfig", "LockConfigValueCheck").toStdString() << std::endl,
 
-    err = checkLockScreenLogo()            ? err : 1;
-    err = checkLockScreenLogoShow()        ? err : 1;
-    err = checkLockScreenBackground()      ? err : 1;
-    err = checkLockScreenBackgroundColor() ? err : 1;
-    err = checkLockScreenBackgroundImage() ? err : 1;
-    err = checkLockScreenMessageColor()    ? err : 1;
-    err = checkLockScreenMessageSize()     ? err : 1;
-    err = checkLockScreenTimeColor()     ? err : 1;
-    err = checkLockScreenTimeSize()      ? err : 1;
+    err = checkLockScreenBackground()               ? err : 1;
+    err = checkLockScreenBackgroundColor()          ? err : 1;
+    err = checkLockScreenBackgroundImage()          ? err : 1;
+    err = checkLockScreenTimeColor()                ? err : 1;
+    err = checkLockScreenTimeSize()                 ? err : 1;
+    err = checkLockScreenMessageColor()             ? err : 1;
+    err = checkLockScreenMessageSize()              ? err : 1;
+    err = checkLockScreenLogo()                     ? err : 1;
+    err = checkLockScreenLogoShow()                 ? err : 1;
 
-    err = checkUnlockScreenPromptLogo()            ? err : 1;
-    err = checkUnlockScreenPromptLogoShow()        ? err : 1;
-    err = checkUnlockScreenPromptBackground()      ? err : 1;
-    err = checkUnlockScreenPromptBackgroundColor() ? err : 1;
-    err = checkUnlockScreenPromptBackgroundImage() ? err : 1;
-    err = checkUnlockScreenPromptMessageColor()    ? err : 1;
-    err = checkUnlockScreenPromptMessageSize()     ? err : 1;
-    err = checkUnlockScreenPromptTimeout()         ? err : 1;
-    err = checkUnlockAttempts()        ? err : 1;
-    err = checkBlockTimeout()       ? err : 1;
+    err = checkBlockScreenBackground()              ? err : 1;
+    err = checkBlockScreenBackgroundColor()         ? err : 1;
+    err = checkBlockScreenBackgroundImage()         ? err : 1;
+    err = checkBlockScreenTimeColor()               ? err : 1;
+    err = checkBlockScreenTimeSize()                ? err : 1;
+    err = checkBlockScreenMessageColor()            ? err : 1;
+    err = checkBlockScreenMessageSize()             ? err : 1;
+    err = checkBlockTimeout()                       ? err : 1;
+    err = checkUnlockScreenPromptBackground()       ? err : 1;
+    err = checkUnlockScreenPromptBackgroundColor()  ? err : 1;
+
+
+    err = checkUnlockScreenPromptBackgroundImage()  ? err : 1;
+    err = checkUnlockScreenPromptLogo()             ? err : 1;
+    err = checkUnlockScreenPromptLogoShow()         ? err : 1;
+    err = checkUnlockScreenPromptMessageColor()     ? err : 1;
+    err = checkUnlockScreenPromptMessageSize()      ? err : 1;
+
+    err = checkUnlockScreenPromptTimeout()          ? err : 1;
+    err = checkUnlockAttempts()                     ? err : 1;
+
 
     if(err)
         std::cout << qApp->translate("LockConfig", "LockConfigValueCheckFailed").toStdString() << std::endl;
@@ -140,7 +151,8 @@ void Mere::Lock::Config::password(const std::string &password)
 unsigned int Mere::Lock::Config::timeout() const
 {
     std::string value = this->get("mere.lock.timeout");
-    if (value.empty()) return 0;
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return 0;
 
     return Mere::Utils::StringUtils::toInt(value);
 }
@@ -228,7 +240,8 @@ bool Mere::Lock::Config::checkLockScreenTimeColor() const
 int Mere::Lock::Config::lockScreenTimeSize() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_TIME_SIZE);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_LOCK_SCREEN_TIME_SIZE);
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return Mere::Utils::StringUtils::toInt(VAL_LOCK_SCREEN_TIME_SIZE);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
@@ -259,7 +272,8 @@ bool Mere::Lock::Config::checkLockScreenMessageColor() const
 int Mere::Lock::Config::lockScreenMessageSize() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_MESSAGE_SIZE);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_LOCK_SCREEN_MESSAGE_SIZE);
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return Mere::Utils::StringUtils::toInt(VAL_LOCK_SCREEN_MESSAGE_SIZE);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
@@ -311,10 +325,7 @@ bool Mere::Lock::Config::checkBlockScreenBackground() const
 QColor Mere::Lock::Config::screenBlockScreenBackgroundColor() const
 {
     std::string value = this->get(KEY_BLOCK_SCREEN_BACKGROUND_COLOR);
-    if (value.empty())
-    {
-        value = this->get(KEY_BLOCK_SCREEN_BACKGROUND);
-    }
+    if (value.empty()) value = this->get(KEY_BLOCK_SCREEN_BACKGROUND);
 
     if (value.empty() || value.at(0) != '#')
         return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_BACKGROUND));
@@ -333,10 +344,7 @@ bool Mere::Lock::Config::checkBlockScreenBackgroundColor() const
 QPixmap Mere::Lock::Config::blockScreenBackgroundImage() const
 {
     std::string value = this->get(KEY_BLOCK_SCREEN_BACKGROUND_IMAGE);
-    if (value.empty())
-    {
-        value = this->get(KEY_BLOCK_SCREEN_BACKGROUND);
-    }
+    if (value.empty()) value = this->get(KEY_BLOCK_SCREEN_BACKGROUND);
 
     if (value.empty() || value.at(0) != '/')
         return QPixmap();
@@ -374,7 +382,8 @@ bool Mere::Lock::Config::checkBlockScreenTimeColor() const
 int Mere::Lock::Config::blockScreenTimeSize() const
 {
     std::string value = this->get(KEY_BLOCK_SCREEN_TIME_SIZE);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_BLOCK_SCREEN_TIME_SIZE);
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return Mere::Utils::StringUtils::toInt(VAL_BLOCK_SCREEN_TIME_SIZE);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
@@ -405,7 +414,8 @@ bool Mere::Lock::Config::checkBlockScreenMessageColor() const
 int Mere::Lock::Config::blockScreenMessageSize() const
 {
     std::string value = this->get(KEY_BLOCK_SCREEN_MESSAGE_SIZE);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_BLOCK_SCREEN_MESSAGE_SIZE);
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return Mere::Utils::StringUtils::toInt(VAL_BLOCK_SCREEN_MESSAGE_SIZE);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
@@ -418,7 +428,8 @@ bool Mere::Lock::Config::checkBlockScreenMessageSize() const
 unsigned int Mere::Lock::Config::blockTimeout() const
 {
     std::string value = this->get(KEY_LOCK_BLOCK_TIMEOUT);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_LOCK_BLOCK_TIMEOUT);
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return Mere::Utils::StringUtils::toInt(VAL_LOCK_BLOCK_TIMEOUT);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
@@ -444,10 +455,7 @@ bool Mere::Lock::Config::checkUnlockScreenPromptBackground() const
 QColor Mere::Lock::Config::unlockScreenPromptBackgroundColor() const
 {
     std::string value = this->get(KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_COLOR);
-    if (value.empty())
-    {
-        value = this->get(KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND);
-    }
+    if (value.empty()) value = this->get(KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND);
 
     if (value.empty() || value.at(0) != '#')
         return QColor(QString::fromStdString(VAL_UNLOCK_SCREEN_PROMPT_BACKGROUND));
@@ -532,7 +540,8 @@ bool Mere::Lock::Config::checkUnlockScreenPromptMessageColor() const
 int Mere::Lock::Config::unlockScreenPromptMessageSize() const
 {
     std::string value = this->get(KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE);
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return Mere::Utils::StringUtils::toInt(VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
@@ -545,7 +554,8 @@ bool Mere::Lock::Config::checkUnlockScreenPromptMessageSize() const
 unsigned int Mere::Lock::Config::unlockScreenPromptTimeout() const
 {
     std::string value = this->get(KEY_UNLOCK_SCREEN_PROMPT_TIMEOUT);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_UNLOCK_SCREEN_PROMPT_TIMEOUT);
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return Mere::Utils::StringUtils::toInt(VAL_UNLOCK_SCREEN_PROMPT_TIMEOUT);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
@@ -558,7 +568,8 @@ bool Mere::Lock::Config::checkUnlockScreenPromptTimeout() const
 unsigned int Mere::Lock::Config::unlockAttempts() const
 {
     std::string value = this->get(KEY_UNLOCK_ATTEMPTS);
-    if (value.empty()) return Mere::Utils::StringUtils::toInt(VAL_UNLOCK_ATTEMPTS);
+    if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
+        return Mere::Utils::StringUtils::toInt(VAL_UNLOCK_ATTEMPTS);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
