@@ -93,11 +93,11 @@ void Mere::Lock::UnlockPrompt::initMessageUI()
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
 
     QPalette palette = label->palette();
-    palette.setColor(QPalette::WindowText, config->promptMessageColor());
+    palette.setColor(QPalette::WindowText, config->unlockScreenPromptMessageColor());
     label->setPalette(palette);
 
     QFont font = label->font();
-    font.setPointSize(config->promptMessageSize());
+    font.setPointSize(config->unlockScreenPromptMessageSize());
     label->setFont(font);
 
     label->move(geometry().center() - label->fontMetrics().boundingRect(label->text()).center());
@@ -120,7 +120,7 @@ void Mere::Lock::UnlockPrompt::setTimeout()
     connect(m_timeoutTimer, &QTimer::timeout, this, [&]{
         Mere::Lock::Config *config = Mere::Lock::Config::instance();
         qint64 lapse = QDateTime::currentMSecsSinceEpoch() - m_timeoutStart;
-        if ( lapse > (config->promptTimeout() * 1000 + timeoutStartOffset + timeoutCheckInterval))
+        if ( lapse > (config->unlockScreenPromptTimeout() * 1000 + timeoutStartOffset + timeoutCheckInterval))
         {
             setVisible(false);
         }
@@ -133,7 +133,7 @@ void Mere::Lock::UnlockPrompt::setTimeout()
             m_timeoutPanel->setStyleSheet("background: red;");
             QPropertyAnimation *animation = new QPropertyAnimation(m_timeoutPanel, "geometry", this);
             animation->setDuration(timeoutCheckInterval);
-            animation->setEndValue(QRect(0, 0, this->width()/(config->promptTimeout() * 2) * qFloor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
+            animation->setEndValue(QRect(0, 0, this->width()/(config->unlockScreenPromptTimeout() * 2) * qFloor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
             animation->start();
         }
     });
@@ -178,7 +178,7 @@ void Mere::Lock::UnlockPrompt::setBackground()
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
 
     QPalette pal = palette();
-    QPixmap pixmap = config->promptBackgroundImage();
+    QPixmap pixmap = config->unlockScreenPromptBackgroundImage();
     if (!pixmap.isNull())
     {
         pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
@@ -186,7 +186,7 @@ void Mere::Lock::UnlockPrompt::setBackground()
     }
     else
     {
-        QColor color = config->promptBackgroundColor();
+        QColor color = config->unlockScreenPromptBackgroundColor();
         pal.setColor(QPalette::Window, QColor(color));
     }
 
@@ -196,9 +196,9 @@ void Mere::Lock::UnlockPrompt::setBackground()
 void Mere::Lock::UnlockPrompt::setPromptLogo()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    if(!config->promptlogoshow()) return;
+    if(!config->unlockScreenPromptLogoShow()) return;
 
-    QString logo(config->promptlogo().c_str());
+    QString logo(config->unlockScreenPromptLogo().c_str());
     if (logo.isEmpty()) return;
 
     QPixmap pixmap(logo);

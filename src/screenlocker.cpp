@@ -144,7 +144,7 @@ bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
         // - end of test code
 #endif
 
-        if (m_unlocker->attempt() < m_config->attempts())
+        if (m_unlocker->attempt() < m_config->unlockAttempts())
             unlock();
 
         return true;

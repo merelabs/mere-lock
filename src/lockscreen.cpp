@@ -48,7 +48,7 @@ void Mere::Lock::LockScreen::unlock()
 
 void Mere::Lock::LockScreen::block()
 {
-    m_blocktime = QTime(0, m_config->blocktime());
+    m_blocktime = QTime(0, m_config->blockTimeout());
     applyBlockTheme();
 
     m_time->show();
@@ -104,8 +104,7 @@ void Mere::Lock::LockScreen::applyBlockTheme()
     setBlockTimeStyle();
     setBlockTimePosition();
 
-    m_text->setText(tr("BlockMessage").arg(m_config->attempts()));
-    m_text->adjustSize();
+    m_text->setText(tr("BlockMessage").arg(m_config->unlockAttempts()));
     setBlockMessageStyle();
     setBlockMessagePosition();
 }
@@ -130,7 +129,7 @@ void Mere::Lock::LockScreen::setTimeStyle(const QColor &color, const int size)
 
 void Mere::Lock::LockScreen::setLockTimeStyle()
 {
-    setTimeStyle(m_config->screenElapseColor(), m_config->screenElapseSize());
+    setTimeStyle(m_config->lockScreenTimeColor(), m_config->lockScreenTimeSize());
 }
 
 void Mere::Lock::LockScreen::setLockTimePosition()
@@ -140,7 +139,7 @@ void Mere::Lock::LockScreen::setLockTimePosition()
 
 void Mere::Lock::LockScreen::setBlockTimeStyle()
 {
-    setTimeStyle(m_config->blockTimeColor(), m_config->blockTimeSize());
+    setTimeStyle(m_config->blockScreenTimeColor(), m_config->blockScreenTimeSize());
 }
 
 void Mere::Lock::LockScreen::setBlockTimePosition()
@@ -168,7 +167,7 @@ void Mere::Lock::LockScreen::setMessageStyle(const QColor &color, const int size
 
 void Mere::Lock::LockScreen::setLockMessageStyle()
 {
-    setMessageStyle(m_config->screenMessageColor(), m_config->screenMessageSize());
+    setMessageStyle(m_config->lockScreenMessageColor(), m_config->lockScreenMessageSize());
 }
 
 void Mere::Lock::LockScreen::setLockMessagePosition()
@@ -178,7 +177,7 @@ void Mere::Lock::LockScreen::setLockMessagePosition()
 
 void Mere::Lock::LockScreen::setBlockMessageStyle()
 {
-    setMessageStyle(m_config->blockMessageColor(), m_config->blockMessageSize());
+    setMessageStyle(m_config->blockScreenMessageColor(), m_config->blockScreenMessageSize());
 }
 
 void Mere::Lock::LockScreen::setBlockMessagePosition()
@@ -215,7 +214,7 @@ void Mere::Lock::LockScreen::moveToCenter(QLabel *label)
 void Mere::Lock::LockScreen::setBackground()
 {
     QPalette pal = palette();
-    QPixmap pixmap = m_config->screenBackgroundImage();
+    QPixmap pixmap = m_config->lockScreenBackgroundImage();
     if (!pixmap.isNull())
     {
         pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
@@ -223,7 +222,7 @@ void Mere::Lock::LockScreen::setBackground()
     }
     else
     {
-        QColor color = m_config->screenBackgroundColor();
+        QColor color = m_config->lockScreenBackgroundColor();
         pal.setColor(QPalette::Window, color);
     }
 
@@ -232,9 +231,9 @@ void Mere::Lock::LockScreen::setBackground()
 
 void Mere::Lock::LockScreen::setScreenLogo()
 {
-    if(!m_config->logoshow()) return;
+    if(!m_config->lockScreenLogoShow()) return;
 
-    QString logo(m_config->logo().c_str());
+    QString logo(m_config->lockScreenLogo().c_str());
     if (logo.isEmpty()) return;
 
     QPixmap pixmap(logo);
