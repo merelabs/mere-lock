@@ -24,6 +24,8 @@ public:
 
 signals:
     void blocked();
+    void unblocked();
+
     void unlocked();
     void attempted();
     void cancelled();

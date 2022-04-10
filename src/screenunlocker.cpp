@@ -46,8 +46,9 @@ void Mere::Lock::ScreenUnlocker::prompt()
                 {
                     state(0);
                     m_prompt->close();
-                    QTimer::singleShot(m_config->blocktime() * 1000 * 60, this, [&](){
+                    QTimer::singleShot(.1 * 1000 * 60, this, [&](){
                         attempt(0);
+                        emit unblocked();
                     });
                     emit blocked();
                 }

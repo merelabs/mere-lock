@@ -82,14 +82,14 @@
     </message>
     <message>
         <source>UnlockAttempt</source>
-        <translation>* sorry, incorrect attempt to unlock the screen.</translation>
+        <translation>* sorry, incorrect attempt to unlock the screen</translation>
     </message>
 </context>
 <context>
     <name>Mere::Lock::LockScreen</name>
     <message>
         <source>LockMessage</source>
-        <translation>press any key or move the mouse a bit.</translation>
+        <translation>press any key or move the mouse a bit</translation>
     </message>
     <message>
         <source>BlockTime</source>
@@ -101,7 +101,7 @@
     </message>
     <message>
         <source>BlockMessage</source>
-        <translation>due to excess failed attempt, blocked for %1 minute(s)</translation>
+        <translation>due to excess failed attempts, blocked for %1 minute(s)</translation>
     </message>
 </context>
 </TS>

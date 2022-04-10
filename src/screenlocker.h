@@ -26,7 +26,9 @@ public:
 
     int lock();
     int unlock();
+
     int block();
+    int unblock();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -35,10 +37,9 @@ private:
     void capture();
     void release();
 
-    void ticker();
+    void tick();
 
-    void hideTextPrompt();
-    void showTextPrompt();
+    void restore();
 
 signals:
     void locked();
