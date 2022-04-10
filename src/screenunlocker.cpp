@@ -4,6 +4,7 @@
 #include "unlockprompt.h"
 
 #include "mere/auth/service.h"
+#include "mere/utils/stringutils.h"
 
 #include <QTimer>
 

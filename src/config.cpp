@@ -42,20 +42,20 @@ static const std::string VAL_BLOCK_SCREEN_BACKGROUND                = "#0B6623";
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND_COLOR          = "mere.lock.block.screen.background.color";
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND_IMAGE          = "mere.lock.block.screen.background.image";
 
-static const std::string KEY_BLOCK_SCREEN_MESSAGE_COLOR              = "mere.lock.block.screen.message.font.color";
-static const std::string VAL_BLOCK_SCREEN_MESSAGE_COLOR              = "#000";
+static const std::string KEY_BLOCK_SCREEN_MESSAGE_COLOR             = "mere.lock.block.screen.message.font.color";
+static const std::string VAL_BLOCK_SCREEN_MESSAGE_COLOR             = "#000";
 
-static const std::string KEY_BLOCK_SCREEN_MESSAGE_SIZE               = "mere.lock.block.screen.message.font.size";
-static const std::string VAL_BLOCK_SCREEN_MESSAGE_SIZE               = "10";
+static const std::string KEY_BLOCK_SCREEN_MESSAGE_SIZE              = "mere.lock.block.screen.message.font.size";
+static const std::string VAL_BLOCK_SCREEN_MESSAGE_SIZE              = "10";
 
-static const std::string KEY_BLOCK_SCREEN_TIME_COLOR                 = "mere.lock.block.screen.time.font.color";
-static const std::string VAL_BLOCK_SCREEN_TIME_COLOR                 = "#D6ED17";
+static const std::string KEY_BLOCK_SCREEN_TIME_COLOR                = "mere.lock.block.screen.time.font.color";
+static const std::string VAL_BLOCK_SCREEN_TIME_COLOR                = "#D6ED17";
 
 static const std::string KEY_BLOCK_SCREEN_TIME_SIZE                 = "mere.lock.block.screen.time.font.size";
 static const std::string VAL_BLOCK_SCREEN_TIME_SIZE                 = "92";
 
-static const std::string KEY_LOCK_BLOCK_TIMEOUT                        = "mere.lock.block.timeout";
-static const std::string VAL_LOCK_BLOCK_TIMEOUT                        = "1";
+static const std::string KEY_LOCK_BLOCK_TIMEOUT                     = "mere.lock.block.timeout";
+static const std::string VAL_LOCK_BLOCK_TIMEOUT                     = "1";
 
 //
 // Unlock Screen
@@ -66,17 +66,17 @@ static const std::string VAL_UNLOCK_SCREEN_PROMPT_BACKGROUND        = "#F9F9F9";
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_COLOR  = "mere.lock.unlock.screen.prompt.background.color";
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_IMAGE  = "mere.lock.unlock.screen.prompt.background.image";
 
-static const std::string KEY_UNLOCK_SCREEN_PROMPT_LOGO             = "mere.lock.unlock.screen.prompt.logo";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_LOGO             = "/usr/local/share/mere/lock/freebsd-logo.png";
+static const std::string KEY_UNLOCK_SCREEN_PROMPT_LOGO              = "mere.lock.unlock.screen.prompt.logo";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_LOGO              = "/usr/local/share/mere/lock/freebsd-logo.png";
 
-static const std::string KEY_UNLOCK_SCREEN_PROMPT_LOGO_SHOW        = "mere.lock.unlock.screen.prompt.logo.show";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_LOGO_SHOW        = "true";
+static const std::string KEY_UNLOCK_SCREEN_PROMPT_LOGO_SHOW         = "mere.lock.unlock.screen.prompt.logo.show";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_LOGO_SHOW         = "true";
 
-static const std::string KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR    = "mere.lock.unlock.screen.prompt.message.font.color";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR    = "#000";
+static const std::string KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR     = "mere.lock.unlock.screen.prompt.message.font.color";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR     = "#000";
 
-static const std::string KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE     = "mere.lock.unlock.screen.prompt.message.font.size";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE     = "10";
+static const std::string KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE      = "mere.lock.unlock.screen.prompt.message.font.size";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE      = "10";
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_TIMEOUT           = "mere.lock.unlock.screen.prompt.timeout";
 static const std::string VAL_UNLOCK_SCREEN_PROMPT_TIMEOUT           = "10";
