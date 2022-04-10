@@ -26,7 +26,7 @@ private:
     bool verify();    
 
 private:
-    Mere::Lock::LockScreen *m_screen;
+    LockScreen *m_screen;
     Mere::Lock::UnlockPrompt *m_prompt;
 
     Mere::Lock::Config *m_config;

@@ -18,6 +18,7 @@ SOURCES += \
     src/lockscreen.cpp \
     src/main.cpp \
     src/lockapp.cpp \
+    src/prompt.cpp \
     src/screenlocker.cpp \
     src/screenunlocker.cpp \
     src/systemlocker.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     src/lockapp.h \
     src/locker.h \
     src/lockscreen.h \
+    src/prompt.h \
     src/screenlocker.h \
     src/screenunlocker.h \
     src/systemlocker.h \

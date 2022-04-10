@@ -61,10 +61,11 @@ void Mere::Lock::ScreenUnlocker::prompt()
             m_prompt->close();
             emit cancelled();
         });
+
     }
 
     state(1);
-    m_prompt->showNormal();
+    m_prompt->prompt();
 }
 
 bool Mere::Lock::ScreenUnlocker::verify()

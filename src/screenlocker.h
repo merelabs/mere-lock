@@ -15,7 +15,7 @@ class Config;
 class Ticker;
 class Unlocker;
 class LockScreen;
-class UnlockPrompt;
+class Prompt;
 
 class ScreenLocker : public QObject
 {
