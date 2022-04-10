@@ -3,7 +3,7 @@
 #include "ticker.h"
 #include "locker.h"
 #include "lockscreen.h"
-#include "unlockprompt.h"
+#include "prompt.h"
 #include "screenunlocker.h"
 
 #include <QApplication>

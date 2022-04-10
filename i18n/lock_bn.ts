@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>Mere::Lock::UnlockPrompt</name>
+    <name>Mere::Lock::Prompt</name>
     <message>
         <source>UnlockPrompt</source>
         <translation>আপনার পাসওয়ার্ড লিখে রিটার্ন চাঁপুন।</translation>

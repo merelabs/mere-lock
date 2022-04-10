@@ -13,7 +13,7 @@ namespace Lock
 {
 
 class Config;
-class UnlockPrompt;
+class Prompt;
 
 class LockScreen : public QWidget
 {
@@ -43,7 +43,7 @@ private:
     QLabel *m_time;
     QLabel *m_text;
     QScreen *m_screen;
-    UnlockPrompt *m_prompt;
+    Prompt *m_prompt;
 
     QTime m_timer;
     Mere::Lock::Config *m_config;
