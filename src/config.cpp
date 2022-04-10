@@ -27,12 +27,6 @@ static const std::string VAL_LOCK_SCREEN_TIME_COLOR                 = "#FFF";
 static const std::string KEY_LOCK_SCREEN_TIME_SIZE                  = "mere.lock.screen.time.font.size";
 static const std::string VAL_LOCK_SCREEN_TIME_SIZE                  = "92";
 
-static const std::string KEY_LOCK_SCREEN_LOGO                       = "mere.lock.screen.logo";
-static const std::string VAL_LOCK_SCREEN_LOGO                       = "/usr/local/share/mere/lock/mere-logo.png";
-
-static const std::string KEY_LOCK_SCREEN_LOGO_SHOW                  = "mere.lock.screen.logo.show";
-static const std::string VAL_LOCK_SCREEN_LOGO_SHOW                  = "true";
-
 //
 // Block Screen
 //
@@ -83,6 +77,12 @@ static const std::string VAL_UNLOCK_SCREEN_PROMPT_TIMEOUT           = "10";
 
 static const std::string KEY_UNLOCK_ATTEMPTS                        = "mere.lock.unlock.attempts";
 static const std::string VAL_UNLOCK_ATTEMPTS                        = "3";
+
+static const std::string KEY_LOCK_LOGO                              = "mere.lock.logo";
+static const std::string VAL_LOCK_LOGO                              = "/usr/local/share/mere/lock/mere-logo.png";
+
+static const std::string KEY_LOCK_LOGO_SHOW                         = "mere.lock.logo.show";
+static const std::string VAL_LOCK_LOGO_SHOW                         = "true";
 
 Mere::Lock::Config::Config() :
     Mere::Lock::Config::Config("mere/lock.conf", Mere::Config::Spec::Strict::Soft)
@@ -281,32 +281,6 @@ int Mere::Lock::Config::lockScreenMessageSize() const
 bool Mere::Lock::Config::checkLockScreenMessageSize() const
 {
     return checkInt(KEY_LOCK_SCREEN_MESSAGE_SIZE);
-}
-
-std::string Mere::Lock::Config::lockScreenLogo() const
-{
-    std::string value = this->get(KEY_LOCK_SCREEN_LOGO);
-    if (value.empty()) return VAL_LOCK_SCREEN_LOGO;
-
-    return value;
-}
-
-bool Mere::Lock::Config::checkLockScreenLogo() const
-{
-    return checkLogo(KEY_LOCK_SCREEN_LOGO);
-}
-
-bool Mere::Lock::Config::lockScreenLogoShow() const
-{
-    std::string value = this->get(KEY_LOCK_SCREEN_LOGO_SHOW);
-    if (value.empty()) return true;
-
-    return Mere::Utils::StringUtils::isTrue(value);
-}
-
-bool Mere::Lock::Config::checkLockScreenLogoShow() const
-{
-    return checkBool(KEY_LOCK_SCREEN_LOGO_SHOW);
 }
 
 std::string Mere::Lock::Config::blockScreenBackground() const
@@ -577,6 +551,32 @@ unsigned int Mere::Lock::Config::unlockAttempts() const
 bool Mere::Lock::Config::checkUnlockAttempts() const
 {
     return checkInt(KEY_UNLOCK_ATTEMPTS);
+}
+
+std::string Mere::Lock::Config::lockScreenLogo() const
+{
+    std::string value = this->get(KEY_LOCK_LOGO);
+    if (value.empty()) return VAL_LOCK_LOGO;
+
+    return value;
+}
+
+bool Mere::Lock::Config::checkLockScreenLogo() const
+{
+    return checkLogo(KEY_LOCK_LOGO);
+}
+
+bool Mere::Lock::Config::lockScreenLogoShow() const
+{
+    std::string value = this->get(KEY_LOCK_LOGO_SHOW);
+    if (value.empty()) return true;
+
+    return Mere::Utils::StringUtils::isTrue(value);
+}
+
+bool Mere::Lock::Config::checkLockScreenLogoShow() const
+{
+    return checkBool(KEY_LOCK_LOGO_SHOW);
 }
 
 bool Mere::Lock::Config::checkBackground(const std::string &key) const

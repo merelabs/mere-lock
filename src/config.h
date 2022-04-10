@@ -47,12 +47,6 @@ public:
     int lockScreenMessageSize() const;
     bool checkLockScreenMessageSize() const;
 
-    std::string lockScreenLogo() const;
-    bool checkLockScreenLogo() const;
-
-    bool lockScreenLogoShow() const;
-    bool checkLockScreenLogoShow() const;
-
     std::string blockScreenBackground() const;
     bool checkBlockScreenBackground() const;
 
@@ -103,6 +97,12 @@ public:
 
     unsigned int unlockAttempts() const;
     bool checkUnlockAttempts() const;
+
+    std::string lockScreenLogo() const;
+    bool checkLockScreenLogo() const;
+
+    bool lockScreenLogoShow() const;
+    bool checkLockScreenLogoShow() const;
 
     static Config* instance(const std::string &path = "", const Mere::Config::Spec::Strict &strict = Mere::Config::Spec::Strict::Soft)
     {
