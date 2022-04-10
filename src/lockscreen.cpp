@@ -1,5 +1,5 @@
 #include "lockscreen.h"
-#include "unlockprompt.h"
+#include "prompt.h"
 #include "locker.h"
 #include "config.h"
 

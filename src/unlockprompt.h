@@ -1,59 +1,16 @@
-#ifndef MERE_LOCK_UNLOCKPROMPT_H
-#define MERE_LOCK_UNLOCKPROMPT_H
+#ifndef UNLOCKPROMPT_H
+#define UNLOCKPROMPT_H
 
-#include <QTimer>
-#include <QLabel>
-#include <QLineEdit>
-#include <QEvent>
-#include <QWidget>
+#include <QObject>
 
-namespace Mere
-{
-namespace Lock
-{
-
-class UnlockPrompt : public QWidget
+class UnlockPrompt : public QObject
 {
     Q_OBJECT
 public:
-    ~UnlockPrompt();
-    explicit UnlockPrompt(QWidget *parent = nullptr);
-
-    std::string input() const;
-
-protected:
-    void setVisible(bool visible) override;
-    bool eventFilter(QObject *obj, QEvent *event) override;
-
-private:
-    static const int timeoutCheckInterval;
-    static const int timeoutStartOffset;
-
-    void initUI();
-    void setShadow();
-    void setBackground();
-    void setPromptLogo();
-    void setTimeout();
-
-    void initMessageUI();
+    explicit UnlockPrompt(QObject *parent = nullptr);
 
 signals:
-    void attempted();
-    void cancelled();
 
-private slots:
-    void clear();
-
-private:
-    QLabel *m_result;
-    QLineEdit *m_password;
-
-    qint64 m_timeoutStart;
-    QWidget *m_timeoutPanel;
-    QTimer *m_timeoutTimer = nullptr;
 };
 
-}
-}
-
-#endif // MERE_LOCK_UNLOCKPROMPT_H
+#endif // UNLOCKPROMPT_H

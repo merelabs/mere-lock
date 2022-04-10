@@ -1,7 +1,7 @@
 #include "screenunlocker.h"
 #include "config.h"
 #include "lockscreen.h"
-#include "unlockprompt.h"
+#include "prompt.h"
 
 #include "mere/auth/service.h"
 
@@ -27,8 +27,8 @@ void Mere::Lock::ScreenUnlocker::prompt()
 {
     if (!m_prompt)
     {
-        m_prompt = new Mere::Lock::UnlockPrompt(m_screen);
-        connect(m_prompt, &Mere::Lock::UnlockPrompt::attempted, [&](){
+        m_prompt = new Mere::Lock::Prompt(m_screen);
+        connect(m_prompt, &Mere::Lock::Prompt::attempted, [&](){
             bool ok = verify();
             if (ok)
             {
@@ -53,7 +53,7 @@ void Mere::Lock::ScreenUnlocker::prompt()
                 }
             }
         });
-        connect(m_prompt, &Mere::Lock::UnlockPrompt::cancelled, [&](){
+        connect(m_prompt, &Mere::Lock::Prompt::cancelled, [&](){
             state(0);
             m_prompt->close();
             emit cancelled();
