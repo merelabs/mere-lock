@@ -83,22 +83,14 @@
     </message>
     <message>
         <source>UnlockAttempt</source>
-        <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা করেছেন, আবার চেষ্টা করুন।</translation>
+        <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা করেছেন, আবার চেষ্টা করুন</translation>
     </message>
 </context>
 <context>
     <name>Mere::Lock::LockScreen</name>
     <message>
-        <source>LockTime</source>
-        <translation>%1</translation>
-    </message>
-    <message>
-        <source>LockTimeUnit</source>
-        <translation>সে</translation>
-    </message>
-    <message>
         <source>LockMessage</source>
-        <translation>যে কোনো কী চাপুন বা মাউস একটু সরান।</translation>
+        <translation>যে কোনো কী চাপুন বা মাউস একটু সরান</translation>
     </message>
     <message>
         <source>BlockTime</source>
