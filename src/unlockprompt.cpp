@@ -1,6 +1,13 @@
 #include "unlockprompt.h"
+#include "prompt.h"
 
-UnlockPrompt::UnlockPrompt(QObject *parent) : QObject(parent)
+Mere::Lock::UnlockPrompt::UnlockPrompt(QWidget *parent)
+    : Prompt(parent)
+{
+    initUI();
+}
+
+void Mere::Lock::UnlockPrompt::initUI()
 {
 
 }

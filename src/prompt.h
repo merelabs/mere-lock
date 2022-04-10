@@ -1,5 +1,5 @@
-#ifndef MERE_LOCK_UNLOCKPROMPT_H
-#define MERE_LOCK_UNLOCKPROMPT_H
+#ifndef MERE_LOCK_PROMPT_H
+#define MERE_LOCK_PROMPT_H
 
 #include <QTimer>
 #include <QLabel>
@@ -16,7 +16,7 @@ class Prompt : public QWidget
 {
     Q_OBJECT
 public:
-    ~Prompt();
+    virtual ~Prompt();
     explicit Prompt(QWidget *parent = nullptr);
 
     std::string input() const;
@@ -56,4 +56,4 @@ private:
 }
 }
 
-#endif // MERE_LOCK_UNLOCKPROMPT_H
+#endif // MERE_LOCK_PROMPT_H

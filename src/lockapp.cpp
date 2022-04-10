@@ -7,7 +7,7 @@
 #include <iostream>
 #include <QTimer>
 #include <QCommandLineParser>
-
+#include <QMessageBox>
 LockApp::~LockApp()
 {
     if (m_locker)
@@ -41,6 +41,9 @@ LockApp::LockApp(int &argc, char **argv)
     QCommandLineOption passwordOption(QStringList() << "p" << "password", QCoreApplication::translate("LockArg", "LockArgPassword"),
                                     "password");
 
+//    QCommandLineOption askPasswordOption(QStringList() << "a" << "ask-password", QCoreApplication::translate("LockArg", "LockArgPassword"),
+//                                    "ask");
+
     QCommandLineOption timeoutOption(QStringList() << "t" << "timeout", QCoreApplication::translate("LockArg", "LockArgTimeout"),
                                     "timeout");
 
@@ -52,7 +55,6 @@ LockApp::LockApp(int &argc, char **argv)
     parser.addOptions({configOption, passwordOption, timeoutOption, screenOption, strictOption});
 
     parser.process(QCoreApplication::arguments());
-
 
     m_config = Mere::Lock::Config::instance(parser.value(configOption).toStdString(),
                                             parser.isSet(strictOption)

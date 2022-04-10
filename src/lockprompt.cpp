@@ -1,6 +1,7 @@
 #include "lockprompt.h"
 
-LockPrompt::LockPrompt(QObject *parent) : QObject(parent)
+Mere::Lock::LockPrompt::LockPrompt(QWidget *parent)
+    : Prompt(parent)
 {
 
 }

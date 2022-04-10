@@ -12,7 +12,7 @@ namespace Lock
 
 class Config;
 class LockScreen;
-class Prompt;
+class UnlockPrompt;
 
 class ScreenUnlocker : public Unlocker
 {
@@ -27,7 +27,7 @@ private:
 
 private:
     Mere::Lock::LockScreen *m_screen;
-    Mere::Lock::Prompt *m_prompt;
+    Mere::Lock::UnlockPrompt *m_prompt;
 
     Mere::Lock::Config *m_config;
 };

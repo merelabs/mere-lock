@@ -23,7 +23,7 @@ Mere::Lock::Prompt::~Prompt()
 Mere::Lock::Prompt::Prompt(QWidget *parent)
     : QWidget(parent)
 {
-    setObjectName("UnlockPrompt");
+    setObjectName("Prompt");
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setWindowModality(Qt::WindowModal);
 

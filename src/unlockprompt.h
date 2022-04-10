@@ -1,16 +1,26 @@
 #ifndef UNLOCKPROMPT_H
 #define UNLOCKPROMPT_H
 
-#include <QObject>
+#include "prompt.h"
 
-class UnlockPrompt : public QObject
+namespace Mere
+{
+namespace Lock
+{
+
+class UnlockPrompt : public Prompt
 {
     Q_OBJECT
 public:
-    explicit UnlockPrompt(QObject *parent = nullptr);
+    explicit UnlockPrompt(QWidget *parent = nullptr);
+
+private:
+    void initUI();
 
 signals:
-
+private:
 };
 
+}
+}
 #endif // UNLOCKPROMPT_H
