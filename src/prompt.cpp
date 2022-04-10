@@ -1,6 +1,8 @@
 #include "prompt.h"
 #include "config.h"
 
+#include "mere/utils/stringutils.h"
+
 #include <iostream>
 #include <QDateTime>
 #include <QScreen>
@@ -21,7 +23,8 @@ Mere::Lock::Prompt::~Prompt()
 }
 
 Mere::Lock::Prompt::Prompt(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      m_config(Mere::Lock::Config::instance())
 {
     setObjectName("Prompt");
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -90,14 +93,12 @@ void Mere::Lock::Prompt::initMessageUI()
     label->setAlignment(Qt::AlignCenter);
     this->layout()->addWidget(label);
 
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-
     QPalette palette = label->palette();
-    palette.setColor(QPalette::WindowText, config->unlockScreenPromptMessageColor());
+    palette.setColor(QPalette::WindowText, m_config->unlockScreenPromptMessageColor());
     label->setPalette(palette);
 
     QFont font = label->font();
-    font.setPointSize(config->unlockScreenPromptMessageSize());
+    font.setPointSize(m_config->unlockScreenPromptMessageSize());
     label->setFont(font);
 
     label->move(geometry().center() - label->fontMetrics().boundingRect(label->text()).center());
@@ -118,9 +119,8 @@ void Mere::Lock::Prompt::setTimeout()
     m_timeoutTimer->setInterval(timeoutCheckInterval);
 
     connect(m_timeoutTimer, &QTimer::timeout, this, [&]{
-        Mere::Lock::Config *config = Mere::Lock::Config::instance();
         qint64 lapse = QDateTime::currentMSecsSinceEpoch() - m_timeoutStart;
-        if ( lapse > (config->unlockScreenPromptTimeout() * 1000 + timeoutStartOffset + timeoutCheckInterval))
+        if ( lapse > (m_config->unlockScreenPromptTimeout() * 1000 + timeoutStartOffset + timeoutCheckInterval))
         {
             setVisible(false);
         }
@@ -133,7 +133,7 @@ void Mere::Lock::Prompt::setTimeout()
             m_timeoutPanel->setStyleSheet("background: red;");
             QPropertyAnimation *animation = new QPropertyAnimation(m_timeoutPanel, "geometry", this);
             animation->setDuration(timeoutCheckInterval);
-            animation->setEndValue(QRect(0, 0, this->width()/(config->unlockScreenPromptTimeout() * 2) * qFloor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
+            animation->setEndValue(QRect(0, 0, this->width()/(m_config->unlockScreenPromptTimeout() * 2) * qFloor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
             animation->start();
         }
     });
@@ -175,10 +175,8 @@ void Mere::Lock::Prompt::setShadow()
 
 void Mere::Lock::Prompt::setBackground()
 {
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-
     QPalette pal = palette();
-    QPixmap pixmap = config->unlockScreenPromptBackgroundImage();
+    QPixmap pixmap = m_config->unlockScreenPromptBackgroundImage();
     if (!pixmap.isNull())
     {
         pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
@@ -186,7 +184,7 @@ void Mere::Lock::Prompt::setBackground()
     }
     else
     {
-        QColor color = config->unlockScreenPromptBackgroundColor();
+        QColor color = m_config->unlockScreenPromptBackgroundColor();
         pal.setColor(QPalette::Window, QColor(color));
     }
 
@@ -195,28 +193,27 @@ void Mere::Lock::Prompt::setBackground()
 
 void Mere::Lock::Prompt::setPromptLogo()
 {
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    if(!config->unlockScreenPromptLogoShow()) return;
+    if(!m_config->unlockScreenPromptLogoShow()) return;
 
-    QString logo(config->unlockScreenPromptLogo().c_str());
-    if (logo.isEmpty()) return;
+    std::string path = m_config->unlockScreenPromptLogo();
+    if (Mere::Utils::StringUtils::isBlank(path)) return;
 
-    QPixmap pixmap(logo);
+    QPixmap pixmap(QString::fromStdString(path));
     if (pixmap.isNull())
     {
-        std::cout << "Unable to create image for prompt logo; please check the image path." << logo.toStdString() << std::endl;
+        std::cout << "Unable to create image for prompt logo; please check the image path." << path << std::endl;
         return;
     }
 
-    QSize size(96, 94);
-    pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QSize size(97, 96);
+    pixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QLabel *label = new QLabel(this);
     label->setMargin(0);
     label->setContentsMargins(0, 0, 0, 0);
     label->setAlignment(Qt::AlignCenter);
-    label->setScaledContents(true);
-    label->setMinimumSize(size);
+    label->setMinimumHeight(96);
+    label->setMaximumHeight(96);
     label->setPixmap(pixmap);
 
     label->move(this->width()/2 - label->width()/2, 30);

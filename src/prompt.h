@@ -12,6 +12,8 @@ namespace Mere
 namespace Lock
 {
 
+class Config;
+
 class Prompt : public QWidget
 {
     Q_OBJECT
@@ -51,6 +53,8 @@ private:
     qint64 m_timeoutStart;
     QWidget *m_timeoutPanel;
     QTimer *m_timeoutTimer = nullptr;
+
+    Mere::Lock::Config *m_config;
 };
 
 }
