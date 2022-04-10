@@ -50,6 +50,7 @@ void Mere::Lock::ScreenUnlocker::prompt()
                         attempt(0);
                         emit unblocked();
                     });
+
                     emit blocked();
                 }
             }
