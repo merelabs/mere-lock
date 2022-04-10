@@ -1,6 +1,8 @@
 #include "locker.h"
 #include "screenlocker.h"
 
+uint Mere::Lock::Locker::Attempts = 0;
+
 Mere::Lock::Locker::~Locker()
 {
     if (m_locker)
@@ -14,7 +16,7 @@ Mere::Lock::Locker::Locker(QObject *parent)
     : QObject(parent)
 {
     m_locker = new Mere::Lock::ScreenLocker(this);
-    connect(m_locker, &Mere::Lock::ScreenLocker::verified, this, [&](){
+    connect(m_locker, &Mere::Lock::ScreenLocker::unlocked, this, [&](){
         unlock();
     });
 }

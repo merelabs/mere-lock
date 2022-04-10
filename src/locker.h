@@ -1,5 +1,5 @@
-#ifndef LOCKER_H
-#define LOCKER_H
+#ifndef MERE_LOCK_LOCKER_H
+#define MERE_LOCK_LOCKER_H
 
 #include <QObject>
 
@@ -20,6 +20,8 @@ public:
     int lock();
     int unlock();
 
+    static uint Attempts;
+
 signals:
     void locked();
     void unlocked();
@@ -31,4 +33,4 @@ private:
 }
 }
 
-#endif // LOCKER_H
+#endif // MERE_LOCK_LOCKER_H

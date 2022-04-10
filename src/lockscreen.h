@@ -1,18 +1,16 @@
 #ifndef MERE_LOCK_LOCKSCREEN_H
 #define MERE_LOCK_LOCKSCREEN_H
 
+#include <QTime>
 #include <QLabel>
-#include <QEvent>
-#include <QKeyEvent>
 #include <QWidget>
-
 
 namespace Mere
 {
 namespace Lock
 {
 
-class LockPrompt;
+class Config;
 
 class LockScreen : public QWidget
 {
@@ -23,20 +21,53 @@ public:
     void lock();
     void unlock();
 
-    void hideMessage();
-    void showMessage();
+    void block();
+    void unblock();
+
+    bool isBlocked() const;
+
+
+    void tick();
+    void restore();
 
 private:
+    void setTime();
+    void setTimePosition();
+    void setTimeStyle(const QColor &color, const int size);
+
+    void setLockTimeStyle();
+    void setLockTimePosition();
+
+    void setBlockTimeStyle();
+    void setBlockTimePosition();
+
     void setMessage();
+    void setMessagePosition();
+    void setMessageStyle(const QColor &color, const int size);
+
+    void setLockMessageStyle();
+    void setLockMessagePosition();
+    void setBlockMessageStyle();
+    void setBlockMessagePosition();
+
     void setBackground();
     void setScreenLogo();
 
-signals:
-    void verified();
+    void applyLockTheme();
+    void applyBlockTheme();
+
+    void moveToCenter(QLabel *label);
+    void setTextStyle(QLabel *label, const QColor &color, const int size);
 
 private:
+    QLabel *m_time;
+    QLabel *m_text;
+
+    QTime m_blocktime;
+    QTime m_elaspsetime;
+
     QScreen *m_screen;
-    LockPrompt *m_prompt;
+    Mere::Lock::Config *m_config;
 };
 
 }

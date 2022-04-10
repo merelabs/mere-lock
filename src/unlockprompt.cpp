@@ -1,7 +1,5 @@
-#include "lockprompt.h"
+#include "unlockprompt.h"
 #include "config.h"
-
-#include "mere/auth/service.h"
 
 #include <iostream>
 #include <QDateTime>
@@ -14,18 +12,18 @@
 #include <QtMath>
 
 //static
-const int Mere::Lock::LockPrompt::timeoutCheckInterval = 500;
-const int Mere::Lock::LockPrompt::timeoutStartOffset = 5000;
+const int Mere::Lock::UnlockPrompt::timeoutCheckInterval = 500;
+const int Mere::Lock::UnlockPrompt::timeoutStartOffset = 5000;
 
-Mere::Lock::LockPrompt::~LockPrompt()
+Mere::Lock::UnlockPrompt::~UnlockPrompt()
 {
 
 }
 
-Mere::Lock::LockPrompt::LockPrompt(QWidget *parent)
+Mere::Lock::UnlockPrompt::UnlockPrompt(QWidget *parent)
     : QWidget(parent)
 {
-    setObjectName("LockPrompt");
+    setObjectName("UnlockPrompt");
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setWindowModality(Qt::WindowModal);
 
@@ -54,7 +52,7 @@ Mere::Lock::LockPrompt::LockPrompt(QWidget *parent)
     installEventFilter(this);
 }
 
-void Mere::Lock::LockPrompt::initUI()
+void Mere::Lock::UnlockPrompt::initUI()
 {
     QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
     this->layout()->addItem(topSpacer);
@@ -69,8 +67,8 @@ void Mere::Lock::LockPrompt::initUI()
     QSpacerItem *bottomSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
     this->layout()->addItem(bottomSpacer);
 
-    m_result = new QLabel(tr("LockAttempt"), this);
-    m_result->setObjectName("LockAttempt");
+    m_result = new QLabel(tr("UnlockAttempt"), this);
+    m_result->setObjectName("UnlockAttempt");
 
     QSizePolicy sizePolicy = m_result->sizePolicy();
     sizePolicy.setRetainSizeWhenHidden(true);
@@ -80,13 +78,15 @@ void Mere::Lock::LockPrompt::initUI()
 
     m_result->setVisible(false);
 
-    connect(m_password, SIGNAL(returnPressed()), this, SLOT(verify()));
+    connect(m_password, &QLineEdit::returnPressed, this, [&](){
+        emit attempted();
+    });
 }
 
-void Mere::Lock::LockPrompt::initMessageUI()
+void Mere::Lock::UnlockPrompt::initMessageUI()
 {
-    QLabel *label = new QLabel(tr("LockPrompt"), this);
-    label->setObjectName("LockPrompt");
+    QLabel *label = new QLabel(tr("UnlockPrompt"), this);
+    label->setObjectName("UnlockPrompt");
     label->setAlignment(Qt::AlignCenter);
     this->layout()->addWidget(label);
 
@@ -103,14 +103,14 @@ void Mere::Lock::LockPrompt::initMessageUI()
     label->move(geometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
 
-void Mere::Lock::LockPrompt::clear()
+void Mere::Lock::UnlockPrompt::clear()
 {
     m_password->clear();
     m_result->setVisible(false);
     m_timeoutPanel->setGeometry(0, 0, 0, 2);
 }
 
-void Mere::Lock::LockPrompt::setTimeout()
+void Mere::Lock::UnlockPrompt::setTimeout()
 {
     if (m_timeoutTimer) return;
 
@@ -142,7 +142,7 @@ void Mere::Lock::LockPrompt::setTimeout()
     m_timeoutPanel->setGeometry(0, 0, 0, 2);
 }
 
-void Mere::Lock::LockPrompt::setVisible(bool visible)
+void Mere::Lock::UnlockPrompt::setVisible(bool visible)
 {
     if (visible)
     {
@@ -150,12 +150,8 @@ void Mere::Lock::LockPrompt::setVisible(bool visible)
         m_timeoutStart = QDateTime::currentMSecsSinceEpoch();
         m_timeoutTimer->start();
 
-        grabMouse();
         m_password->setFocus();
         m_password->grabKeyboard();
-        emit keyboardGrabbed();
-
-        emit opened();
     }
     else
     {
@@ -163,17 +159,13 @@ void Mere::Lock::LockPrompt::setVisible(bool visible)
         m_timeoutTimer->stop();
         m_timeoutPanel->setGeometry(0, 0, 0, 2);
 
-        releaseMouse();
         m_password->releaseKeyboard();
-        emit keyboardReleased();
-
-        emit closed();
     }
 
     QWidget::setVisible(visible);
 }
 
-void Mere::Lock::LockPrompt::setShadow()
+void Mere::Lock::UnlockPrompt::setShadow()
 {
     QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
     shadowEffect->setOffset(10);
@@ -181,7 +173,7 @@ void Mere::Lock::LockPrompt::setShadow()
     setGraphicsEffect(shadowEffect);
 }
 
-void Mere::Lock::LockPrompt::setBackground()
+void Mere::Lock::UnlockPrompt::setBackground()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
 
@@ -201,7 +193,7 @@ void Mere::Lock::LockPrompt::setBackground()
     setPalette(pal);
 }
 
-void Mere::Lock::LockPrompt::setPromptLogo()
+void Mere::Lock::UnlockPrompt::setPromptLogo()
 {
     Mere::Lock::Config *config = Mere::Lock::Config::instance();
     if(!config->promptlogoshow()) return;
@@ -226,49 +218,27 @@ void Mere::Lock::LockPrompt::setPromptLogo()
     label->setScaledContents(true);
     label->setMinimumSize(size);
     label->setPixmap(pixmap);
-    //label->setStyleSheet("border: 1px solid black;");
 
     label->move(this->width()/2 - label->width()/2, 30);
 }
 
-void Mere::Lock::LockPrompt::verify()
+std::string Mere::Lock::UnlockPrompt::input() const
 {
-    bool ok = false;
-
-    Mere::Lock::Config *config = Mere::Lock::Config::instance();
-    std::string password = config->password();
-    if (!password.empty())
-    {
-        ok = (password.compare(m_password->text().toStdString()) == 0);
-    }
-    else
-    {
-        Mere::Auth::Service service;
-        ok = service.verify(m_password->text().toStdString());
-    }
-
-    if (!ok)
-    {
-        m_result->setVisible(true);
-        return;
-    }
-
-    emit verified();
+    return m_password->text().toStdString();
 }
 
-bool Mere::Lock::LockPrompt::eventFilter(QObject *obj, QEvent *event)
+bool Mere::Lock::UnlockPrompt::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress  /*|| event->type() == QEvent::KeyRelease*/ ||
-        event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove)
+    if (event->type() == QEvent::KeyPress )
     {
         m_timeoutStart = QDateTime::currentMSecsSinceEpoch();
 
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Enter)
-            setVisible(false);
+        if (keyEvent->key() == Qt::Key_Escape)
+            emit cancelled();
 
         return true;
     }
 
-    return QObject::eventFilter(obj, event);
+    return false;
 }

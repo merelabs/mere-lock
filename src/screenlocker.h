@@ -1,17 +1,21 @@
-#ifndef SCREELOCKER_H
-#define SCREELOCKER_H
+#ifndef MERE_LOCK_SCREELOCKER_H
+#define MERE_LOCK_SCREELOCKER_H
 
 #include <QObject>
 #include <QDebug>
 #include <QEvent>
+#include <QTimer>
 
 namespace Mere
 {
 namespace Lock
 {
 
+class Config;
+class Ticker;
+class Unlocker;
 class LockScreen;
-class LockPrompt;
+class UnlockPrompt;
 
 class ScreenLocker : public QObject
 {
@@ -23,6 +27,9 @@ public:
     int lock();
     int unlock();
 
+    int block();
+    int unblock();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
@@ -30,21 +37,24 @@ private:
     void capture();
     void release();
 
-    void prompt();
-    void hideTextPrompt();
-    void showTextPrompt();
+    void tick();
+
+    void restore();
 
 signals:
     void locked();
     void unlocked();
-    void verified();
 
 private:
-    Mere::Lock::LockPrompt *m_prompt;
+    Mere::Lock::Ticker *m_ticker;
+
+    Mere::Lock::Unlocker *m_unlocker;
     Mere::Lock::LockScreen *m_screen;
     std::vector<Mere::Lock::LockScreen *> m_screens;
+
+    Mere::Lock::Config *m_config;
 };
 
 }
 }
-#endif // SCREELOCKER_H
+#endif // MERE_LOCK_SCREELOCKER_H
