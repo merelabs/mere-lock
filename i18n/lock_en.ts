@@ -75,7 +75,7 @@
     </message>
 </context>
 <context>
-    <name>Mere::Lock::UnlockPrompt</name>
+    <name>Mere::Lock::Prompt</name>
     <message>
         <source>UnlockPrompt</source>
         <translation>Enter your password and press return.</translation>
