@@ -12,7 +12,9 @@ namespace Mere
 namespace Lock
 {
 
+class Ticker;
 class Config;
+class PromptTimeout;
 
 class Prompt : public QWidget
 {
@@ -53,6 +55,10 @@ private:
     qint64 m_timeoutStart;
     QWidget *m_timeoutPanel;
     QTimer *m_timeoutTimer = nullptr;
+
+    Mere::Lock::PromptTimeout *m_timeout;
+
+    Mere::Lock::Ticker *m_ticker;
 
     Mere::Lock::Config *m_config;
 };
