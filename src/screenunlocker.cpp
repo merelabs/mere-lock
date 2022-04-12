@@ -39,10 +39,7 @@ void Mere::Lock::ScreenUnlocker::prompt()
             }
             else
             {
-                int _attempt = attempt();
-                ++_attempt;
-                attempt(_attempt);
-
+                attempt(attempt() + 1);
                 if (attempt() == m_config->unlockAttempts())
                 {
                     state(0);

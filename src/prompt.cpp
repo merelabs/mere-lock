@@ -2,6 +2,7 @@
 #include "config.h"
 #include "ticker.h"
 #include "waitbar.h"
+#include "secret.h"
 
 #include "mere/utils/stringutils.h"
 
@@ -56,8 +57,6 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
         emit cancelled();
     });
 
-
-    installEventFilter(this);
 }
 
 void Mere::Lock::Prompt::initUI()
@@ -67,10 +66,8 @@ void Mere::Lock::Prompt::initUI()
 
     initMessageUI();
 
-    m_password = new QLineEdit(this);
-    m_password->setAlignment(Qt::AlignCenter);
-    m_password->setEchoMode(QLineEdit::Password);
-    this->layout()->addWidget(m_password);
+    m_secret = new Mere::Lock::Secret(this);
+    this->layout()->addWidget(m_secret);
 
     QSpacerItem *bottomSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
     this->layout()->addItem(bottomSpacer);
@@ -86,13 +83,17 @@ void Mere::Lock::Prompt::initUI()
 
     m_result->setVisible(false);
 
-    connect(m_password, &QLineEdit::cursorPositionChanged, this, [&](){
+    connect(m_secret, &Mere::Lock::Secret::changed, this, [&](){
         m_timeout->reset();
         m_ticker->start();
     });
 
-    connect(m_password, &QLineEdit::returnPressed, this, [&](){
+    connect(m_secret, &Mere::Lock::Secret::entered, this, [&](){
         emit attempted();
+    });
+
+    connect(m_secret, &Mere::Lock::Secret::escaped, this, [&](){
+        emit cancelled();
     });
 }
 
@@ -116,7 +117,8 @@ void Mere::Lock::Prompt::initMessageUI()
 
 void Mere::Lock::Prompt::clear()
 {
-    m_password->clear();
+    m_secret->clear();
+
     m_result->setVisible(false);
 }
 
@@ -130,15 +132,15 @@ void Mere::Lock::Prompt::setVisible(bool visible)
     if (visible)
     {
         clear();
-        m_password->setFocus();
-        m_password->grabKeyboard();
+        m_secret->setFocus();
+        m_secret->grabKeyboard();
 
         m_ticker->start();
         m_timeout->stop();
     }
     else
     {
-        m_password->releaseKeyboard();
+        m_secret->releaseKeyboard();
 
         m_ticker->stop();
         m_timeout->stop();
@@ -203,19 +205,6 @@ void Mere::Lock::Prompt::setPromptLogo()
 
 std::string Mere::Lock::Prompt::input() const
 {
-    return m_password->text().toStdString();
+    return m_secret->secret();
 }
 
-bool Mere::Lock::Prompt::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::KeyPress /*|| event->type() == QEvent::MouseMove*/)
-    {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Escape)
-            emit cancelled();
-
-        return true;
-    }
-
-    return false;
-}
