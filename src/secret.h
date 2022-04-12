@@ -19,7 +19,6 @@ public:
     std::string secret() const;
 
 protected:
-//    void setVisible(bool visible) override;
     void keyPressEvent(QKeyEvent *keyEvent) override;
 
 signals:

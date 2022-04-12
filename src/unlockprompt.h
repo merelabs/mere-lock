@@ -15,6 +15,7 @@ class UnlockPrompt : public QObject
 {
     Q_OBJECT
 public:
+    virtual ~UnlockPrompt();
     explicit UnlockPrompt(LockScreen *screen, QObject *parent = nullptr);
 
     void close();
@@ -28,7 +29,6 @@ signals:
 
 private:
     Prompt *m_prompt;
-    LockScreen *m_screen;
 };
 
 }
