@@ -31,7 +31,7 @@ static const std::string VAL_LOCK_SCREEN_TIME_SIZE                  = "92";
 // Block Screen
 //
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND                = "mere.lock.block.screen.background";
-static const std::string VAL_BLOCK_SCREEN_BACKGROUND                = "#0B6623";
+static const std::string VAL_BLOCK_SCREEN_BACKGROUND                = "#FF0000";
 
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND_COLOR          = "mere.lock.block.screen.background.color";
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND_IMAGE          = "mere.lock.block.screen.background.image";
@@ -54,8 +54,14 @@ static const std::string VAL_LOCK_BLOCK_TIMEOUT                     = "1";
 //
 // Unlock Screen
 //
+static const std::string KEY_UNLOCK_SCREEN_BACKGROUND               = "mere.lock.unlock.screen.background";
+static const std::string VAL_UNLOCK_SCREEN_BACKGROUND               = "#0B6623";
+
+static const std::string KEY_UNLOCK_SCREEN_BACKGROUND_COLOR         = "mere.lock.unlock.screen.background.color";
+static const std::string KEY_UNLOCK_SCREEN_BACKGROUND_IMAGE         = "mere.lock.unlock.screen.background.image";
+
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND        = "mere.lock.unlock.screen.prompt.background";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_BACKGROUND        = "#F9F9F9";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_BACKGROUND        = "#FFF";
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_COLOR  = "mere.lock.unlock.screen.prompt.background.color";
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_IMAGE  = "mere.lock.unlock.screen.prompt.background.image";
@@ -299,7 +305,7 @@ bool Mere::Lock::Config::checkBlockScreenBackground() const
     return checkBackground(KEY_BLOCK_SCREEN_BACKGROUND);
 }
 
-QColor Mere::Lock::Config::screenBlockScreenBackgroundColor() const
+QColor Mere::Lock::Config::blockScreenBackgroundColor() const
 {
     std::string value = this->get(KEY_BLOCK_SCREEN_BACKGROUND_COLOR);
     if (value.empty()) value = this->get(KEY_BLOCK_SCREEN_BACKGROUND);
@@ -414,6 +420,63 @@ unsigned int Mere::Lock::Config::blockTimeout() const
 bool Mere::Lock::Config::checkBlockTimeout() const
 {
     return checkInt(KEY_LOCK_BLOCK_TIMEOUT);
+}
+
+std::string Mere::Lock::Config::unlockScreenBackground() const
+{
+    std::string value = this->get(KEY_UNLOCK_SCREEN_BACKGROUND);
+    if (value.empty()) return VAL_UNLOCK_SCREEN_BACKGROUND;
+
+    return value;
+}
+
+bool Mere::Lock::Config::checkUnlockScreenBackground() const
+{
+    return checkBackground(KEY_UNLOCK_SCREEN_BACKGROUND);
+}
+
+QColor Mere::Lock::Config::unlockScreenBackgroundColor() const
+{
+    std::string value = this->get(KEY_UNLOCK_SCREEN_BACKGROUND_COLOR);
+    if (value.empty())
+    {
+        value = this->get(KEY_UNLOCK_SCREEN_BACKGROUND);
+    }
+
+    if (value.empty() || value.at(0) != '#')
+        return QColor(QString::fromStdString(VAL_UNLOCK_SCREEN_BACKGROUND));
+
+    QColor color(QString::fromStdString(value));
+    if(!color.isValid()) return QColor(QString::fromStdString(VAL_UNLOCK_SCREEN_BACKGROUND));
+
+    return color;
+}
+
+bool Mere::Lock::Config::checkUnlockScreenBackgroundColor() const
+{
+    return checkColor(KEY_UNLOCK_SCREEN_BACKGROUND_COLOR);
+}
+
+QPixmap Mere::Lock::Config::unlockScreenBackgroundImage() const
+{
+    std::string value = this->get(KEY_UNLOCK_SCREEN_BACKGROUND_IMAGE);
+    if (value.empty())
+    {
+        value = this->get(KEY_UNLOCK_SCREEN_BACKGROUND);
+    }
+
+    if (value.empty() || value.at(0) != '/')
+        return QPixmap();
+
+    if(Mere::Utils::FileUtils::isNotExist(value))
+        return QPixmap();
+
+    return QPixmap(QString::fromStdString(value));
+}
+
+bool Mere::Lock::Config::checkUnlockScreenBackgroundImage() const
+{
+    return checkImage(KEY_UNLOCK_SCREEN_BACKGROUND_IMAGE);
 }
 
 std::string Mere::Lock::Config::unlockScreenPromptBackground() const

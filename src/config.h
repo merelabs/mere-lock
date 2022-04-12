@@ -50,7 +50,7 @@ public:
     std::string blockScreenBackground() const;
     bool checkBlockScreenBackground() const;
 
-    QColor screenBlockScreenBackgroundColor() const;
+    QColor blockScreenBackgroundColor() const;
     bool checkBlockScreenBackgroundColor() const;
 
     QPixmap blockScreenBackgroundImage() const;
@@ -70,6 +70,19 @@ public:
 
     unsigned int blockTimeout() const;
     bool checkBlockTimeout() const;
+
+    //
+    // unlock
+    //
+    std::string unlockScreenBackground() const;
+    bool checkUnlockScreenBackground() const;
+
+    QColor unlockScreenBackgroundColor() const;
+    bool checkUnlockScreenBackgroundColor() const;
+
+    QPixmap unlockScreenBackgroundImage() const;
+    bool checkUnlockScreenBackgroundImage() const;
+
 
     std::string unlockScreenPromptBackground() const;
     bool checkUnlockScreenPromptBackground() const;

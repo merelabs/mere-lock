@@ -133,7 +133,6 @@ void Mere::Lock::Prompt::setVisible(bool visible)
         m_password->setFocus();
         m_password->grabKeyboard();
 
-        qDebug() << "GOING TO START";
         m_ticker->start();
         m_timeout->stop();
     }
@@ -188,7 +187,7 @@ void Mere::Lock::Prompt::setPromptLogo()
         return;
     }
 
-    QSize size(97, 96);
+    QSize size(geometry().width() - 50, 96);
     pixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QLabel *label = new QLabel(this);
