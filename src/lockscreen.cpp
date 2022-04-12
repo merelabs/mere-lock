@@ -111,7 +111,7 @@ void Mere::Lock::LockScreen::applyBlockTheme()
     setBlockTimeStyle();
     setBlockTimePosition();
 
-    m_text->setText(tr("BlockMessage").arg(m_config->unlockAttempts()));
+    m_text->setText(tr("BlockMessage").arg(m_config->blockTimeout()));
     setBlockMessageStyle();
     setBlockMessagePosition();
 }
