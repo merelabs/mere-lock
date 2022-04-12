@@ -2,9 +2,6 @@
 #define MERE_LOCK_PROMPT_H
 
 #include <QLabel>
-#include <QLineEdit>
-#include <QEvent>
-#include <QWidget>
 
 namespace Mere
 {
@@ -14,6 +11,7 @@ namespace Lock
 class Ticker;
 class Config;
 class Waitbar;
+class Secret;
 
 class Prompt : public QWidget
 {
@@ -26,7 +24,6 @@ public:
 
 protected:
     void setVisible(bool visible) override;
-    bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
     void initUI();
@@ -46,9 +43,8 @@ private slots:
 
 private:
     QLabel *m_result;
-    QLineEdit *m_password;
 
-
+    Mere::Lock::Secret *m_secret;
     Mere::Lock::Ticker *m_ticker;
     Mere::Lock::Waitbar *m_timeout;
 
