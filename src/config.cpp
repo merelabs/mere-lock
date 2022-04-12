@@ -73,7 +73,7 @@ static const std::string KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE      = "mere.lock
 static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE      = "10";
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_TIMEOUT           = "mere.lock.unlock.screen.prompt.timeout";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_TIMEOUT           = "10";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_TIMEOUT           = "15";
 
 //
 // Generic

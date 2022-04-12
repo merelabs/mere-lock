@@ -19,13 +19,13 @@ SOURCES += \
     src/main.cpp \
     src/lockapp.cpp \
     src/prompt.cpp \
-    src/prompttimeout.cpp \
     src/screenlocker.cpp \
     src/screenunlocker.cpp \
     src/systemlocker.cpp \
     src/ticker.cpp \
     src/unlocker.cpp \
-    src/unlockprompt.cpp
+    src/unlockprompt.cpp \
+    src/waitbar.cpp
 
 HEADERS += \
     src/config.h \
@@ -33,13 +33,13 @@ HEADERS += \
     src/locker.h \
     src/lockscreen.h \
     src/prompt.h \
-    src/prompttimeout.h \
     src/screenlocker.h \
     src/screenunlocker.h \
     src/systemlocker.h \
     src/ticker.h \
     src/unlocker.h \
-    src/unlockprompt.h
+    src/unlockprompt.h \
+    src/waitbar.h
 
 RESOURCES += \
     res/lock.qrc

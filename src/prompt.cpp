@@ -1,23 +1,14 @@
 #include "prompt.h"
 #include "config.h"
 #include "ticker.h"
-#include "prompttimeout.h"
+#include "waitbar.h"
 
 #include "mere/utils/stringutils.h"
 
 #include <iostream>
-#include <QDateTime>
-#include <QScreen>
 #include <QKeyEvent>
 #include <QVBoxLayout>
-#include <QApplication>
-#include <QPropertyAnimation>
 #include <QGraphicsDropShadowEffect>
-#include <QtMath>
-
-//static
-const int Mere::Lock::Prompt::timeoutCheckInterval = 500;
-const int Mere::Lock::Prompt::timeoutStartOffset = 5000;
 
 Mere::Lock::Prompt::~Prompt()
 {
@@ -58,10 +49,13 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
     connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
         std::cout << "you can restart counting! :)" << std::endl;
         m_ticker->stop();
-//        m_timeout->start();
-
-//        m_timeoutStart = QDateTime::currentMSecsSinceEpoch();
+        m_timeout->start();
     });
+
+    connect(m_timeout, &Mere::Lock::Waitbar::timeout, this, [&](){
+        emit cancelled();
+    });
+
 
     installEventFilter(this);
 }
@@ -93,8 +87,8 @@ void Mere::Lock::Prompt::initUI()
     m_result->setVisible(false);
 
     connect(m_password, &QLineEdit::cursorPositionChanged, this, [&](){
-//        m_ticker->stop();
-//        m_timeout->stop();
+        m_timeout->reset();
+        m_ticker->start();
     });
 
     connect(m_password, &QLineEdit::returnPressed, this, [&](){
@@ -124,38 +118,11 @@ void Mere::Lock::Prompt::clear()
 {
     m_password->clear();
     m_result->setVisible(false);
-//    m_timeoutPanel->setGeometry(0, 0, 0, 2);
 }
 
 void Mere::Lock::Prompt::setTimeout()
 {
-//    if (m_timeoutTimer) return;
-
-//    m_timeoutTimer = new QTimer(this);
-//    m_timeoutTimer->setInterval(timeoutCheckInterval);
-
-//    connect(m_timeoutTimer, &QTimer::timeout, this, [&]{
-//        qint64 lapse = QDateTime::currentMSecsSinceEpoch() - m_timeoutStart;
-//        if ( lapse > (m_config->unlockScreenPromptTimeout() * 1000 + timeoutStartOffset + timeoutCheckInterval))
-//        {
-//            emit cancelled();
-//        }
-//        else if (lapse < timeoutStartOffset + timeoutCheckInterval )
-//        {
-//            m_timeoutPanel->setGeometry(0, 0, 0, 2);
-//        }
-//        else
-//        {
-//            m_timeoutPanel->setStyleSheet("background: red;");
-//            QPropertyAnimation *animation = new QPropertyAnimation(m_timeoutPanel, "geometry", this);
-//            animation->setDuration(timeoutCheckInterval);
-//            animation->setEndValue(QRect(0, 0, this->width()/(m_config->unlockScreenPromptTimeout() * 2) * qFloor((lapse - timeoutStartOffset) / timeoutCheckInterval), 2));
-//            animation->start();
-//        }
-//    });
-
-//    m_timeoutPanel = new QWidget(this);
-//    m_timeoutPanel->setGeometry(0, 0, 0, 2);
+    m_timeout = new Mere::Lock::Waitbar(this);
 }
 
 void Mere::Lock::Prompt::setVisible(bool visible)
@@ -163,26 +130,19 @@ void Mere::Lock::Prompt::setVisible(bool visible)
     if (visible)
     {
         clear();
-//        m_timeoutStart = QDateTime::currentMSecsSinceEpoch();
-//        m_timeoutTimer->start();
-
         m_password->setFocus();
         m_password->grabKeyboard();
 
         qDebug() << "GOING TO START";
         m_ticker->start();
-//        m_timeout->stop();
+        m_timeout->stop();
     }
     else
     {
-//        m_timeoutStart = 0;
-//        m_timeoutTimer->stop();
-//        m_timeoutPanel->setGeometry(0, 0, 0, 2);
-
         m_password->releaseKeyboard();
 
         m_ticker->stop();
-//        m_timeout->stop();
+        m_timeout->stop();
     }
 
     QWidget::setVisible(visible);

@@ -1,7 +1,6 @@
 #ifndef MERE_LOCK_PROMPT_H
 #define MERE_LOCK_PROMPT_H
 
-#include <QTimer>
 #include <QLabel>
 #include <QLineEdit>
 #include <QEvent>
@@ -14,7 +13,7 @@ namespace Lock
 
 class Ticker;
 class Config;
-class PromptTimeout;
+class Waitbar;
 
 class Prompt : public QWidget
 {
@@ -30,9 +29,6 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
-    static const int timeoutCheckInterval;
-    static const int timeoutStartOffset;
-
     void initUI();
     void setShadow();
     void setBackground();
@@ -52,13 +48,9 @@ private:
     QLabel *m_result;
     QLineEdit *m_password;
 
-    qint64 m_timeoutStart;
-    QWidget *m_timeoutPanel;
-    QTimer *m_timeoutTimer = nullptr;
-
-    Mere::Lock::PromptTimeout *m_timeout;
 
     Mere::Lock::Ticker *m_ticker;
+    Mere::Lock::Waitbar *m_timeout;
 
     Mere::Lock::Config *m_config;
 };
