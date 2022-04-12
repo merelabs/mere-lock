@@ -15,11 +15,11 @@ static const std::string VAL_LOCK_SCREEN_BACKGROUND                 = "#0B6623";
 static const std::string KEY_LOCK_SCREEN_BACKGROUND_COLOR           = "mere.lock.screen.background.color";
 static const std::string KEY_LOCK_SCREEN_BACKGROUND_IMAGE           = "mere.lock.screen.background.image";
 
-static const std::string KEY_LOCK_SCREEN_ELAPSE_FONT_COLOR          = "mere.lock.screen.elapse.font.color";
-static const std::string VAL_LOCK_SCREEN_ELAPSE_FONT_COLOR          = "#FFF";
+static const std::string KEY_LOCK_SCREEN_TIME_FONT_COLOR            = "mere.lock.screen.elapse.font.color";
+static const std::string VAL_LOCK_SCREEN_TIME_FONT_COLOR            = "#FFF";
 
-static const std::string KEY_LOCK_SCREEN_ELAPSE_FONT_SIZE           = "mere.lock.screen.elapse.font.size";
-static const std::string VAL_LOCK_SCREEN_ELAPSE_FONT_SIZE           = "92";
+static const std::string KEY_LOCK_SCREEN_TIME_FONT_SIZE             = "mere.lock.screen.elapse.font.size";
+static const std::string VAL_LOCK_SCREEN_TIME_FONT_SIZE             = "92";
 
 static const std::string KEY_LOCK_SCREEN_MESSAGE_FONT_COLOR         = "mere.lock.screen.message.font.color";
 static const std::string VAL_LOCK_SCREEN_MESSAGE_FONT_COLOR         = "#000";
@@ -36,17 +36,17 @@ static const std::string VAL_BLOCK_SCREEN_BACKGROUND                = "#FF0000";
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND_COLOR          = "mere.lock.block.screen.background.color";
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND_IMAGE          = "mere.lock.block.screen.background.image";
 
-static const std::string KEY_BLOCK_SCREEN_MESSAGE_COLOR             = "mere.lock.block.screen.message.font.color";
-static const std::string VAL_BLOCK_SCREEN_MESSAGE_COLOR             = "#000";
-
-static const std::string KEY_BLOCK_SCREEN_MESSAGE_SIZE              = "mere.lock.block.screen.message.font.size";
-static const std::string VAL_BLOCK_SCREEN_MESSAGE_SIZE              = "10";
-
 static const std::string KEY_BLOCK_SCREEN_TIME_COLOR                = "mere.lock.block.screen.time.font.color";
 static const std::string VAL_BLOCK_SCREEN_TIME_COLOR                = "#D6ED17";
 
 static const std::string KEY_BLOCK_SCREEN_TIME_SIZE                 = "mere.lock.block.screen.time.font.size";
 static const std::string VAL_BLOCK_SCREEN_TIME_SIZE                 = "92";
+
+static const std::string KEY_BLOCK_SCREEN_MESSAGE_COLOR             = "mere.lock.block.screen.message.font.color";
+static const std::string VAL_BLOCK_SCREEN_MESSAGE_COLOR             = "#000";
+
+static const std::string KEY_BLOCK_SCREEN_MESSAGE_SIZE              = "mere.lock.block.screen.message.font.size";
+static const std::string VAL_BLOCK_SCREEN_MESSAGE_SIZE              = "10";
 
 static const std::string KEY_LOCK_BLOCK_TIMEOUT                     = "mere.lock.block.timeout";
 static const std::string VAL_LOCK_BLOCK_TIMEOUT                     = "1";
@@ -112,8 +112,8 @@ int Mere::Lock::Config::validate() const
     err = checkLockScreenBackground()               ? err : 1;
     err = checkLockScreenBackgroundColor()          ? err : 1;
     err = checkLockScreenBackgroundImage()          ? err : 1;
-    err = checkLockScreenElapseFontColor()                ? err : 1;
-    err = checkLockScreenElapseFontSize()                 ? err : 1;
+    err = checkLockScreenTimeFontColor()                ? err : 1;
+    err = checkLockScreenTimeFontSize()                 ? err : 1;
     err = checkLockScreenMessageFontColor()             ? err : 1;
     err = checkLockScreenMessageFontSize()              ? err : 1;
     err = checkLockScreenLogo()                     ? err : 1;
@@ -228,36 +228,36 @@ bool Mere::Lock::Config::checkLockScreenBackgroundImage() const
     return checkImage(KEY_LOCK_SCREEN_BACKGROUND_IMAGE);
 }
 
-QColor Mere::Lock::Config::lockScreenElapseFontColor() const
+QColor Mere::Lock::Config::lockScreenTimeFontColor() const
 {
-    std::string value = this->get(KEY_LOCK_SCREEN_ELAPSE_FONT_COLOR);
+    std::string value = this->get(KEY_LOCK_SCREEN_TIME_FONT_COLOR);
 
     if (value.empty() || value.at(0) != '#')
-        return QColor(QString::fromStdString(VAL_LOCK_SCREEN_ELAPSE_FONT_COLOR));
+        return QColor(QString::fromStdString(VAL_LOCK_SCREEN_TIME_FONT_COLOR));
 
     QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_SCREEN_ELAPSE_FONT_COLOR));
+    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_SCREEN_TIME_FONT_COLOR));
 
     return color;
 }
 
-bool Mere::Lock::Config::checkLockScreenElapseFontColor() const
+bool Mere::Lock::Config::checkLockScreenTimeFontColor() const
 {
-    return checkColor(KEY_LOCK_SCREEN_ELAPSE_FONT_COLOR);
+    return checkColor(KEY_LOCK_SCREEN_TIME_FONT_COLOR);
 }
 
-int Mere::Lock::Config::lockScreenElapseFontSize() const
+int Mere::Lock::Config::lockScreenTimeFontSize() const
 {
-    std::string value = this->get(KEY_LOCK_SCREEN_ELAPSE_FONT_SIZE);
+    std::string value = this->get(KEY_LOCK_SCREEN_TIME_FONT_SIZE);
     if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
-        return Mere::Utils::StringUtils::toInt(VAL_LOCK_SCREEN_ELAPSE_FONT_SIZE);
+        return Mere::Utils::StringUtils::toInt(VAL_LOCK_SCREEN_TIME_FONT_SIZE);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
 
-bool Mere::Lock::Config::checkLockScreenElapseFontSize() const
+bool Mere::Lock::Config::checkLockScreenTimeFontSize() const
 {
-    return checkInt(KEY_LOCK_SCREEN_ELAPSE_FONT_SIZE);
+    return checkInt(KEY_LOCK_SCREEN_TIME_FONT_SIZE);
 }
 
 QColor Mere::Lock::Config::lockScreenMessageFontColor() const

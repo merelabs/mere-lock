@@ -38,11 +38,11 @@ public:
     QPixmap lockScreenBackgroundImage() const;
     bool checkLockScreenBackgroundImage() const;
 
-    QColor lockScreenElapseFontColor() const;
-    bool checkLockScreenElapseFontColor() const;
+    QColor lockScreenTimeFontColor() const;
+    bool checkLockScreenTimeFontColor() const;
 
-    int lockScreenElapseFontSize() const;
-    bool checkLockScreenElapseFontSize() const;
+    int lockScreenTimeFontSize() const;
+    bool checkLockScreenTimeFontSize() const;
 
     QColor lockScreenMessageFontColor() const;
     bool checkLockScreenMessageFontColor() const;
