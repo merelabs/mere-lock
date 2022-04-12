@@ -36,17 +36,17 @@ static const std::string VAL_BLOCK_SCREEN_BACKGROUND                = "#FF0000";
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND_COLOR          = "mere.lock.block.screen.background.color";
 static const std::string KEY_BLOCK_SCREEN_BACKGROUND_IMAGE          = "mere.lock.block.screen.background.image";
 
-static const std::string KEY_BLOCK_SCREEN_TIME_COLOR                = "mere.lock.block.screen.time.font.color";
-static const std::string VAL_BLOCK_SCREEN_TIME_COLOR                = "#D6ED17";
+static const std::string KEY_BLOCK_SCREEN_TIME_FONT_COLOR           = "mere.lock.block.screen.time.font.color";
+static const std::string VAL_BLOCK_SCREEN_TIME_FONT_COLOR           = "#D6ED17";
 
-static const std::string KEY_BLOCK_SCREEN_TIME_SIZE                 = "mere.lock.block.screen.time.font.size";
-static const std::string VAL_BLOCK_SCREEN_TIME_SIZE                 = "92";
+static const std::string KEY_BLOCK_SCREEN_TIME_FONT_SIZE            = "mere.lock.block.screen.time.font.size";
+static const std::string VAL_BLOCK_SCREEN_TIME_FONT_SIZE            = "92";
 
-static const std::string KEY_BLOCK_SCREEN_MESSAGE_COLOR             = "mere.lock.block.screen.message.font.color";
-static const std::string VAL_BLOCK_SCREEN_MESSAGE_COLOR             = "#000";
+static const std::string KEY_BLOCK_SCREEN_MESSAGE_FONT_COLOR        = "mere.lock.block.screen.message.font.color";
+static const std::string VAL_BLOCK_SCREEN_MESSAGE_FONT_COLOR        = "#000";
 
-static const std::string KEY_BLOCK_SCREEN_MESSAGE_SIZE              = "mere.lock.block.screen.message.font.size";
-static const std::string VAL_BLOCK_SCREEN_MESSAGE_SIZE              = "10";
+static const std::string KEY_BLOCK_SCREEN_MESSAGE_FONT_SIZE         = "mere.lock.block.screen.message.font.size";
+static const std::string VAL_BLOCK_SCREEN_MESSAGE_FONT_SIZE         = "10";
 
 static const std::string KEY_LOCK_BLOCK_TIMEOUT                     = "mere.lock.block.timeout";
 static const std::string VAL_LOCK_BLOCK_TIMEOUT                     = "1";
@@ -122,10 +122,10 @@ int Mere::Lock::Config::validate() const
     err = checkBlockScreenBackground()              ? err : 1;
     err = checkBlockScreenBackgroundColor()         ? err : 1;
     err = checkBlockScreenBackgroundImage()         ? err : 1;
-    err = checkBlockScreenTimeColor()               ? err : 1;
-    err = checkBlockScreenTimeSize()                ? err : 1;
-    err = checkBlockScreenMessageColor()            ? err : 1;
-    err = checkBlockScreenMessageSize()             ? err : 1;
+    err = checkBlockScreenTimeFontColor()               ? err : 1;
+    err = checkBlockScreenTimeFontSize()                ? err : 1;
+    err = checkBlockScreenMessageFontColor()            ? err : 1;
+    err = checkBlockScreenMessageFontSize()             ? err : 1;
     err = checkBlockTimeout()                       ? err : 1;
     err = checkUnlockScreenPromptBackground()       ? err : 1;
     err = checkUnlockScreenPromptBackgroundColor()  ? err : 1;
@@ -344,68 +344,68 @@ bool Mere::Lock::Config::checkBlockScreenBackgroundImage() const
 }
 
 //--
-QColor Mere::Lock::Config::blockScreenTimeColor() const
+QColor Mere::Lock::Config::blockScreenTimeFontColor() const
 {
-    std::string value = this->get(KEY_BLOCK_SCREEN_TIME_COLOR);
+    std::string value = this->get(KEY_BLOCK_SCREEN_TIME_FONT_COLOR);
 
     if (value.empty() || value.at(0) != '#')
-        return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_TIME_COLOR));
+        return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_TIME_FONT_COLOR));
 
     QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_TIME_COLOR));
+    if(!color.isValid()) return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_TIME_FONT_COLOR));
 
     return color;
 }
 
-bool Mere::Lock::Config::checkBlockScreenTimeColor() const
+bool Mere::Lock::Config::checkBlockScreenTimeFontColor() const
 {
-    return checkColor(KEY_BLOCK_SCREEN_TIME_COLOR);
+    return checkColor(KEY_BLOCK_SCREEN_TIME_FONT_COLOR);
 }
 
-int Mere::Lock::Config::blockScreenTimeSize() const
+int Mere::Lock::Config::blockScreenTimeFontSize() const
 {
-    std::string value = this->get(KEY_BLOCK_SCREEN_TIME_SIZE);
+    std::string value = this->get(KEY_BLOCK_SCREEN_TIME_FONT_SIZE);
     if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
-        return Mere::Utils::StringUtils::toInt(VAL_BLOCK_SCREEN_TIME_SIZE);
+        return Mere::Utils::StringUtils::toInt(VAL_BLOCK_SCREEN_TIME_FONT_SIZE);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
 
-bool Mere::Lock::Config::checkBlockScreenTimeSize() const
+bool Mere::Lock::Config::checkBlockScreenTimeFontSize() const
 {
-    return checkInt(KEY_BLOCK_SCREEN_TIME_SIZE);
+    return checkInt(KEY_BLOCK_SCREEN_TIME_FONT_SIZE);
 }
 
-QColor Mere::Lock::Config::blockScreenMessageColor() const
+QColor Mere::Lock::Config::blockScreenMessageFontColor() const
 {
-    std::string value = this->get(KEY_BLOCK_SCREEN_MESSAGE_COLOR);
+    std::string value = this->get(KEY_BLOCK_SCREEN_MESSAGE_FONT_COLOR);
 
     if (value.empty() || value.at(0) != '#')
-        return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_MESSAGE_COLOR));
+        return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_MESSAGE_FONT_COLOR));
 
     QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_MESSAGE_COLOR));
+    if(!color.isValid()) return QColor(QString::fromStdString(VAL_BLOCK_SCREEN_MESSAGE_FONT_COLOR));
 
     return color;
 }
 
-bool Mere::Lock::Config::checkBlockScreenMessageColor() const
+bool Mere::Lock::Config::checkBlockScreenMessageFontColor() const
 {
-    return checkColor(KEY_BLOCK_SCREEN_MESSAGE_COLOR);
+    return checkColor(KEY_BLOCK_SCREEN_MESSAGE_FONT_COLOR);
 }
 
-int Mere::Lock::Config::blockScreenMessageSize() const
+int Mere::Lock::Config::blockScreenMessageFontSize() const
 {
-    std::string value = this->get(KEY_BLOCK_SCREEN_MESSAGE_SIZE);
+    std::string value = this->get(KEY_BLOCK_SCREEN_MESSAGE_FONT_SIZE);
     if (value.empty() || !Mere::Utils::StringUtils::isUInt(value))
-        return Mere::Utils::StringUtils::toInt(VAL_BLOCK_SCREEN_MESSAGE_SIZE);
+        return Mere::Utils::StringUtils::toInt(VAL_BLOCK_SCREEN_MESSAGE_FONT_SIZE);
 
     return Mere::Utils::StringUtils::toInt(value);
 }
 
-bool Mere::Lock::Config::checkBlockScreenMessageSize() const
+bool Mere::Lock::Config::checkBlockScreenMessageFontSize() const
 {
-    return checkInt(KEY_BLOCK_SCREEN_MESSAGE_SIZE);
+    return checkInt(KEY_BLOCK_SCREEN_MESSAGE_FONT_SIZE);
 }
 
 unsigned int Mere::Lock::Config::blockTimeout() const

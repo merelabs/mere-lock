@@ -151,7 +151,7 @@ void Mere::Lock::LockScreen::setLockTimePosition()
 
 void Mere::Lock::LockScreen::setBlockTimeStyle()
 {
-    setTimeStyle(m_config->blockScreenTimeColor(), m_config->blockScreenTimeSize());
+    setTimeStyle(m_config->blockScreenTimeFontColor(), m_config->blockScreenTimeFontSize());
 }
 
 void Mere::Lock::LockScreen::setBlockTimePosition()
@@ -189,7 +189,7 @@ void Mere::Lock::LockScreen::setLockMessagePosition()
 
 void Mere::Lock::LockScreen::setBlockMessageStyle()
 {
-    setMessageStyle(m_config->blockScreenMessageColor(), m_config->blockScreenMessageSize());
+    setMessageStyle(m_config->blockScreenMessageFontColor(), m_config->blockScreenMessageFontSize());
 }
 
 void Mere::Lock::LockScreen::setBlockMessagePosition()

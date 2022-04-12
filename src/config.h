@@ -62,17 +62,17 @@ public:
     QPixmap blockScreenBackgroundImage() const;
     bool checkBlockScreenBackgroundImage() const;
 
-    QColor blockScreenTimeColor() const;
-    bool checkBlockScreenTimeColor() const;
+    QColor blockScreenTimeFontColor() const;
+    bool checkBlockScreenTimeFontColor() const;
 
-    int blockScreenTimeSize() const;
-    bool checkBlockScreenTimeSize() const;
+    int blockScreenTimeFontSize() const;
+    bool checkBlockScreenTimeFontSize() const;
 
-    QColor blockScreenMessageColor() const;
-    bool checkBlockScreenMessageColor() const;
+    QColor blockScreenMessageFontColor() const;
+    bool checkBlockScreenMessageFontColor() const;
 
-    int blockScreenMessageSize() const;
-    bool checkBlockScreenMessageSize() const;
+    int blockScreenMessageFontSize() const;
+    bool checkBlockScreenMessageFontSize() const;
 
     unsigned int blockTimeout() const;
     bool checkBlockTimeout() const;
