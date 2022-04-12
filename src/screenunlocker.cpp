@@ -4,6 +4,7 @@
 #include "unlockprompt.h"
 
 #include "mere/auth/service.h"
+#include "mere/utils/stringutils.h"
 
 #include <QTimer>
 
@@ -60,19 +61,25 @@ void Mere::Lock::ScreenUnlocker::prompt()
             m_prompt->close();
             emit cancelled();
         });
+
     }
 
     state(1);
-    m_prompt->showNormal();
+    m_prompt->prompt();
 }
 
 bool Mere::Lock::ScreenUnlocker::verify()
 {
     std::string input = m_prompt->input();
+    if (Mere::Utils::StringUtils::isBlank(input))
+        return false;
 
     std::string password = m_config->password();
-    if (!password.empty())
-        return (password.compare(input) == 0);
+    if (Mere::Utils::StringUtils::isBlank(password))
+        return false;
+
+    if (input == password)
+        return true;
 
     Mere::Auth::Service service;
     return service.verify(input);

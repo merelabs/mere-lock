@@ -18,24 +18,28 @@ SOURCES += \
     src/lockscreen.cpp \
     src/main.cpp \
     src/lockapp.cpp \
+    src/prompt.cpp \
     src/screenlocker.cpp \
     src/screenunlocker.cpp \
     src/systemlocker.cpp \
     src/ticker.cpp \
     src/unlocker.cpp \
-    src/unlockprompt.cpp
+    src/unlockprompt.cpp \
+    src/waitbar.cpp
 
 HEADERS += \
     src/config.h \
     src/lockapp.h \
     src/locker.h \
     src/lockscreen.h \
+    src/prompt.h \
     src/screenlocker.h \
     src/screenunlocker.h \
     src/systemlocker.h \
     src/ticker.h \
     src/unlocker.h \
-    src/unlockprompt.h
+    src/unlockprompt.h \
+    src/waitbar.h
 
 RESOURCES += \
     res/lock.qrc

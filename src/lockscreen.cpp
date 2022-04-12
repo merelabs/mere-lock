@@ -44,15 +44,18 @@ void Mere::Lock::LockScreen::unlock()
 {
     m_time->hide();
     m_text->hide();
+
+    applyUnlockTheme();
 }
 
 void Mere::Lock::LockScreen::block()
 {
     m_blocktime = QTime(0, m_config->blockTimeout());
-    applyBlockTheme();
 
     m_time->show();
     m_text->show();
+
+    applyBlockTheme();
 }
 
 void Mere::Lock::LockScreen::unblock()
@@ -89,6 +92,8 @@ bool Mere::Lock::LockScreen::isBlocked() const
 
 void Mere::Lock::LockScreen::applyLockTheme()
 {
+    setLockBackground();
+
     m_time->setText(m_elaspsetime.toString("hh:mm:ss"));
     setLockTimeStyle();
     setLockTimePosition();
@@ -100,6 +105,8 @@ void Mere::Lock::LockScreen::applyLockTheme()
 
 void Mere::Lock::LockScreen::applyBlockTheme()
 {
+    setBlockBackground();
+
     m_time->setText(m_blocktime.toString("hh:mm:ss"));
     setBlockTimeStyle();
     setBlockTimePosition();
@@ -107,6 +114,11 @@ void Mere::Lock::LockScreen::applyBlockTheme()
     m_text->setText(tr("BlockMessage").arg(m_config->unlockAttempts()));
     setBlockMessageStyle();
     setBlockMessagePosition();
+}
+
+void Mere::Lock::LockScreen::applyUnlockTheme()
+{
+    setUnlockBackground();
 }
 
 void Mere::Lock::LockScreen::setTime()
@@ -213,8 +225,27 @@ void Mere::Lock::LockScreen::moveToCenter(QLabel *label)
 
 void Mere::Lock::LockScreen::setBackground()
 {
+    setLockBackground();
+}
+
+void Mere::Lock::LockScreen::setLockBackground()
+{
+    setBackground(m_config->lockScreenBackgroundImage(), m_config->lockScreenBackgroundColor());
+}
+
+void Mere::Lock::LockScreen::setBlockBackground()
+{
+    setBackground(m_config->blockScreenBackgroundImage(), m_config->blockScreenBackgroundColor());
+}
+
+void Mere::Lock::LockScreen::setUnlockBackground()
+{
+    setBackground(m_config->unlockScreenBackgroundImage(), m_config->unlockScreenBackgroundColor());
+}
+
+void Mere::Lock::LockScreen::setBackground(QPixmap pixmap, QColor color)
+{
     QPalette pal = palette();
-    QPixmap pixmap = m_config->lockScreenBackgroundImage();
     if (!pixmap.isNull())
     {
         pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
@@ -222,7 +253,6 @@ void Mere::Lock::LockScreen::setBackground()
     }
     else
     {
-        QColor color = m_config->lockScreenBackgroundColor();
         pal.setColor(QPalette::Window, color);
     }
 

@@ -51,10 +51,16 @@ private:
     void setBlockMessagePosition();
 
     void setBackground();
+    void setLockBackground();
+    void setBlockBackground();
+    void setUnlockBackground();
+    void setBackground(QPixmap pixmap, QColor color);
+
     void setScreenLogo();
 
     void applyLockTheme();
     void applyBlockTheme();
+    void applyUnlockTheme();
 
     void moveToCenter(QLabel *label);
     void setTextStyle(QLabel *label, const QColor &color, const int size);
