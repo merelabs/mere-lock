@@ -57,6 +57,18 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
         emit cancelled();
     });
 
+    connect(m_secret, &Mere::Lock::Secret::changed, this, [&](){
+        m_timeout->reset();
+        m_ticker->start();
+    });
+
+    connect(m_secret, &Mere::Lock::Secret::entered, this, [&](){
+        emit attempted();
+    });
+
+    connect(m_secret, &Mere::Lock::Secret::escaped, this, [&](){
+        emit cancelled();
+    });
 }
 
 void Mere::Lock::Prompt::initUI()
@@ -82,19 +94,6 @@ void Mere::Lock::Prompt::initUI()
     this->layout()->addWidget(m_result);
 
     m_result->setVisible(false);
-
-    connect(m_secret, &Mere::Lock::Secret::changed, this, [&](){
-        m_timeout->reset();
-        m_ticker->start();
-    });
-
-    connect(m_secret, &Mere::Lock::Secret::entered, this, [&](){
-        emit attempted();
-    });
-
-    connect(m_secret, &Mere::Lock::Secret::escaped, this, [&](){
-        emit cancelled();
-    });
 }
 
 void Mere::Lock::Prompt::initMessageUI()

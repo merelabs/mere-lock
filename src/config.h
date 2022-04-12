@@ -26,6 +26,9 @@ public:
     unsigned int timeout() const;
     void timeout(unsigned int timeout);
 
+    //
+    // lock
+    //
     std::string lockScreenBackground() const;
     bool checkLockScreenBackground() const;
 
@@ -35,18 +38,21 @@ public:
     QPixmap lockScreenBackgroundImage() const;
     bool checkLockScreenBackgroundImage() const;
 
-    QColor lockScreenTimeColor() const;
-    bool checkLockScreenTimeColor() const;
+    QColor lockScreenElapseFontColor() const;
+    bool checkLockScreenElapseFontColor() const;
 
-    int lockScreenTimeSize() const;
-    bool checkLockScreenTimeSize() const;
+    int lockScreenElapseFontSize() const;
+    bool checkLockScreenElapseFontSize() const;
 
-    QColor lockScreenMessageColor() const;
-    bool checkLockScreenMessageColor() const;
+    QColor lockScreenMessageFontColor() const;
+    bool checkLockScreenMessageFontColor() const;
 
-    int lockScreenMessageSize() const;
-    bool checkLockScreenMessageSize() const;
+    int lockScreenMessageFontSize() const;
+    bool checkLockScreenMessageFontSize() const;
 
+    //
+    // block
+    //
     std::string blockScreenBackground() const;
     bool checkBlockScreenBackground() const;
 

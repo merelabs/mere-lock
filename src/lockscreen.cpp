@@ -141,7 +141,7 @@ void Mere::Lock::LockScreen::setTimeStyle(const QColor &color, const int size)
 
 void Mere::Lock::LockScreen::setLockTimeStyle()
 {
-    setTimeStyle(m_config->lockScreenTimeColor(), m_config->lockScreenTimeSize());
+    setTimeStyle(m_config->lockScreenElapseFontColor(), m_config->lockScreenElapseFontSize());
 }
 
 void Mere::Lock::LockScreen::setLockTimePosition()
@@ -179,7 +179,7 @@ void Mere::Lock::LockScreen::setMessageStyle(const QColor &color, const int size
 
 void Mere::Lock::LockScreen::setLockMessageStyle()
 {
-    setMessageStyle(m_config->lockScreenMessageColor(), m_config->lockScreenMessageSize());
+    setMessageStyle(m_config->lockScreenMessageFontColor(), m_config->lockScreenMessageFontSize());
 }
 
 void Mere::Lock::LockScreen::setLockMessagePosition()
