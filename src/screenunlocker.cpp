@@ -72,10 +72,7 @@ bool Mere::Lock::ScreenUnlocker::verify()
         return false;
 
     std::string password = m_config->password();
-    if (Mere::Utils::StringUtils::isBlank(password))
-        return false;
-
-    if (input == password)
+    if (Mere::Utils::StringUtils::isNotBlank(password) && input == password)
         return true;
 
     Mere::Auth::Service service;

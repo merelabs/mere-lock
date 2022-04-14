@@ -49,7 +49,7 @@ static const std::string KEY_BLOCK_SCREEN_MESSAGE_FONT_SIZE         = "mere.lock
 static const std::string VAL_BLOCK_SCREEN_MESSAGE_FONT_SIZE         = "10";
 
 static const std::string KEY_LOCK_BLOCK_TIMEOUT                     = "mere.lock.block.timeout";
-static const std::string VAL_LOCK_BLOCK_TIMEOUT                     = "1";
+static const std::string VAL_LOCK_BLOCK_TIMEOUT                     = "2";
 
 //
 // Unlock Screen
@@ -112,20 +112,20 @@ int Mere::Lock::Config::validate() const
     err = checkLockScreenBackground()               ? err : 1;
     err = checkLockScreenBackgroundColor()          ? err : 1;
     err = checkLockScreenBackgroundImage()          ? err : 1;
-    err = checkLockScreenTimeFontColor()                ? err : 1;
-    err = checkLockScreenTimeFontSize()                 ? err : 1;
-    err = checkLockScreenMessageFontColor()             ? err : 1;
-    err = checkLockScreenMessageFontSize()              ? err : 1;
+    err = checkLockScreenTimeFontColor()            ? err : 1;
+    err = checkLockScreenTimeFontSize()             ? err : 1;
+    err = checkLockScreenMessageFontColor()         ? err : 1;
+    err = checkLockScreenMessageFontSize()          ? err : 1;
     err = checkLockScreenLogo()                     ? err : 1;
     err = checkLockScreenLogoShow()                 ? err : 1;
 
     err = checkBlockScreenBackground()              ? err : 1;
     err = checkBlockScreenBackgroundColor()         ? err : 1;
     err = checkBlockScreenBackgroundImage()         ? err : 1;
-    err = checkBlockScreenTimeFontColor()               ? err : 1;
-    err = checkBlockScreenTimeFontSize()                ? err : 1;
-    err = checkBlockScreenMessageFontColor()            ? err : 1;
-    err = checkBlockScreenMessageFontSize()             ? err : 1;
+    err = checkBlockScreenTimeFontColor()           ? err : 1;
+    err = checkBlockScreenTimeFontSize()            ? err : 1;
+    err = checkBlockScreenMessageFontColor()        ? err : 1;
+    err = checkBlockScreenMessageFontSize()         ? err : 1;
     err = checkBlockTimeout()                       ? err : 1;
     err = checkUnlockScreenPromptBackground()       ? err : 1;
     err = checkUnlockScreenPromptBackgroundColor()  ? err : 1;
