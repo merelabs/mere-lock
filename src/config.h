@@ -20,6 +20,10 @@ public:
     int init();
     int validate() const;
 
+
+    bool ask() const;
+    void ask(bool ask);
+
     std::string password() const;
     void password(const std::string &password);
 

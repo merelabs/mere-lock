@@ -3,10 +3,12 @@
 #include <iostream>
 
 #include <QTimer>
+
 Mere::Lock::Ticker::~Ticker()
 {
     if (m_timer)
     {
+        m_timer->disconnect();
         delete m_timer;
         m_timer = nullptr;
     }
@@ -25,7 +27,7 @@ Mere::Lock::Ticker::Ticker(unsigned int step, QObject *parent)
 
 int Mere::Lock::Ticker::start()
 {
-    std::cout << "Ticker start:" << std::endl;
+    std::cout << "Ticker::start:" << std::endl;
     m_timer->start();
 
     return 0;
@@ -33,7 +35,7 @@ int Mere::Lock::Ticker::start()
 
 int Mere::Lock::Ticker::stop()
 {
-    std::cout << "Ticker stop:" << std::endl;
+    std::cout << "Ticker::stop:" << std::endl;
 
     m_timer->stop();
     return 0;
@@ -41,10 +43,9 @@ int Mere::Lock::Ticker::stop()
 
 int Mere::Lock::Ticker::reset(int step)
 {
-    std::cout << "Ticker reset:" << std::endl;
+    std::cout << "Ticker::reset:" << std::endl;
 
     m_timer->start(step);
 
     return 0;
 }
-

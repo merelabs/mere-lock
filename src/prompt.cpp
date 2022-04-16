@@ -13,7 +13,19 @@
 
 Mere::Lock::Prompt::~Prompt()
 {
+    if (m_ticker)
+    {
+        m_ticker->disconnect();
+        delete m_ticker;
+        m_ticker = nullptr;
+    }
 
+    if (m_secret)
+    {
+        m_secret->disconnect();
+    }
+
+    setGraphicsEffect(nullptr);
 }
 
 Mere::Lock::Prompt::Prompt(QWidget *parent)
@@ -25,7 +37,7 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
     setWindowFlags (Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setWindowModality(Qt::WindowModal);
 
-    setCursor(Qt::BlankCursor);
+//    setCursor(Qt::BlankCursor);
     setMouseTracking(true);
     setAutoFillBackground(true);
 
@@ -48,13 +60,12 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
     initUI();
 
     connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
-        std::cout << "you can restart counting! :)" << std::endl;
         m_ticker->stop();
         m_timeout->start();
     });
 
     connect(m_timeout, &Mere::Lock::Waitbar::timeout, this, [&](){
-        emit cancelled();
+        emit escaped();
     });
 
     connect(m_secret, &Mere::Lock::Secret::changed, this, [&](){
@@ -63,11 +74,11 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
     });
 
     connect(m_secret, &Mere::Lock::Secret::entered, this, [&](){
-        emit attempted();
+        emit entered();
     });
 
     connect(m_secret, &Mere::Lock::Secret::escaped, this, [&](){
-        emit cancelled();
+        emit escaped();
     });
 }
 
@@ -84,41 +95,41 @@ void Mere::Lock::Prompt::initUI()
     QSpacerItem *bottomSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
     this->layout()->addItem(bottomSpacer);
 
-    m_result = new QLabel(tr("UnlockAttempt"), this);
-    m_result->setObjectName("UnlockAttempt");
+    m_message = new QLabel(tr("UnlockAttempt"), this);
+    m_message->setObjectName("UnlockAttemptMessage");
 
-    QSizePolicy sizePolicy = m_result->sizePolicy();
+    QSizePolicy sizePolicy = m_message->sizePolicy();
     sizePolicy.setRetainSizeWhenHidden(true);
-    m_result->setSizePolicy(sizePolicy);
+    m_message->setSizePolicy(sizePolicy);
 
-    this->layout()->addWidget(m_result);
+    this->layout()->addWidget(m_message);
 
-    m_result->setVisible(false);
+    m_message->setVisible(false);
 }
 
 void Mere::Lock::Prompt::initMessageUI()
 {
-    QLabel *label = new QLabel(tr("UnlockPrompt"), this);
-    label->setObjectName("UnlockPrompt");
-    label->setAlignment(Qt::AlignCenter);
-    this->layout()->addWidget(label);
+    m_prompt = new QLabel(tr("UnlockPrompt"), this);
+    m_prompt->setObjectName("UnlockPrompt");
+    m_prompt->setAlignment(Qt::AlignCenter);
+    this->layout()->addWidget(m_prompt);
 
-    QPalette palette = label->palette();
+    QPalette palette = m_prompt->palette();
     palette.setColor(QPalette::WindowText, m_config->unlockScreenPromptMessageColor());
-    label->setPalette(palette);
+    m_prompt->setPalette(palette);
 
-    QFont font = label->font();
+    QFont font = m_prompt->font();
     font.setPointSize(m_config->unlockScreenPromptMessageSize());
-    label->setFont(font);
+    m_prompt->setFont(font);
 
-    label->move(geometry().center() - label->fontMetrics().boundingRect(label->text()).center());
+    m_prompt->move(geometry().center() - m_prompt->fontMetrics().boundingRect(m_prompt->text()).center());
 }
 
 void Mere::Lock::Prompt::clear()
 {
     m_secret->clear();
 
-    m_result->setVisible(false);
+    m_message->setVisible(false);
 }
 
 void Mere::Lock::Prompt::setTimeout()
@@ -207,3 +218,13 @@ std::string Mere::Lock::Prompt::input() const
     return m_secret->secret();
 }
 
+void Mere::Lock::Prompt::prompt(const std::string &prompt)
+{
+    m_prompt->setText(QString::fromStdString(prompt));
+}
+
+void Mere::Lock::Prompt::message(const std::string &message)
+{
+    m_message->setText(QString::fromStdString(message));
+    if(m_message->isHidden()) m_message->show();
+}

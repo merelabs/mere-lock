@@ -15,7 +15,6 @@ class Config;
 class Ticker;
 class Unlocker;
 class LockScreen;
-class Prompt;
 
 class ScreenLocker : public QObject
 {
@@ -40,6 +39,8 @@ private:
     void tick();
 
     void restore();
+
+    void ask();
 
 signals:
     void locked();

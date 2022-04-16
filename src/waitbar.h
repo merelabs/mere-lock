@@ -1,5 +1,5 @@
-#ifndef MERE_LOCK_PROMPTBAR_H
-#define MERE_LOCK_PROMPTBAR_H
+#ifndef MERE_LOCK_WAITBAR_H
+#define MERE_LOCK_WAITBAR_H
 
 #include <QWidget>
 
@@ -27,12 +27,10 @@ signals:
     void timeout();
 
 private:
-    unsigned int m_step;
     QPropertyAnimation *m_animation;
-
     Mere::Lock::Config *m_config;
 };
 
 }
 }
-#endif // MERE_LOCK_PROMPTBAR_H
+#endif // MERE_LOCK_WAITBAR_H

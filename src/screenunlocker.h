@@ -18,16 +18,18 @@ class ScreenUnlocker : public Unlocker
 {
     Q_OBJECT
 public:
+    virtual ~ScreenUnlocker();
     explicit ScreenUnlocker(LockScreen *screen, QObject *parent = nullptr);
     int unlock() override;
 
+    bool verify(const std::string &secret) override;
+
 private:
     void prompt();
-    bool verify();    
 
 private:
     LockScreen *m_screen;
-    Mere::Lock::UnlockPrompt *m_prompt;
+    UnlockPrompt *m_prompt;
 
     Mere::Lock::Config *m_config;
 };

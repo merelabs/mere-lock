@@ -14,6 +14,7 @@ class Secret : public QLineEdit
 {
     Q_OBJECT
 public:
+    virtual ~Secret();
     explicit Secret(QWidget *parent = nullptr);
 
     std::string secret() const;

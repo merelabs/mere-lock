@@ -21,6 +21,8 @@ public:
     explicit Prompt(QWidget *parent = nullptr);
 
     std::string input() const;
+    void prompt(const std::string &prompt);
+    void message(const std::string &message);
 
 protected:
     void setVisible(bool visible) override;
@@ -35,14 +37,15 @@ private:
     void initMessageUI();
 
 signals:
-    void attempted();
-    void cancelled();
+    void entered();
+    void escaped();
 
 private slots:
     void clear();
 
 private:
-    QLabel *m_result;
+    QLabel *m_prompt;
+    QLabel *m_message;
 
     Mere::Lock::Secret *m_secret;
     Mere::Lock::Ticker *m_ticker;

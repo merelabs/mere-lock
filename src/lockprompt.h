@@ -1,5 +1,5 @@
-#ifndef MERE_LOCK_UNLOCKPROMPT_H
-#define MERE_LOCK_UNLOCKPROMPT_H
+#ifndef LOCKPROMPT_H
+#define LOCKPROMPT_H
 
 #include <QObject>
 
@@ -11,13 +11,12 @@ namespace Lock
 class Prompt;
 class LockScreen;
 
-class UnlockPrompt : public QObject
+class LockPrompt : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~UnlockPrompt();
-    explicit UnlockPrompt(LockScreen *screen, QObject *parent = nullptr);
-
+    virtual ~LockPrompt();
+    explicit LockPrompt(LockScreen *screen, QObject *parent = nullptr);
     void close();
     void prompt();
 
@@ -34,4 +33,4 @@ private:
 
 }
 }
-#endif // MERE_LOCK_UNLOCKPROMPT_H
+#endif // LOCKPROMPT_H

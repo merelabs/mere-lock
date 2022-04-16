@@ -85,6 +85,21 @@
         <source>UnlockAttempt</source>
         <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা করেছেন, আবার চেষ্টা করুন</translation>
     </message>
+    <message>
+        <source>UnlockAttemptFailed</source>
+        <translation>* দুঃখিত, স্ক্রিন আনলক করার ভুল চেষ্টা করেছেন, আবার চেষ্টা করুন</translation>
+    </message>
+</context>
+<context>
+    <name>Mere::Lock::LockPrompt</name>
+    <message>
+        <source>LockPrompt</source>
+        <translation>Enter your password and press return</translation>
+    </message>
+    <message>
+        <source>LockAttemptFailed</source>
+        <translation>* দুঃখিত, স্ক্রীন লক করার ভুল প্রচেষ্টা, আবার চেষ্টা করুন</translation>
+    </message>
 </context>
 <context>
     <name>Mere::Lock::LockScreen</name>

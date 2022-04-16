@@ -147,6 +147,16 @@ int Mere::Lock::Config::validate() const
     return err;
 }
 
+bool Mere::Lock::Config::ask() const
+{
+    return this->get("mere.lock.password.ask") == "1";
+}
+
+void Mere::Lock::Config::ask(bool ask)
+{
+    this->set("mere.lock.password.ask", ask ? "1" : "0");
+}
+
 std::string Mere::Lock::Config::password() const
 {
     return this->get("mere.lock.password");

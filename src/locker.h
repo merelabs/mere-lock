@@ -20,8 +20,6 @@ public:
     int lock();
     int unlock();
 
-    static uint Attempts;
-
 signals:
     void locked();
     void unlocked();

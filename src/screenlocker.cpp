@@ -2,8 +2,10 @@
 #include "config.h"
 #include "ticker.h"
 #include "lockscreen.h"
+#include "lockprompt.h"
 #include "screenunlocker.h"
 
+#include <QEventLoop>
 #include <QApplication>
 Mere::Lock::ScreenLocker::~ScreenLocker()
 {
@@ -56,7 +58,7 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
 
     m_screen->setFocusPolicy(Qt::StrongFocus);
     m_screen->setFocus(Qt::ActiveWindowFocusReason);
-    m_screen->installEventFilter(this);
+//    m_screen->installEventFilter(this);
 }
 
 int Mere::Lock::ScreenLocker::lock()
@@ -64,6 +66,9 @@ int Mere::Lock::ScreenLocker::lock()
     for(auto *screen : m_screens)
         screen->lock();
 
+    if (m_config->ask()) ask();
+
+    m_screen->installEventFilter(this);
     capture();
 
     emit locked();
@@ -131,10 +136,28 @@ void Mere::Lock::ScreenLocker::release()
     m_screen->releaseKeyboard();
 }
 
+void Mere::Lock::ScreenLocker::ask()
+{
+    Mere::Lock::LockPrompt prompt(m_screen);
+
+    QEventLoop loop;
+    connect(&prompt, &Mere::Lock::LockPrompt::attempted, [&](){
+        m_config->password(prompt.input());
+        loop.quit();
+
+    });
+    connect(&prompt, &Mere::Lock::LockPrompt::cancelled, [&](){
+        std::exit(1)  ;
+    });
+
+    prompt.prompt();
+    loop.exec();
+}
+
 bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
 {
     if ((event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
-         &&  m_unlocker->state() != Mere::Lock::Unlocker::InProgress)
+         && m_unlocker->state() != Mere::Lock::Unlocker::InProgress )
     {
 #ifdef QT_DEBUG
         // - test code
@@ -143,7 +166,6 @@ bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
             ::exit(0);
         // - end of test code
 #endif
-
         if (m_unlocker->attempt() < m_config->unlockAttempts())
             unlock();
 

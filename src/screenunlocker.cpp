@@ -1,12 +1,16 @@
 #include "screenunlocker.h"
 #include "config.h"
 #include "lockscreen.h"
+#include "prompt.h"
 #include "unlockprompt.h"
 
 #include "mere/auth/service.h"
 #include "mere/utils/stringutils.h"
 
 #include <QTimer>
+Mere::Lock::ScreenUnlocker::~ScreenUnlocker()
+{
+}
 
 Mere::Lock::ScreenUnlocker::ScreenUnlocker(LockScreen *screen, QObject *parent)
     : Unlocker(parent),
@@ -14,6 +18,7 @@ Mere::Lock::ScreenUnlocker::ScreenUnlocker(LockScreen *screen, QObject *parent)
       m_prompt(nullptr),
       m_config(Mere::Lock::Config::instance())
 {
+
 }
 
 int Mere::Lock::ScreenUnlocker::unlock()
@@ -28,54 +33,44 @@ void Mere::Lock::ScreenUnlocker::prompt()
 {
     if (!m_prompt)
     {
-        m_prompt = new Mere::Lock::UnlockPrompt(m_screen);
+        m_prompt = new Mere::Lock::UnlockPrompt(m_screen, this);
         connect(m_prompt, &Mere::Lock::UnlockPrompt::attempted, [&](){
-            bool ok = verify();
-            if (ok)
-            {
-                state(0);
-                m_prompt->close();
-                emit unlocked();
-            }
-            else
-            {
-                attempt(attempt() + 1);
-                if (attempt() == m_config->unlockAttempts())
-                {
-                    state(0);
-                    m_prompt->close();
-                    QTimer::singleShot(.1 * 1000 * 60, this, [&](){
-                        attempt(0);
-                        emit unblocked();
-                    });
-
-                    emit blocked();
-                }
-            }
+            verify(m_prompt->input());
         });
         connect(m_prompt, &Mere::Lock::UnlockPrompt::cancelled, [&](){
             state(0);
             m_prompt->close();
             emit cancelled();
         });
-
     }
-
-    state(1);
     m_prompt->prompt();
 }
 
-bool Mere::Lock::ScreenUnlocker::verify()
+bool Mere::Lock::ScreenUnlocker::verify(const std::string &secret)
 {
-    std::string input = m_prompt->input();
-    if (Mere::Utils::StringUtils::isBlank(input))
-        return false;
+    bool ok = Mere::Lock::Unlocker::verify(secret);
+    if (ok)
+    {
+        state(0);
+        m_prompt->close();
+        emit unlocked();
+    }
+    else
+    {
+        m_prompt->message(Mere::Lock::Prompt::tr("UnlockAttemptFailed").toStdString());
 
-    std::string password = m_config->password();
-    if (Mere::Utils::StringUtils::isNotBlank(password) && input == password)
-        return true;
+        if (attempt() == m_config->unlockAttempts())
+        {
+            state(0);
+            m_prompt->close();
+            QTimer::singleShot(m_config->blockTimeout() * 1000 * 60, this, [&](){
+                attempt(0);
+                emit unblocked();
+            });
 
-    Mere::Auth::Service service;
-    return service.verify(input);
+            emit blocked();
+        }
+    }
+
+    return ok;
 }
-

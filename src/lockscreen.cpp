@@ -5,7 +5,6 @@
 
 #include <QScreen>
 #include <QWindow>
-#include <QApplication>
 
 Mere::Lock::LockScreen::~LockScreen()
 {
@@ -71,11 +70,11 @@ void Mere::Lock::LockScreen::tick()
     if (isBlocked())
     {
         m_blocktime = m_blocktime.addSecs(-1);
-        m_time->setText(m_blocktime.toString("hh:mm:ss"));
+        if(m_time->isVisible()) m_time->setText(m_blocktime.toString("hh:mm:ss"));
     }
     else
     {
-        m_time->setText(m_elaspsetime.toString("hh:mm:ss"));
+        if(m_time->isVisible()) m_time->setText(m_elaspsetime.toString("hh:mm:ss"));
     }
 }
 
