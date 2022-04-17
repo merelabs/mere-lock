@@ -53,33 +53,18 @@ LockApp::LockApp(int &argc, char **argv)
 
     parser.addOptions({configOption, passwordOption, timeoutOption, screenOption, strictOption});
 
-    //parser.process(QCoreApplication::arguments());
     bool askPassword = false;
     if(!parser.parse(QCoreApplication::arguments()))
     {
-        // kind of hack to make -p/--password value optional
+        // Hack
+        // make -p/--password value optional
         QString message = parser.errorText();
-        if (message.startsWith("Missing value after '-p'") || message.startsWith("Missing value after '--password'"))
+        if (!message.startsWith("Missing value after '-p'") && !message.startsWith("Missing value after '--password'"))
         {
-            askPassword = true;
-//            QMessageBox msgBox;
-//            msgBox.setText("The document has been modified.");
-//            msgBox.exec();
-//            bool ok;
-//            QString text = QInputDialog::getText(0, "Input dialog",
-//                                                     "Date of Birth:", QLineEdit::Normal,
-//                                                     "", &ok);
-            // to fake isSet
-//            passwordOption.setValueName("");
-        }
-        else
-        {
-            qDebug() << message;
+            std::cout << message << std::endl;
             std::exit(1);
         }
-
     }
-
 
     m_config = Mere::Lock::Config::instance(parser.value(configOption).toStdString(),
                                             parser.isSet(strictOption)
@@ -105,15 +90,6 @@ LockApp::LockApp(int &argc, char **argv)
 
     if (parser.isSet(passwordOption))
     {
-//        if (askPassword)
-//        {
-//            bool ok;
-//            QString password = QInputDialog::getText(0, "Input dialog",
-//                                                     "Enter your secret:", QLineEdit::Normal,
-//                                                     "", &ok);
-//            m_config->password(password.toStdString());
-//        }
-//        else
         std::string password = parser.value(passwordOption).toStdString();
 
         m_config->ask(Mere::Utils::StringUtils::isBlank(password));
