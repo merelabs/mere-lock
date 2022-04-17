@@ -53,7 +53,6 @@ LockApp::LockApp(int &argc, char **argv)
 
     parser.addOptions({configOption, passwordOption, timeoutOption, screenOption, strictOption});
 
-    bool askPassword = false;
     if(!parser.parse(QCoreApplication::arguments()))
     {
         // Hack
@@ -61,7 +60,7 @@ LockApp::LockApp(int &argc, char **argv)
         QString message = parser.errorText();
         if (!message.startsWith("Missing value after '-p'") && !message.startsWith("Missing value after '--password'"))
         {
-            std::cout << message << std::endl;
+            std::cout << message.toStdString() << std::endl;
             std::exit(1);
         }
     }
