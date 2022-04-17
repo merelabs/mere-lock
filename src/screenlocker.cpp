@@ -58,7 +58,6 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
 
     m_screen->setFocusPolicy(Qt::StrongFocus);
     m_screen->setFocus(Qt::ActiveWindowFocusReason);
-//    m_screen->installEventFilter(this);
 }
 
 int Mere::Lock::ScreenLocker::lock()
@@ -66,12 +65,13 @@ int Mere::Lock::ScreenLocker::lock()
     for(auto *screen : m_screens)
         screen->lock();
 
-    if (m_config->ask()) ask();
+    // if user does not provide value
+    // for -p/--password option, ask it.
+    if (m_config->ask() && ask())
+        return 1;
 
     m_screen->installEventFilter(this);
     capture();
-
-    emit locked();
 
     return 0;
 }
@@ -136,8 +136,10 @@ void Mere::Lock::ScreenLocker::release()
     m_screen->releaseKeyboard();
 }
 
-void Mere::Lock::ScreenLocker::ask()
+int Mere::Lock::ScreenLocker::ask()
 {
+    int ok = 0;
+
     Mere::Lock::LockPrompt prompt(m_screen);
 
     QEventLoop loop;
@@ -147,11 +149,14 @@ void Mere::Lock::ScreenLocker::ask()
 
     });
     connect(&prompt, &Mere::Lock::LockPrompt::cancelled, [&](){
-        std::exit(1)  ;
+        ok = 1;
+        loop.quit();
     });
 
     prompt.prompt();
     loop.exec();
+
+    return ok;
 }
 
 bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)

@@ -40,10 +40,10 @@ private:
 
     void restore();
 
-    void ask();
+    int ask();
 
 signals:
-    void locked();
+//    void locked();
     void unlocked();
 
 private:

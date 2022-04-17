@@ -107,11 +107,14 @@ LockApp::LockApp(int &argc, char **argv)
 
     m_locker = new Mere::Lock::Locker(this);
     connect(m_locker, &Mere::Lock::Locker::unlocked, [&](){
+        // log here
         quit();
     });
 }
 
 int LockApp::start()
 {
-    return m_locker->lock();
+    int ok = m_locker->lock();
+    // log here
+    return ok;
 }
