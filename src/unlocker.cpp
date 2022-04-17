@@ -32,20 +32,20 @@ void Mere::Lock::Unlocker::attempt(unsigned int attempt)
     m_attempt = attempt;
 }
 
-int Mere::Lock::Unlocker::verify(const std::string &secret)
+bool Mere::Lock::Unlocker::verify(const std::string &secret)
 {
     // increase the attempt even it is with empty password
     ++m_attempt;
 
     if (Mere::Utils::StringUtils::isBlank(secret))
-        return 1;
+        return false;
 
     auto config = Mere::Lock::Config::instance();
 
     std::string password = config->password();
     if (Mere::Utils::StringUtils::isNotBlank(password) && secret == password)
-        return 0;
+        return true;
 
     Mere::Auth::Service service;
-    return !service.verify(secret);
+    return service.verify(secret);
 }

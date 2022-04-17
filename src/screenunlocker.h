@@ -12,7 +12,6 @@ namespace Lock
 
 class Config;
 class LockScreen;
-class UnlockPrompt;
 
 class ScreenUnlocker : public Unlocker
 {
@@ -22,15 +21,11 @@ public:
     explicit ScreenUnlocker(LockScreen *screen, QObject *parent = nullptr);
     int unlock() override;
 
-    int verify(const std::string &secret) override;
-
 private:
     int ask();
 
 private:
     LockScreen *m_screen;
-    UnlockPrompt *m_prompt;
-
     Mere::Lock::Config *m_config;
 };
 

@@ -33,24 +33,7 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
     m_screen = m_screens.at(0);
 
     m_unlocker = new Mere::Lock::ScreenUnlocker(m_screen, this);
-//    connect(m_unlocker, &Mere::Lock::Unlocker::blocked, this, [&](){
-//        block();
-//    });
-
-//    connect(m_unlocker, &Mere::Lock::Unlocker::unblocked, this, [&](){
-//        unblock();
-//    });
-
-//    connect(m_unlocker, &Mere::Lock::Unlocker::unlocked, this, [&](){
-//        release();
-//        emit unlocked();
-//    });
-
-//    connect(m_unlocker, &Mere::Lock::Unlocker::cancelled, this, [&](){
-//        restore();
-//    });
-
-    connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
+    connect(m_ticker, &Mere::Lock::Ticker::tick, [&]{
         tick();
     });
 
@@ -70,7 +53,6 @@ int Mere::Lock::ScreenLocker::lock()
     if (m_config->ask() && ask())
         return 1;
 
-    m_screen->installEventFilter(this);
     capture();
 
     return 0;
@@ -102,7 +84,7 @@ int Mere::Lock::ScreenLocker::block()
     capture();
 
 //    QTimer::singleShot(m_config->blockTimeout() * 1000 * 60, this, [&](){
-    QTimer::singleShot(.1 * 1000 * 60, this, [&](){
+    QTimer::singleShot(.1 * 1000 * 60, this, [&]{
         unblock();
     });
 
@@ -127,12 +109,15 @@ void Mere::Lock::ScreenLocker::capture()
 {
     m_screen->grabMouse();
     m_screen->grabKeyboard();
+    m_screen->installEventFilter(this);
+
 }
 
 void Mere::Lock::ScreenLocker::release()
 {
     m_screen->releaseMouse();
     m_screen->releaseKeyboard();
+    m_screen->removeEventFilter(this);
 }
 
 int Mere::Lock::ScreenLocker::ask()
@@ -172,11 +157,22 @@ bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
 #endif
         if (m_unlocker->attempt() < m_config->unlockAttempts())
         {
+            release();
             int ok = unlock();
-            // signal from here
-            if (ok == 0) emit unlocked();
-            if (ok == 1) restore();
-            if (ok == 2) block();
+            capture();
+
+            switch (ok)
+            {
+                case 1:
+                    restore();
+                    break;
+                case 2:
+                    block();
+                    break;
+                default:
+                    emit unlocked();
+                    break;
+            }
         }
 
         return true;

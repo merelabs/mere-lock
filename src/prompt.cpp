@@ -73,13 +73,11 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
         m_ticker->start();
     });
 
-    connect(m_secret, &Mere::Lock::Secret::entered, this, [&](){
-        emit entered();
-    });
+    connect(m_secret, &Mere::Lock::Secret::entered, this, &Mere::Lock::Prompt::entered);
+    connect(m_secret, &Mere::Lock::Secret::escaped, this, &Mere::Lock::Prompt::escaped);
 
-    connect(m_secret, &Mere::Lock::Secret::escaped, this, [&](){
-        emit escaped();
-    });
+    grabMouse();
+    grabKeyboard();
 }
 
 void Mere::Lock::Prompt::initUI()

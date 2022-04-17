@@ -15,9 +15,7 @@ Mere::Lock::Locker::Locker(QObject *parent)
     : QObject(parent)
 {
     m_locker = new Mere::Lock::ScreenLocker(this);
-    connect(m_locker, &Mere::Lock::ScreenLocker::unlocked, this, [&](){
-        emit unlocked();
-    });
+    connect(m_locker, &Mere::Lock::ScreenLocker::unlocked, this, &Mere::Lock::Locker::unlocked);
 }
 
 int Mere::Lock::Locker::lock()

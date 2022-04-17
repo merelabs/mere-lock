@@ -16,12 +16,8 @@ Mere::Lock::LockPrompt::LockPrompt(LockScreen *screen, QObject *parent)
     : QObject(parent),
       m_prompt(new Mere::Lock::Prompt(screen))
 {
-    connect(m_prompt, &Mere::Lock::Prompt::entered, this, [&](){
-        emit attempted();
-    });
-    connect(m_prompt, &Mere::Lock::Prompt::escaped, [&](){
-        emit cancelled();
-    });
+    connect(m_prompt, &Mere::Lock::Prompt::entered, this, &Mere::Lock::LockPrompt::attempted);
+    connect(m_prompt, &Mere::Lock::Prompt::escaped, this, &Mere::Lock::LockPrompt::cancelled);
 
     m_prompt->prompt(Mere::Lock::LockPrompt::tr("LockPrompt").toStdString());
 }

@@ -12,13 +12,8 @@ Mere::Lock::Secret::Secret(QWidget *parent)
     setEchoMode(QLineEdit::Password);
     setFocus();
 
-    connect(this, &QLineEdit::cursorPositionChanged, [&](){
-        emit changed();
-    });
-
-    connect(this, &QLineEdit::returnPressed, [&](){
-        emit entered();
-    });
+    connect(this, &QLineEdit::cursorPositionChanged, this, &Mere::Lock::Secret::changed);
+    connect(this, &QLineEdit::returnPressed, this, &Mere::Lock::Secret::entered);
 }
 
 std::string Mere::Lock::Secret::secret() const

@@ -19,10 +19,7 @@ Mere::Lock::Ticker::Ticker(unsigned int step, QObject *parent)
       m_timer(new QTimer(this))
 {
     m_timer->setInterval(step * 1000);
-    connect(m_timer, &QTimer::timeout, this, [&](){
-        std::cout << "..." << std::endl;
-        emit tick();
-    });
+    connect(m_timer, &QTimer::timeout, this, &Mere::Lock::Ticker::tick);
 }
 
 int Mere::Lock::Ticker::start()

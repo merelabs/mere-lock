@@ -16,12 +16,8 @@ Mere::Lock::UnlockPrompt::UnlockPrompt(LockScreen *screen, QObject *parent)
     : QObject(parent),
       m_prompt(new Mere::Lock::Prompt(screen))
 {
-    connect(m_prompt, &Mere::Lock::Prompt::entered, this, [&](){
-        emit attempted();
-    });
-    connect(m_prompt, &Mere::Lock::Prompt::escaped, [&](){
-        emit cancelled();
-    });
+    connect(m_prompt, &Mere::Lock::Prompt::entered, this, &Mere::Lock::UnlockPrompt::attempted);
+    connect(m_prompt, &Mere::Lock::Prompt::escaped, this, &Mere::Lock::UnlockPrompt::cancelled);
 }
 
 std::string Mere::Lock::UnlockPrompt::input() const
