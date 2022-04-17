@@ -1,4 +1,4 @@
-#include "waitbar.h"
+#include "timebar.h"
 #include "config.h"
 
 #include <iostream>
@@ -7,11 +7,11 @@
 // 0 width works like hidden bar
 static const QRect WAITBAR_INIT_STATE = QRect(10, 10, 0, 2);
 
-Mere::Lock::Waitbar::~Waitbar()
+Mere::Lock::Timebar::~Timebar()
 {
 }
 
-Mere::Lock::Waitbar::Waitbar(QWidget *parent)
+Mere::Lock::Timebar::Timebar(QWidget *parent)
     : QWidget(parent),
       m_animation(new QPropertyAnimation(this, "geometry", this)),
       m_config(Mere::Lock::Config::instance())
@@ -30,7 +30,7 @@ Mere::Lock::Waitbar::Waitbar(QWidget *parent)
     });
 }
 
-int Mere::Lock::Waitbar::start()
+int Mere::Lock::Timebar::start()
 {
     qDebug() << "Waitbar::start";
     m_animation->start();
@@ -38,7 +38,7 @@ int Mere::Lock::Waitbar::start()
     return 0;
 }
 
-int Mere::Lock::Waitbar::stop()
+int Mere::Lock::Timebar::stop()
 {
     qDebug() << "Waitbar::stop";
     m_animation->stop();
@@ -46,7 +46,7 @@ int Mere::Lock::Waitbar::stop()
     return 0;
 }
 
-int Mere::Lock::Waitbar::reset()
+int Mere::Lock::Timebar::reset()
 {
     qDebug() << "Waitbar::reset";
     stop();

@@ -1,7 +1,7 @@
 #include "prompt.h"
 #include "config.h"
 #include "ticker.h"
-#include "waitbar.h"
+#include "timebar.h"
 #include "secret.h"
 
 #include "mere/utils/stringutils.h"
@@ -64,7 +64,7 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
         m_timeout->start();
     });
 
-    connect(m_timeout, &Mere::Lock::Waitbar::timeout, this, [&](){
+    connect(m_timeout, &Mere::Lock::Timebar::timeout, this, [&](){
         emit escaped();
     });
 
@@ -132,7 +132,7 @@ void Mere::Lock::Prompt::clear()
 
 void Mere::Lock::Prompt::setTimeout()
 {
-    m_timeout = new Mere::Lock::Waitbar(this);
+    m_timeout = new Mere::Lock::Timebar(this);
 }
 
 void Mere::Lock::Prompt::setVisible(bool visible)

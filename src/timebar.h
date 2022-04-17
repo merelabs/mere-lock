@@ -12,12 +12,12 @@ namespace Lock
 
 class Config;
 
-class Waitbar : public QWidget
+class Timebar : public QWidget
 {
     Q_OBJECT
 public:
-    virtual ~Waitbar();
-    explicit Waitbar(QWidget *parent = nullptr);
+    virtual ~Timebar();
+    explicit Timebar(QWidget *parent = nullptr);
 
     int start();
     int stop();

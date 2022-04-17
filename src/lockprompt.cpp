@@ -19,7 +19,10 @@ Mere::Lock::LockPrompt::LockPrompt(LockScreen *screen, QObject *parent)
     connect(m_prompt, &Mere::Lock::Prompt::entered, this, &Mere::Lock::LockPrompt::attempted);
     connect(m_prompt, &Mere::Lock::Prompt::escaped, this, &Mere::Lock::LockPrompt::cancelled);
 
+//    m_prompt->logo();
+//    m_prompt->background();
     m_prompt->prompt(Mere::Lock::LockPrompt::tr("LockPrompt").toStdString());
+//    m_prompt->init();
 }
 
 std::string Mere::Lock::LockPrompt::input() const
