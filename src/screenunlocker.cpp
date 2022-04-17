@@ -8,6 +8,8 @@
 #include "mere/utils/stringutils.h"
 
 #include <QTimer>
+#include <QEventLoop>
+
 Mere::Lock::ScreenUnlocker::~ScreenUnlocker()
 {
 }
@@ -24,52 +26,84 @@ Mere::Lock::ScreenUnlocker::ScreenUnlocker(LockScreen *screen, QObject *parent)
 int Mere::Lock::ScreenUnlocker::unlock()
 {
     state(1);
-    prompt();
+    int ok = ask();
 
-    return 0;
+    state(0);
+
+    return ok;
 }
 
-void Mere::Lock::ScreenUnlocker::prompt()
+int Mere::Lock::ScreenUnlocker::ask()
 {
-    if (!m_prompt)
-    {
-        m_prompt = new Mere::Lock::UnlockPrompt(m_screen, this);
-        connect(m_prompt, &Mere::Lock::UnlockPrompt::attempted, [&](){
-            verify(m_prompt->input());
-        });
-        connect(m_prompt, &Mere::Lock::UnlockPrompt::cancelled, [&](){
-            state(0);
-            m_prompt->close();
-            emit cancelled();
-        });
-    }
-    m_prompt->prompt();
+//    if (!m_prompt)
+//    {
+//        m_prompt = new Mere::Lock::UnlockPrompt(m_screen, this);
+//        connect(m_prompt, &Mere::Lock::UnlockPrompt::attempted, [&](){
+//            verify(m_prompt->input());
+//        });
+//        connect(m_prompt, &Mere::Lock::UnlockPrompt::cancelled, [&](){
+//            state(0);
+//            m_prompt->close();
+//            emit cancelled();
+//        });
+//    }
+//    m_prompt->prompt();
+
+    int ok = 0;
+
+    Mere::Lock::UnlockPrompt prompt(m_screen);
+
+    QEventLoop loop;
+    connect(&prompt, &Mere::Lock::UnlockPrompt::attempted, [&](){
+        ok = verify(prompt.input());
+        if (ok == 0 || ok == 2)
+            loop.quit();
+
+    });
+    connect(&prompt, &Mere::Lock::UnlockPrompt::cancelled, [&](){
+        ok = 1;
+        loop.quit();
+    });
+
+    prompt.prompt();
+    loop.exec();
+
+    return ok;
 }
 
-bool Mere::Lock::ScreenUnlocker::verify(const std::string &secret)
+int Mere::Lock::ScreenUnlocker::verify(const std::string &secret)
 {
-    bool ok = Mere::Lock::Unlocker::verify(secret);
-    if (ok)
-    {
-        state(0);
-        m_prompt->close();
-        emit unlocked();
-    }
-    else
-    {
-        m_prompt->message(Mere::Lock::Prompt::tr("UnlockAttemptFailed").toStdString());
+//    bool ok = Mere::Lock::Unlocker::verify(secret);
+//    if (ok)
+//    {
+//        state(0);
+//        m_prompt->close();
+//        emit unlocked();
+//    }
+//    else
+//    {
+//        m_prompt->message(Mere::Lock::Prompt::tr("UnlockAttemptFailed").toStdString());
 
-        if (attempt() == m_config->unlockAttempts())
-        {
-            state(0);
-            m_prompt->close();
-            QTimer::singleShot(m_config->blockTimeout() * 1000 * 60, this, [&](){
-                attempt(0);
-                emit unblocked();
-            });
+//        if (attempt() == m_config->unlockAttempts())
+//        {
+//            state(0);
+//            m_prompt->close();
+//            QTimer::singleShot(m_config->blockTimeout() * 1000 * 60, this, [&](){
+//                attempt(0);
+//                emit unblocked();
+//            });
 
-            emit blocked();
-        }
+//            emit blocked();
+//        }
+//    }
+
+//    return ok;
+
+    int ok = Mere::Lock::Unlocker::verify(secret);
+    if (ok && attempt() == m_config->unlockAttempts())
+    {
+        attempt(0);
+        ok = 2;
     }
 
     return ok;

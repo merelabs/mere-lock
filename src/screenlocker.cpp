@@ -33,22 +33,22 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
     m_screen = m_screens.at(0);
 
     m_unlocker = new Mere::Lock::ScreenUnlocker(m_screen, this);
-    connect(m_unlocker, &Mere::Lock::Unlocker::blocked, this, [&](){
-        block();
-    });
+//    connect(m_unlocker, &Mere::Lock::Unlocker::blocked, this, [&](){
+//        block();
+//    });
 
-    connect(m_unlocker, &Mere::Lock::Unlocker::unblocked, this, [&](){
-        unblock();
-    });
+//    connect(m_unlocker, &Mere::Lock::Unlocker::unblocked, this, [&](){
+//        unblock();
+//    });
 
-    connect(m_unlocker, &Mere::Lock::Unlocker::unlocked, this, [&](){
-        release();
-        emit unlocked();
-    });
+//    connect(m_unlocker, &Mere::Lock::Unlocker::unlocked, this, [&](){
+//        release();
+//        emit unlocked();
+//    });
 
-    connect(m_unlocker, &Mere::Lock::Unlocker::cancelled, this, [&](){
-        restore();
-    });
+//    connect(m_unlocker, &Mere::Lock::Unlocker::cancelled, this, [&](){
+//        restore();
+//    });
 
     connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
         tick();
@@ -83,13 +83,7 @@ int Mere::Lock::ScreenLocker::unlock()
 
     release();
 
-    m_unlocker->unlock();
-
-//    m_ticker->stop();
-
-//    emit unlocked();
-
-    return 0;
+    return m_unlocker->unlock();
 }
 
 void Mere::Lock::ScreenLocker::restore()
@@ -106,6 +100,11 @@ int Mere::Lock::ScreenLocker::block()
         screen->block();
 
     capture();
+
+//    QTimer::singleShot(m_config->blockTimeout() * 1000 * 60, this, [&](){
+    QTimer::singleShot(.1 * 1000 * 60, this, [&](){
+        unblock();
+    });
 
     return 0;
 }
@@ -172,7 +171,13 @@ bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
         // - end of test code
 #endif
         if (m_unlocker->attempt() < m_config->unlockAttempts())
-            unlock();
+        {
+            int ok = unlock();
+            // signal from here
+            if (ok == 0) emit unlocked();
+            if (ok == 1) restore();
+            if (ok == 2) block();
+        }
 
         return true;
     }

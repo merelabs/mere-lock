@@ -22,10 +22,10 @@ public:
     explicit ScreenUnlocker(LockScreen *screen, QObject *parent = nullptr);
     int unlock() override;
 
-    bool verify(const std::string &secret) override;
+    int verify(const std::string &secret) override;
 
 private:
-    void prompt();
+    int ask();
 
 private:
     LockScreen *m_screen;

@@ -43,7 +43,6 @@ private:
     int ask();
 
 signals:
-//    void locked();
     void unlocked();
 
 private:

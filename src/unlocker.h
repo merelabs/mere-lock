@@ -20,7 +20,7 @@ public:
     virtual unsigned int attempt();
     virtual void attempt(unsigned int attempt);
 
-    virtual bool verify(const std::string &secret);
+    virtual int verify(const std::string &secret);
 
     static int InProgress;
 

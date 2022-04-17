@@ -4,7 +4,12 @@
 
 Mere::Lock::UnlockPrompt::~UnlockPrompt()
 {
-
+    if (m_prompt)
+    {
+        m_prompt->disconnect();
+        delete m_prompt;
+        m_prompt = nullptr;
+    }
 }
 
 Mere::Lock::UnlockPrompt::UnlockPrompt(LockScreen *screen, QObject *parent)
