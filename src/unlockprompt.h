@@ -1,35 +1,36 @@
 #ifndef MERE_LOCK_UNLOCKPROMPT_H
 #define MERE_LOCK_UNLOCKPROMPT_H
 
-#include <QObject>
+#include "prompt.h"
 
 namespace Mere
 {
 namespace Lock
 {
 
-class Prompt;
+class Config;
 class LockScreen;
 
-class UnlockPrompt : public QObject
+class UnlockPrompt : public Prompt
 {
     Q_OBJECT
 public:
     virtual ~UnlockPrompt();
-    explicit UnlockPrompt(LockScreen *screen, QObject *parent = nullptr);
+    explicit UnlockPrompt(LockScreen *screen, QWidget *parent = nullptr);
 
-    void close();
-    void prompt();
+protected:
+    void initUI() override;
 
-    std::string input() const;
-    void message(const std::string &message);
+private:
+    void setBackground() override;
+    void setPromptLogo() override;
 
 signals:
     void attempted();
     void cancelled();
 
 private:
-    Prompt *m_prompt;
+    Mere::Lock::Config *m_config;
 };
 
 }

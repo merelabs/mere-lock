@@ -1,8 +1,7 @@
-#ifndef LOCKPROMPT_H
-#define LOCKPROMPT_H
+#ifndef MERE_LOCK_LOCKPROMPT_H
+#define MERE_LOCK_LOCKPROMPT_H
 
 #include "prompt.h"
-#include <QObject>
 
 namespace Mere
 {
@@ -10,7 +9,6 @@ namespace Lock
 {
 
 class Config;
-//class Prompt;
 class LockScreen;
 
 class LockPrompt : public Prompt
@@ -19,11 +17,9 @@ class LockPrompt : public Prompt
 public:
     virtual ~LockPrompt();
     explicit LockPrompt(LockScreen *screen, QWidget *parent = nullptr);
-//    void close();
-    void prompt();
 
-//    std::string input() const;
-//    void message(const std::string &message);
+protected:
+    void initUI() override;
 
 private:
     void setBackground() override;
@@ -34,11 +30,9 @@ signals:
     void cancelled();
 
 private:
-//    Prompt *m_prompt;
     Mere::Lock::Config *m_config;
-
 };
 
 }
 }
-#endif // LOCKPROMPT_H
+#endif // MERE_LOCK_LOCKPROMPT_H

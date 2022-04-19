@@ -23,15 +23,19 @@ public:
     std::string input() const;
     void prompt(const std::string &prompt);
     void message(const std::string &message);
+    void prompt(){showNormal();}
+
 
 protected:
-    void setVisible(bool visible) override;
-
-private:
-    void initUI();
-    void setShadow();
+    virtual void initUI();
     virtual void setBackground();
     virtual void setPromptLogo();
+
+    void setVisible(bool visible) override;
+    void setLogo(QPixmap pixmap);
+
+private:
+    void setShadow();
     void setTimeout();
 
     void initMessageUI();
@@ -44,6 +48,7 @@ private slots:
     void clear();
 
 private:
+    QLabel *m_logo;
     QLabel *m_prompt;
     QLabel *m_message;
 

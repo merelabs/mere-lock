@@ -47,17 +47,67 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
     QRect geometry(0, 0, rect.width(), rect.height());
     move(geometry.center() - this->rect().center());
 
-    setShadow();
-    setBackground();
-    setPromptLogo();
-    setTimeout();
+//    setShadow();
+//    setBackground();
+//    setPromptLogo();
+//    setTimeout();
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setAlignment(Qt::AlignCenter);
     layout->setContentsMargins(50, 15, 50, 15);
     layout->setSpacing(0);
 
-    initUI();
+//    initUI();
+
+//    connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
+//        m_ticker->stop();
+//        m_timeout->start();
+//    });
+
+//    connect(m_timeout, &Mere::Lock::Timebar::timeout, this, [&](){
+//        emit escaped();
+//    });
+
+//    connect(m_secret, &Mere::Lock::Secret::changed, this, [&](){
+//        m_timeout->reset();
+//        m_ticker->start();
+//    });
+
+//    connect(m_secret, &Mere::Lock::Secret::entered, this, &Mere::Lock::Prompt::entered);
+//    connect(m_secret, &Mere::Lock::Secret::escaped, this, &Mere::Lock::Prompt::escaped);
+
+    grabMouse();
+    grabKeyboard();
+}
+
+void Mere::Lock::Prompt::initUI()
+{
+    setShadow();
+    setBackground();
+    setPromptLogo();
+    setTimeout();
+
+    QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
+    this->layout()->addItem(topSpacer);
+
+    initMessageUI();
+
+    m_secret = new Mere::Lock::Secret(this);
+    this->layout()->addWidget(m_secret);
+
+    QSpacerItem *bottomSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
+    this->layout()->addItem(bottomSpacer);
+
+    m_message = new QLabel(tr("Attempt"), this);
+    m_message->setObjectName("AttemptMessage");
+
+    QSizePolicy sizePolicy = m_message->sizePolicy();
+    sizePolicy.setRetainSizeWhenHidden(true);
+    m_message->setSizePolicy(sizePolicy);
+
+    this->layout()->addWidget(m_message);
+
+    m_message->setVisible(false);
 
     connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
         m_ticker->stop();
@@ -75,40 +125,12 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
 
     connect(m_secret, &Mere::Lock::Secret::entered, this, &Mere::Lock::Prompt::entered);
     connect(m_secret, &Mere::Lock::Secret::escaped, this, &Mere::Lock::Prompt::escaped);
-
-    grabMouse();
-    grabKeyboard();
-}
-
-void Mere::Lock::Prompt::initUI()
-{
-    QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
-    this->layout()->addItem(topSpacer);
-
-    initMessageUI();
-
-    m_secret = new Mere::Lock::Secret(this);
-    this->layout()->addWidget(m_secret);
-
-    QSpacerItem *bottomSpacer = new QSpacerItem(1, 1, QSizePolicy::Fixed, QSizePolicy::Expanding);
-    this->layout()->addItem(bottomSpacer);
-
-    m_message = new QLabel(tr("UnlockAttempt"), this);
-    m_message->setObjectName("UnlockAttemptMessage");
-
-    QSizePolicy sizePolicy = m_message->sizePolicy();
-    sizePolicy.setRetainSizeWhenHidden(true);
-    m_message->setSizePolicy(sizePolicy);
-
-    this->layout()->addWidget(m_message);
-
-    m_message->setVisible(false);
 }
 
 void Mere::Lock::Prompt::initMessageUI()
 {
-    m_prompt = new QLabel(tr("UnlockPrompt"), this);
-    m_prompt->setObjectName("UnlockPrompt");
+    m_prompt = new QLabel(tr("Prompt"), this);
+    m_prompt->setObjectName("Prompt");
     m_prompt->setAlignment(Qt::AlignCenter);
     this->layout()->addWidget(m_prompt);
 
@@ -167,46 +189,27 @@ void Mere::Lock::Prompt::setShadow()
 
 void Mere::Lock::Prompt::setBackground()
 {
-    QPalette pal = palette();
-    QPixmap pixmap = m_config->promptBackgroundImage();
-    if (!pixmap.isNull())
-    {
-        pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
-        pal.setBrush(QPalette::Window, pixmap);
-    }
-    else
-    {
-        QColor color = m_config->promptBackgroundColor();
-        pal.setColor(QPalette::Window, QColor(color));
-    }
-
-    setPalette(pal);
 }
 
 void Mere::Lock::Prompt::setPromptLogo()
 {
-    if(!m_config->promptLogoShow()) return;
+    m_logo = new QLabel(this);
+    m_logo->setMargin(0);
+    m_logo->setContentsMargins(0, 0, 0, 0);
+    m_logo->setAlignment(Qt::AlignCenter);
+    m_logo->setMinimumHeight(96);
+    m_logo->setMaximumHeight(96);
 
-    QPixmap pixmap = m_config->promptLogo();
-    if (pixmap.isNull())
-    {
-        //std::cout << "Unable to create image for prompt logo; please check the image path." << path << std::endl;
-        std::cout << "Prompt logo missing!" << std::endl;
-        return;
-    }
+    m_logo->move(this->width()/2 - m_logo->width()/2, 30);
+}
+
+void Mere::Lock::Prompt::setLogo(QPixmap pixmap)
+{
+    if (pixmap.isNull()) return;
 
     QSize size(geometry().width() - 50, 96);
     pixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-    QLabel *label = new QLabel(this);
-    label->setMargin(0);
-    label->setContentsMargins(0, 0, 0, 0);
-    label->setAlignment(Qt::AlignCenter);
-    label->setMinimumHeight(96);
-    label->setMaximumHeight(96);
-    label->setPixmap(pixmap);
-
-    label->move(this->width()/2 - label->width()/2, 30);
+    m_logo->setPixmap(pixmap);
 }
 
 std::string Mere::Lock::Prompt::input() const

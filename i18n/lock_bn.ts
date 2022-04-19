@@ -102,6 +102,17 @@
     </message>
 </context>
 <context>
+    <name>Mere::Lock::UnlockPrompt</name>
+    <message>
+        <source>UnlockPrompt</source>
+        <translation>Enter secret to lock the screen(s)</translation>
+    </message>
+    <message>
+        <source>UnlockAttemptFailed</source>
+        <translation>* sorry, incorrect attempt to lock the screen</translation>
+    </message>
+</context>
+<context>
     <name>Mere::Lock::LockScreen</name>
     <message>
         <source>LockMessage</source>

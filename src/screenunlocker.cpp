@@ -34,14 +34,14 @@ int Mere::Lock::ScreenUnlocker::ask()
     Mere::Lock::UnlockPrompt prompt(m_screen);
 
     QEventLoop loop;
-    connect(&prompt, &Mere::Lock::UnlockPrompt::attempted, [&](){
+    connect(&prompt, &Mere::Lock::UnlockPrompt::entered, [&](){
         if(verify(prompt.input()) || attempt() == m_config->unlockAttempts())
         {
             attempt(0);
             loop.quit();
         }
     });
-    connect(&prompt, &Mere::Lock::UnlockPrompt::cancelled, [&](){
+    connect(&prompt, &Mere::Lock::UnlockPrompt::escaped, [&](){
         ok = 1;
         loop.quit();
     });
