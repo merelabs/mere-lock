@@ -30,8 +30,8 @@ protected:
 private:
     void initUI();
     void setShadow();
-    void setBackground();
-    void setPromptLogo();
+    virtual void setBackground();
+    virtual void setPromptLogo();
     void setTimeout();
 
     void initMessageUI();

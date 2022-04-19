@@ -168,7 +168,7 @@ void Mere::Lock::Prompt::setShadow()
 void Mere::Lock::Prompt::setBackground()
 {
     QPalette pal = palette();
-    QPixmap pixmap = m_config->unlockScreenPromptBackgroundImage();
+    QPixmap pixmap = m_config->promptBackgroundImage();
     if (!pixmap.isNull())
     {
         pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
@@ -176,7 +176,7 @@ void Mere::Lock::Prompt::setBackground()
     }
     else
     {
-        QColor color = m_config->unlockScreenPromptBackgroundColor();
+        QColor color = m_config->promptBackgroundColor();
         pal.setColor(QPalette::Window, QColor(color));
     }
 
@@ -185,15 +185,13 @@ void Mere::Lock::Prompt::setBackground()
 
 void Mere::Lock::Prompt::setPromptLogo()
 {
-    if(!m_config->unlockScreenPromptLogoShow()) return;
+    if(!m_config->promptLogoShow()) return;
 
-    std::string path = m_config->unlockScreenPromptLogo();
-    if (Mere::Utils::StringUtils::isBlank(path)) return;
-
-    QPixmap pixmap(QString::fromStdString(path));
+    QPixmap pixmap = m_config->promptLogo();
     if (pixmap.isNull())
     {
-        std::cout << "Unable to create image for prompt logo; please check the image path." << path << std::endl;
+        //std::cout << "Unable to create image for prompt logo; please check the image path." << path << std::endl;
+        std::cout << "Prompt logo missing!" << std::endl;
         return;
     }
 

@@ -50,7 +50,7 @@ int Mere::Lock::ScreenLocker::lock()
 
     // if user does not provide value
     // for -p/--password option, ask it.
-    if (m_config->ask() && ask())
+    if (m_config->ask() && this->ask())
         return 1;
 
     capture();
@@ -127,12 +127,12 @@ int Mere::Lock::ScreenLocker::ask()
     Mere::Lock::LockPrompt prompt(m_screen);
 
     QEventLoop loop;
-    connect(&prompt, &Mere::Lock::LockPrompt::attempted, [&](){
+    connect(&prompt, &Mere::Lock::LockPrompt::entered, [&](){
         m_config->password(prompt.input());
         loop.quit();
 
     });
-    connect(&prompt, &Mere::Lock::LockPrompt::cancelled, [&](){
+    connect(&prompt, &Mere::Lock::LockPrompt::escaped, [&](){
         ok = 1;
         loop.quit();
     });

@@ -42,7 +42,7 @@ public:
     QPixmap promptBackgroundImage() const;
     bool checkPromptBackgroundImage() const;
 
-    std::string promptLogo() const;
+    QPixmap promptLogo() const;
     bool checkPromptLogo() const;
 
     bool promptLogoShow() const;
@@ -84,6 +84,9 @@ public:
     int lockScreenMessageFontSize() const;
     bool checkLockScreenMessageFontSize() const;
 
+    //
+    // lock screen prompt
+    //
     std::string lockScreenPromptBackground() const;
     bool checkLockScreenPromptBackground() const;
 
@@ -93,7 +96,7 @@ public:
     QPixmap lockScreenPromptBackgroundImage() const;
     bool checkLockScreenPromptBackgroundImage() const;
 
-    std::string lockScreenPromptLogo() const;
+    QPixmap lockScreenPromptLogo() const;
     bool checkLockScreenPromptLogo() const;
 
     bool lockScreenPromptLogoShow() const;
@@ -148,6 +151,9 @@ public:
     bool checkUnlockScreenBackgroundImage() const;
 
 
+    //
+    // unlock screen prompt
+    //
     std::string unlockScreenPromptBackground() const;
     bool checkUnlockScreenPromptBackground() const;
 

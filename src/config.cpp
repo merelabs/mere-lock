@@ -59,27 +59,29 @@ static const std::string VAL_LOCK_SCREEN_MESSAGE_FONT_COLOR         = "#000";
 static const std::string KEY_LOCK_SCREEN_MESSAGE_FONT_SIZE          = "mere.lock.screen.message.font.size";
 static const std::string VAL_LOCK_SCREEN_MESSAGE_FONT_SIZE          = "10";
 
-//----
+//
+// Lock Screeb Prompt
+//
 static const std::string KEY_LOCK_SCREEN_PROMPT_BACKGROUND        = "mere.lock.screen.prompt.background";
-static const std::string VAL_LOCK_SCREEN_PROMPT_BACKGROUND        = "#FFF";
+static const std::string VAL_LOCK_SCREEN_PROMPT_BACKGROUND        = VAL_LOCK_PROMPT_BACKGROUND;
 
 static const std::string KEY_LOCK_SCREEN_PROMPT_BACKGROUND_COLOR  = "mere.lock.screen.prompt.background.color";
 static const std::string KEY_LOCK_SCREEN_PROMPT_BACKGROUND_IMAGE  = "mere.lock.screen.prompt.background.image";
 
 static const std::string KEY_LOCK_SCREEN_PROMPT_LOGO              = "mere.lock.screen.prompt.logo";
-static const std::string VAL_LOCK_SCREEN_PROMPT_LOGO              = "/usr/local/share/mere/lock/freebsd-logo.png";
+static const std::string VAL_LOCK_SCREEN_PROMPT_LOGO              = VAL_LOCK_PROMPT_LOGO;
 
 static const std::string KEY_LOCK_SCREEN_PROMPT_LOGO_SHOW         = "mere.lock.screen.prompt.logo.show";
-static const std::string VAL_LOCK_SCREEN_PROMPT_LOGO_SHOW         = "true";
+static const std::string VAL_LOCK_SCREEN_PROMPT_LOGO_SHOW         = VAL_LOCK_PROMPT_LOGO_SHOW;
 
 static const std::string KEY_LOCK_SCREEN_PROMPT_MESSAGE_COLOR     = "mere.lock.screen.prompt.message.font.color";
-static const std::string VAL_LOCK_SCREEN_PROMPT_MESSAGE_COLOR     = "#000";
+static const std::string VAL_LOCK_SCREEN_PROMPT_MESSAGE_COLOR     = VAL_LOCK_PROMPT_MESSAGE_COLOR;
 
 static const std::string KEY_LOCK_SCREEN_PROMPT_MESSAGE_SIZE      = "mere.lock.screen.prompt.message.font.size";
-static const std::string VAL_LOCK_SCREEN_PROMPT_MESSAGE_SIZE      = "10";
+static const std::string VAL_LOCK_SCREEN_PROMPT_MESSAGE_SIZE      = VAL_LOCK_PROMPT_MESSAGE_SIZE;
 
 static const std::string KEY_LOCK_SCREEN_PROMPT_TIMEOUT           = "mere.lock.screen.prompt.timeout";
-static const std::string VAL_LOCK_SCREEN_PROMPT_TIMEOUT           = "15";
+static const std::string VAL_LOCK_SCREEN_PROMPT_TIMEOUT           = VAL_LOCK_PROMPT_TIMEOUT;
 
 //----
 
@@ -118,25 +120,25 @@ static const std::string KEY_UNLOCK_SCREEN_BACKGROUND_COLOR         = "mere.lock
 static const std::string KEY_UNLOCK_SCREEN_BACKGROUND_IMAGE         = "mere.lock.unlock.screen.background.image";
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND        = "mere.lock.unlock.screen.prompt.background";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_BACKGROUND        = "#FFF";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_BACKGROUND        = VAL_LOCK_PROMPT_BACKGROUND;
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_COLOR  = "mere.lock.unlock.screen.prompt.background.color";
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_IMAGE  = "mere.lock.unlock.screen.prompt.background.image";
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_LOGO              = "mere.lock.unlock.screen.prompt.logo";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_LOGO              = "/usr/local/share/mere/lock/freebsd-logo.png";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_LOGO              = VAL_LOCK_PROMPT_LOGO;
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_LOGO_SHOW         = "mere.lock.unlock.screen.prompt.logo.show";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_LOGO_SHOW         = "true";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_LOGO_SHOW         = VAL_LOCK_PROMPT_LOGO_SHOW;
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR     = "mere.lock.unlock.screen.prompt.message.font.color";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR     = "#000";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR     = VAL_LOCK_PROMPT_MESSAGE_COLOR;
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE      = "mere.lock.unlock.screen.prompt.message.font.size";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE      = "10";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_SIZE      = VAL_LOCK_PROMPT_MESSAGE_SIZE;
 
 static const std::string KEY_UNLOCK_SCREEN_PROMPT_TIMEOUT           = "mere.lock.unlock.screen.prompt.timeout";
-static const std::string VAL_UNLOCK_SCREEN_PROMPT_TIMEOUT           = "15";
+static const std::string VAL_UNLOCK_SCREEN_PROMPT_TIMEOUT           = VAL_LOCK_PROMPT_TIMEOUT;
 
 //
 // Generic
@@ -270,15 +272,13 @@ bool Mere::Lock::Config::checkPromptBackground() const
 QColor Mere::Lock::Config::promptBackgroundColor() const
 {
     std::string value = this->get(KEY_LOCK_PROMPT_BACKGROUND_COLOR);
-    if (value.empty()) value = this->get(KEY_LOCK_PROMPT_BACKGROUND);
+    if (value.empty() || value.at(0) != '#')
+        value = promptBackground();
 
     if (value.empty() || value.at(0) != '#')
-        return QColor(QString::fromStdString(VAL_LOCK_PROMPT_BACKGROUND));
+        return QColor();
 
-    QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_PROMPT_BACKGROUND));
-
-    return color;
+    return QColor(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkPromptBackgroundColor() const
@@ -289,12 +289,10 @@ bool Mere::Lock::Config::checkPromptBackgroundColor() const
 QPixmap Mere::Lock::Config::promptBackgroundImage() const
 {
     std::string value = this->get(KEY_LOCK_PROMPT_BACKGROUND_IMAGE);
-    if (value.empty()) value = this->get(KEY_LOCK_PROMPT_BACKGROUND);
+    if (value.empty() || Mere::Utils::FileUtils::isNotExist(value))
+        value = promptBackground();
 
-    if (value.empty() || value.at(0) != '/')
-        return QPixmap();
-
-    if(Mere::Utils::FileUtils::isNotExist(value))
+    if (value.empty() || Mere::Utils::FileUtils::isNotExist(value))
         return QPixmap();
 
     return QPixmap(QString::fromStdString(value));
@@ -305,12 +303,13 @@ bool Mere::Lock::Config::checkPromptBackgroundImage() const
     return checkImage(KEY_LOCK_PROMPT_BACKGROUND_IMAGE);
 }
 
-std::string Mere::Lock::Config::promptLogo() const
+QPixmap Mere::Lock::Config::promptLogo() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_PROMPT_LOGO);
-    if (value.empty()) return VAL_LOCK_PROMPT_LOGO;
+    if (value.empty() || Mere::Utils::FileUtils::isNotExist(value))
+        return QPixmap(QString::fromStdString(VAL_LOCK_PROMPT_LOGO));
 
-    return value;
+    return QPixmap(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkPromptLogo() const
@@ -321,7 +320,7 @@ bool Mere::Lock::Config::checkPromptLogo() const
 bool Mere::Lock::Config::promptLogoShow() const
 {
     std::string value = this->get(KEY_LOCK_PROMPT_LOGO_SHOW);
-    if (value.empty()) return true;
+    if (value.empty()) return Mere::Utils::StringUtils::isTrue(VAL_LOCK_PROMPT_LOGO_SHOW);
 
     return Mere::Utils::StringUtils::isTrue(value);
 }
@@ -334,14 +333,10 @@ bool Mere::Lock::Config::checkPromptLogoShow() const
 QColor Mere::Lock::Config::promptMessageColor() const
 {
     std::string value = this->get(KEY_LOCK_PROMPT_MESSAGE_COLOR);
-
     if (value.empty() || value.at(0) != '#')
         return QColor(QString::fromStdString(VAL_LOCK_PROMPT_MESSAGE_COLOR));
 
-    QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_PROMPT_MESSAGE_COLOR));
-
-    return color;
+    return QColor(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkPromptMessageColor() const
@@ -380,14 +375,10 @@ bool Mere::Lock::Config::checkPromptTimeout() const
 QColor Mere::Lock::Config::promptTimebarColor() const
 {
     std::string value = this->get(KEY_LOCK_PROMPT_TIMEBAR_COLOR);
-
     if (value.empty() || value.at(0) != '#')
         return QColor(QString::fromStdString(VAL_LOCK_PROMPT_TIMEBAR_COLOR));
 
-    QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_PROMPT_TIMEBAR_COLOR));
-
-    return color;
+    return QColor(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkPromptTimebarColor() const
@@ -450,14 +441,10 @@ bool Mere::Lock::Config::checkLockScreenBackgroundImage() const
 QColor Mere::Lock::Config::lockScreenTimeFontColor() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_TIME_FONT_COLOR);
-
     if (value.empty() || value.at(0) != '#')
         return QColor(QString::fromStdString(VAL_LOCK_SCREEN_TIME_FONT_COLOR));
 
-    QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_SCREEN_TIME_FONT_COLOR));
-
-    return color;
+    return QColor(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkLockScreenTimeFontColor() const
@@ -512,11 +499,10 @@ bool Mere::Lock::Config::checkLockScreenMessageFontSize() const
 }
 
 //--
-
 std::string Mere::Lock::Config::lockScreenPromptBackground() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_PROMPT_BACKGROUND);
-    if (value.empty()) return VAL_LOCK_SCREEN_PROMPT_BACKGROUND;
+    if (value.empty()) return VAL_LOCK_SCREEN_PROMPT_BACKGROUND;;
 
     return value;
 }
@@ -528,16 +514,17 @@ bool Mere::Lock::Config::checkLockScreenPromptBackground() const
 
 QColor Mere::Lock::Config::lockScreenPromptBackgroundColor() const
 {
+    // check if it is set in own key
     std::string value = this->get(KEY_LOCK_SCREEN_PROMPT_BACKGROUND_COLOR);
-    if (value.empty()) value = this->get(KEY_LOCK_SCREEN_PROMPT_BACKGROUND);
-
     if (value.empty() || value.at(0) != '#')
-        return QColor(QString::fromStdString(VAL_LOCK_SCREEN_PROMPT_BACKGROUND));
+        // grab the value from background key
+        value = lockScreenPromptBackground();
 
-    QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_SCREEN_PROMPT_BACKGROUND));
+    // check if background key's value is valid
+    if (value.empty() || value.at(0) != '#')
+        return QColor();
 
-    return color;
+    return QColor(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkLockScreenPromptBackgroundColor() const
@@ -548,9 +535,10 @@ bool Mere::Lock::Config::checkLockScreenPromptBackgroundColor() const
 QPixmap Mere::Lock::Config::lockScreenPromptBackgroundImage() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_PROMPT_BACKGROUND_IMAGE);
-    if (value.empty()) value = this->get(KEY_LOCK_SCREEN_PROMPT_BACKGROUND);
+    if (value.empty() || Mere::Utils::FileUtils::isNotExist(value))
+        value = lockScreenPromptBackground();
 
-    if(Mere::Utils::FileUtils::isNotExist(value))
+    if (value.empty() || Mere::Utils::FileUtils::isNotExist(value))
         return QPixmap();
 
     return QPixmap(QString::fromStdString(value));
@@ -561,12 +549,13 @@ bool Mere::Lock::Config::checkLockScreenPromptBackgroundImage() const
     return checkImage(KEY_LOCK_SCREEN_PROMPT_BACKGROUND_IMAGE);
 }
 
-std::string Mere::Lock::Config::lockScreenPromptLogo() const
+QPixmap Mere::Lock::Config::lockScreenPromptLogo() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_PROMPT_LOGO);
-    if (value.empty()) return VAL_LOCK_SCREEN_PROMPT_LOGO;
+    if (value.empty() || Mere::Utils::FileUtils::isNotExist(value))
+        return QPixmap(QString::fromStdString(VAL_LOCK_SCREEN_PROMPT_LOGO));
 
-    return value;
+    return QPixmap(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkLockScreenPromptLogo() const
@@ -577,7 +566,7 @@ bool Mere::Lock::Config::checkLockScreenPromptLogo() const
 bool Mere::Lock::Config::lockScreenPromptLogoShow() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_PROMPT_LOGO_SHOW);
-    if (value.empty()) return true;
+    if (value.empty()) return Mere::Utils::StringUtils::isTrue(VAL_LOCK_SCREEN_PROMPT_LOGO_SHOW);
 
     return Mere::Utils::StringUtils::isTrue(value);
 }
@@ -590,14 +579,10 @@ bool Mere::Lock::Config::checkLockScreenPromptLogoShow() const
 QColor Mere::Lock::Config::lockScreenPromptMessageColor() const
 {
     std::string value = this->get(KEY_LOCK_SCREEN_PROMPT_MESSAGE_COLOR);
-
     if (value.empty() || value.at(0) != '#')
         return QColor(QString::fromStdString(VAL_LOCK_SCREEN_PROMPT_MESSAGE_COLOR));
 
-    QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_LOCK_SCREEN_PROMPT_MESSAGE_COLOR));
-
-    return color;
+    return QColor(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkLockScreenPromptMessageColor() const
@@ -831,15 +816,13 @@ bool Mere::Lock::Config::checkUnlockScreenPromptBackground() const
 QColor Mere::Lock::Config::unlockScreenPromptBackgroundColor() const
 {
     std::string value = this->get(KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_COLOR);
-    if (value.empty()) value = this->get(KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND);
+    if (value.empty() || value.at(0) != '#')
+        value = unlockScreenPromptBackground();
 
     if (value.empty() || value.at(0) != '#')
-        return QColor(QString::fromStdString(VAL_UNLOCK_SCREEN_PROMPT_BACKGROUND));
+        return QColor();
 
-    QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_UNLOCK_SCREEN_PROMPT_BACKGROUND));
-
-    return color;
+    return QColor(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkUnlockScreenPromptBackgroundColor() const
@@ -850,12 +833,10 @@ bool Mere::Lock::Config::checkUnlockScreenPromptBackgroundColor() const
 QPixmap Mere::Lock::Config::unlockScreenPromptBackgroundImage() const
 {
     std::string value = this->get(KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND_IMAGE);
-    if (value.empty())
-    {
-        value = this->get(KEY_UNLOCK_SCREEN_PROMPT_BACKGROUND);
-    }
+    if (value.empty() || Mere::Utils::FileUtils::isNotExist(value))
+        value = unlockScreenPromptBackground();
 
-    if(Mere::Utils::FileUtils::isNotExist(value))
+    if (value.empty() || Mere::Utils::FileUtils::isNotExist(value))
         return QPixmap();
 
     return QPixmap(QString::fromStdString(value));
@@ -882,7 +863,7 @@ bool Mere::Lock::Config::checkUnlockScreenPromptLogo() const
 bool Mere::Lock::Config::unlockScreenPromptLogoShow() const
 {
     std::string value = this->get(KEY_UNLOCK_SCREEN_PROMPT_LOGO_SHOW);
-    if (value.empty()) return true;
+    if (value.empty()) return Mere::Utils::StringUtils::isTrue(VAL_UNLOCK_SCREEN_PROMPT_LOGO_SHOW);
 
     return Mere::Utils::StringUtils::isTrue(value);
 }
@@ -895,14 +876,10 @@ bool Mere::Lock::Config::checkUnlockScreenPromptLogoShow() const
 QColor Mere::Lock::Config::unlockScreenPromptMessageColor() const
 {
     std::string value = this->get(KEY_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR);
-
     if (value.empty() || value.at(0) != '#')
         return QColor(QString::fromStdString(VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR));
 
-    QColor color(QString::fromStdString(value));
-    if(!color.isValid()) return QColor(QString::fromStdString(VAL_UNLOCK_SCREEN_PROMPT_MESSAGE_COLOR));
-
-    return color;
+    return QColor(QString::fromStdString(value));
 }
 
 bool Mere::Lock::Config::checkUnlockScreenPromptMessageColor() const
