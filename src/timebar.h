@@ -1,5 +1,5 @@
-#ifndef MERE_LOCK_WAITBAR_H
-#define MERE_LOCK_WAITBAR_H
+#ifndef MERE_LOCK_TIMEBAR_H
+#define MERE_LOCK_TIMEBAR_H
 
 #include <QWidget>
 
@@ -33,4 +33,4 @@ private:
 
 }
 }
-#endif // MERE_LOCK_WAITBAR_H
+#endif // MERE_LOCK_TIMEBAR_H

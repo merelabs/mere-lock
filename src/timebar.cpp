@@ -5,7 +5,7 @@
 #include <QPropertyAnimation>
 
 // 0 width works like hidden bar
-static const QRect WAITBAR_INIT_STATE = QRect(10, 10, 0, 2);
+static const QRect TIMEBAR_INIT_RECT = QRect(10, 10, 0, 2);
 
 Mere::Lock::Timebar::~Timebar()
 {
@@ -18,14 +18,14 @@ Mere::Lock::Timebar::Timebar(QWidget *parent)
 {
     setObjectName("Timebar");
     setAttribute(Qt::WA_StyledBackground);
-    setGeometry(WAITBAR_INIT_STATE);
+    setGeometry(TIMEBAR_INIT_RECT);
 
     m_animation->setDuration(m_config->unlockScreenPromptTimeout() * 1000);
-    m_animation->setStartValue(QRect(WAITBAR_INIT_STATE));
-    m_animation->setEndValue(QRect(WAITBAR_INIT_STATE.x(), WAITBAR_INIT_STATE.y(), parent->geometry().width() - 2 * WAITBAR_INIT_STATE.x(), 2));
+    m_animation->setStartValue(QRect(TIMEBAR_INIT_RECT));
+    m_animation->setEndValue(QRect(TIMEBAR_INIT_RECT.x(), TIMEBAR_INIT_RECT.y(), parent->geometry().width() - 2 * TIMEBAR_INIT_RECT.x(), 2));
 
     connect(m_animation, &QPropertyAnimation::finished, this, [&](){
-        setGeometry(WAITBAR_INIT_STATE);
+        setGeometry(TIMEBAR_INIT_RECT);
         emit timeout();
     });
 }
@@ -50,6 +50,6 @@ int Mere::Lock::Timebar::reset()
 {
     qDebug() << "Waitbar::reset";
     stop();
-    setGeometry(WAITBAR_INIT_STATE);
+    setGeometry(TIMEBAR_INIT_RECT);
     return 0;
 }

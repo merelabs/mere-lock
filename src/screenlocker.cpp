@@ -5,6 +5,7 @@
 #include "lockprompt.h"
 #include "screenunlocker.h"
 
+#include <QScreen>
 #include <QEventLoop>
 #include <QApplication>
 Mere::Lock::ScreenLocker::~ScreenLocker()
@@ -23,12 +24,35 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
     : QObject(parent),
       m_ticker(new Mere::Lock::Ticker(1, this)),
       m_config(Mere::Lock::Config::instance())
-{
+{    
     for(QScreen *screen : QApplication::screens())
     {
         auto *lockScreen = new Mere::Lock::LockScreen(screen);
         m_screens.push_back(lockScreen);
     }
+    connect(qApp, &QApplication::screenAdded, [&](QScreen *screen){
+        auto *lockScreen = new Mere::Lock::LockScreen(screen);
+        m_screens.push_back(lockScreen);
+        lockScreen->lock();
+    });
+
+    connect(qApp, &QApplication::screenRemoved, [&](QScreen *screen){
+        auto it = std::find_if(m_screens.begin(), m_screens.end(), [&](Mere::Lock::LockScreen *lockedScreen){
+            return lockedScreen->screen()->name() == screen->name();
+        });
+
+        if (it != m_screens.end())
+            m_screens.erase(it);
+    });
+
+    connect(qApp, &QApplication::primaryScreenChanged, [&](QScreen *screen){
+        auto it = std::find_if(m_screens.begin(), m_screens.end(), [&](Mere::Lock::LockScreen *lockedScreen){
+            return lockedScreen->screen()->name() == screen->name();
+        });
+
+        if (it != m_screens.end())
+            m_screen = *it;
+    });
 
     m_screen = m_screens.at(0);
 
