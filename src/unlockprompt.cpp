@@ -16,7 +16,7 @@ Mere::Lock::UnlockPrompt::~UnlockPrompt()
 }
 
 Mere::Lock::UnlockPrompt::UnlockPrompt(LockScreen *screen, QObject *parent)
-    : QObject(screen),
+    : QObject(parent),
       m_prompt(new Prompt(screen)),
       m_config(Mere::Lock::Config::instance())
 {

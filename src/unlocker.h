@@ -13,16 +13,12 @@ class Unlocker : public QObject
     Q_OBJECT
 public:
     explicit Unlocker(QObject *parent = nullptr);
-    virtual int unlock()= 0;
-    virtual int state();
-    virtual void state(unsigned int state);
+    virtual int unlock() = 0;
 
     virtual unsigned int attempt();
     virtual void attempt(unsigned int attempt);
 
     virtual bool verify(const std::string &secret);
-
-    static int InProgress;
 
 signals:
     void blocked();

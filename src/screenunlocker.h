@@ -21,6 +21,8 @@ public:
     explicit ScreenUnlocker(LockScreen *screen, QObject *parent = nullptr);
     int unlock() override;
 
+    void screen(LockScreen *screen);
+
 private:
     int ask();
 

@@ -36,7 +36,7 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
         lockScreen->lock();
     });
 
-    connect(qApp, &QApplication::screenRemoved, [&](QScreen *screen){
+    connect(qApp, &QApplication::screenRemoved, [&](QScreen *screen) {
         auto it = std::find_if(m_screens.begin(), m_screens.end(), [&](Mere::Lock::LockScreen *lockedScreen){
             return lockedScreen->screen()->name() == screen->name();
         });
@@ -51,7 +51,10 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
         });
 
         if (it != m_screens.end())
+        {
             m_screen = *it;
+            m_unlocker->screen(m_screen);
+        }
     });
 
     m_screen = m_screens.at(0);
@@ -84,6 +87,7 @@ int Mere::Lock::ScreenLocker::lock()
 
 int Mere::Lock::ScreenLocker::unlock()
 {
+    qDebug() << "5...Number of screens: " << m_screens.size();
     for(auto *screen : m_screens)
         screen->unlock();
 

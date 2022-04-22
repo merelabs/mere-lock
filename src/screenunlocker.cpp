@@ -17,6 +17,12 @@ Mere::Lock::ScreenUnlocker::ScreenUnlocker(LockScreen *screen, QObject *parent)
 
 }
 
+void Mere::Lock::ScreenUnlocker::screen(LockScreen *screen)
+{
+    m_screen = screen;
+    emit cancelled();
+}
+
 int Mere::Lock::ScreenUnlocker::unlock()
 {
     return ask();
@@ -24,6 +30,8 @@ int Mere::Lock::ScreenUnlocker::unlock()
 
 int Mere::Lock::ScreenUnlocker::ask()
 {
+    if (!m_screen) return 1;
+
     int ok = 0;
 
     QEventLoop loop;
@@ -45,7 +53,6 @@ int Mere::Lock::ScreenUnlocker::ask()
         {
             prompt.failed();
         }
-        qDebug() << "TIME!" << (QDateTime::currentDateTime().currentMSecsSinceEpoch() - start);
     });
     connect(&prompt, &Mere::Lock::UnlockPrompt::cancelled, [&](){
         ok = 1;
@@ -53,7 +60,14 @@ int Mere::Lock::ScreenUnlocker::ask()
     });
 
     prompt.prompt();
+
+    connect(this, &Mere::Lock::ScreenUnlocker::cancelled, [&](){
+        ok = 1;
+        loop.quit();
+    });
     loop.exec();
+
+    disconnect();
 
     return ok;
 }
