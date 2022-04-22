@@ -6,8 +6,8 @@
 #include "screenunlocker.h"
 
 #include <QScreen>
-#include <QEventLoop>
 #include <QApplication>
+
 Mere::Lock::ScreenLocker::~ScreenLocker()
 {
     for(auto *screen : m_screens)
@@ -87,7 +87,6 @@ int Mere::Lock::ScreenLocker::lock()
 
 int Mere::Lock::ScreenLocker::unlock()
 {
-    qDebug() << "5...Number of screens: " << m_screens.size();
     for(auto *screen : m_screens)
         screen->unlock();
 
@@ -157,7 +156,6 @@ int Mere::Lock::ScreenLocker::ask()
 
     Mere::Lock::LockPrompt prompt(m_screen);
     connect(&prompt, &Mere::Lock::LockPrompt::attempted, [&](){
-        qDebug() << "HOISE TO!";
         m_config->password(prompt.input());
         loop.quit();
 
