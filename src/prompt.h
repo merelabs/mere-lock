@@ -23,19 +23,18 @@ public:
     std::string input() const;
     void prompt(const std::string &prompt);
     void message(const std::string &message);
-    void prompt(){showNormal();}
+    void prompt();
 
-
-protected:
-    virtual void initUI();
-    virtual void setBackground();
-    virtual void setPromptLogo();
-
-    void setVisible(bool visible) override;
     void setLogo(QPixmap pixmap);
 
+protected:
+    void initUI();
+    void setBackground();
+    void setPromptLogo();
+
+    void setVisible(bool visible) override;
+
 private:
-    void setShadow();
     void setTimeout();
 
     void initMessageUI();
@@ -54,7 +53,7 @@ private:
 
     Mere::Lock::Secret *m_secret;
     Mere::Lock::Ticker *m_ticker;
-    Mere::Lock::Timebar *m_timeout;
+    Mere::Lock::Timebar *m_timebar;
 
     Mere::Lock::Config *m_config;
 };

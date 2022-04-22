@@ -124,20 +124,22 @@ int Mere::Lock::ScreenLocker::ask()
 {
     int ok = 0;
 
-    Mere::Lock::LockPrompt prompt(m_screen);
 
     QEventLoop loop;
-    connect(&prompt, &Mere::Lock::LockPrompt::entered, [&](){
+
+    Mere::Lock::LockPrompt prompt(m_screen);
+    connect(&prompt, &Mere::Lock::LockPrompt::attempted, [&](){
+        qDebug() << "HOISE TO!";
         m_config->password(prompt.input());
         loop.quit();
 
     });
-    connect(&prompt, &Mere::Lock::LockPrompt::escaped, [&](){
+    connect(&prompt, &Mere::Lock::LockPrompt::cancelled, [&](){
         ok = 1;
         loop.quit();
     });
-
     prompt.prompt();
+
     loop.exec();
 
     return ok;
@@ -145,8 +147,7 @@ int Mere::Lock::ScreenLocker::ask()
 
 bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
 {
-    if ((event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
-         && m_unlocker->state() != Mere::Lock::Unlocker::InProgress )
+    if ((event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove))
     {
 #ifdef QT_DEBUG
         // - test code

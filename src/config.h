@@ -31,34 +31,34 @@ public:
     void timeout(unsigned int timeout);
 
     //
-    // Prompt
-    //
-//    std::string promptBackground() const;
-//    bool checkPromptBackground() const;
+   // Prompt
+   //
+   std::string promptBackground() const;
+   bool checkPromptBackground() const;
 
-//    QColor promptBackgroundColor() const;
-//    bool checkPromptBackgroundColor() const;
+   QColor promptBackgroundColor() const;
+   bool checkPromptBackgroundColor() const;
 
-//    QPixmap promptBackgroundImage() const;
-//    bool checkPromptBackgroundImage() const;
+   QPixmap promptBackgroundImage() const;
+   bool checkPromptBackgroundImage() const;
 
-//    QPixmap promptLogo() const;
-//    bool checkPromptLogo() const;
+   QPixmap promptLogo() const;
+   bool checkPromptLogo() const;
 
-//    bool promptLogoShow() const;
-//    bool checkPromptLogoShow() const;
+   bool promptLogoShow() const;
+   bool checkPromptLogoShow() const;
 
-//    QColor promptMessageColor() const;
-//    bool checkPromptMessageColor() const;
+   QColor promptMessageColor() const;
+   bool checkPromptMessageColor() const;
 
-//    int promptMessageSize() const;
-//    bool checkPromptMessageSize() const;
+   int promptMessageSize() const;
+   bool checkPromptMessageSize() const;
 
-//    unsigned int promptTimeout() const;
-//    bool checkPromptTimeout() const;
+   unsigned int promptTimeout() const;
+   bool checkPromptTimeout() const;
 
-//    QColor promptTimebarColor() const;
-//    bool checkPromptTimebarColor() const;
+   QColor promptTimebarColor() const;
+   bool checkPromptTimebarColor() const;
 
     //
     // lock

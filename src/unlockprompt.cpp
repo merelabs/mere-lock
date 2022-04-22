@@ -1,73 +1,75 @@
 #include "unlockprompt.h"
 #include "lockscreen.h"
 #include "config.h"
+#include "prompt.h"
 
 #include <iostream>
 
 Mere::Lock::UnlockPrompt::~UnlockPrompt()
 {
+    if (m_prompt)
+    {
+        m_prompt->disconnect();
+        delete m_prompt;
+        m_prompt = nullptr;
+    }
 }
 
-Mere::Lock::UnlockPrompt::UnlockPrompt(LockScreen *screen, QWidget *parent)
-    : Prompt(screen),
+Mere::Lock::UnlockPrompt::UnlockPrompt(LockScreen *screen, QObject *parent)
+    : QObject(screen),
+      m_prompt(new Prompt(screen)),
       m_config(Mere::Lock::Config::instance())
 {
+    connect(m_prompt, &Mere::Lock::Prompt::entered, this, &Mere::Lock::UnlockPrompt::attempted);
+    connect(m_prompt, &Mere::Lock::Prompt::escaped, this, &Mere::Lock::UnlockPrompt::cancelled);
+
     initUI();
 }
 
 void Mere::Lock::UnlockPrompt::initUI()
 {
-    Mere::Lock::Prompt::initUI();
-    prompt(Mere::Lock::UnlockPrompt::tr("UnlockPrompt").toStdString());
+    setBackground();
+    setPromptLogo();
+
+    m_prompt->prompt(Mere::Lock::UnlockPrompt::tr("UnlockPrompt").toStdString());
 }
 
 void Mere::Lock::UnlockPrompt::setBackground()
 {
-    QPalette pal = palette();
+    QPalette pal = m_prompt->palette();
     QPixmap pixmap = m_config->unlockScreenPromptBackgroundImage();
     if (!pixmap.isNull())
     {
-        pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
+        pixmap = pixmap.scaled(m_prompt->size(), Qt::IgnoreAspectRatio);
         pal.setBrush(QPalette::Window, pixmap);
     }
     else
     {
         QColor color = m_config->unlockScreenPromptBackgroundColor();
-        if (color.isValid())
-        {
-            pal.setColor(QPalette::Window, QColor(color));
-        }
+        pal.setColor(QPalette::Window, QColor(color));
     }
 
-    setPalette(pal);
+    m_prompt->setPalette(pal);
 }
 
 void Mere::Lock::UnlockPrompt::setPromptLogo()
 {
     if(!m_config->unlockScreenPromptLogoShow()) return;
 
-    Mere::Lock::Prompt::setPromptLogo();
+    m_prompt->setLogo(m_config->unlockScreenPromptLogo());
+}
 
-//    QPixmap pixmap = m_config->unlockScreenPromptLogo();
-//    if (pixmap.isNull())
-//    {
-////        std::cout << "Unable to create image for prompt logo; please check the image path." << std::endl;
-//        std::cout << "Lock screen prompt logo missing!" << std::endl;
-//        return;
-//    }
+void Mere::Lock::UnlockPrompt::prompt() const
+{
+    m_prompt->showNormal();
+}
 
-    setLogo(m_config->unlockScreenPromptLogo());
+std::string Mere::Lock::UnlockPrompt::input() const
+{
+    return m_prompt->input();
+}
 
-//    QSize size(geometry().width() - 50, 96);
-//    pixmap = pixmap.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-//    QLabel *label = new QLabel(this);
-//    label->setMargin(0);
-//    label->setContentsMargins(0, 0, 0, 0);
-//    label->setAlignment(Qt::AlignCenter);
-//    label->setMinimumHeight(96);
-//    label->setMaximumHeight(96);
-//    label->setPixmap(pixmap);
-
-//    label->move(this->width()/2 - label->width()/2, 30);
+void Mere::Lock::UnlockPrompt::failed() const
+{
+    m_prompt->message(Mere::Lock::UnlockPrompt::tr("UnlockAttemptFailed").toStdString());
 }

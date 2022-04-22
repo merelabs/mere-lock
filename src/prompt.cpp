@@ -15,6 +15,7 @@ Mere::Lock::Prompt::~Prompt()
 {
     if (m_ticker)
     {
+        m_ticker->stop();
         m_ticker->disconnect();
         delete m_ticker;
         m_ticker = nullptr;
@@ -47,34 +48,14 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
     QRect geometry(0, 0, rect.width(), rect.height());
     move(geometry.center() - this->rect().center());
 
-//    setShadow();
-//    setBackground();
-//    setPromptLogo();
-//    setTimeout();
+    setTimeout();
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setAlignment(Qt::AlignCenter);
-    layout->setContentsMargins(50, 15, 50, 15);
-    layout->setSpacing(0);
+    QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
+    shadowEffect->setOffset(10);
+    shadowEffect->setBlurRadius(25);
+    setGraphicsEffect(shadowEffect);
 
-//    initUI();
-
-//    connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
-//        m_ticker->stop();
-//        m_timeout->start();
-//    });
-
-//    connect(m_timeout, &Mere::Lock::Timebar::timeout, this, [&](){
-//        emit escaped();
-//    });
-
-//    connect(m_secret, &Mere::Lock::Secret::changed, this, [&](){
-//        m_timeout->reset();
-//        m_ticker->start();
-//    });
-
-//    connect(m_secret, &Mere::Lock::Secret::entered, this, &Mere::Lock::Prompt::entered);
-//    connect(m_secret, &Mere::Lock::Secret::escaped, this, &Mere::Lock::Prompt::escaped);
+    initUI();
 
     grabMouse();
     grabKeyboard();
@@ -82,10 +63,13 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
 
 void Mere::Lock::Prompt::initUI()
 {
-    setShadow();
     setBackground();
     setPromptLogo();
-    setTimeout();
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setAlignment(Qt::AlignCenter);
+    layout->setContentsMargins(50, 15, 50, 15);
+    layout->setSpacing(0);
 
     QSpacerItem *topSpacer = new QSpacerItem(1, 120, QSizePolicy::Fixed, QSizePolicy::Minimum);
     this->layout()->addItem(topSpacer);
@@ -111,16 +95,16 @@ void Mere::Lock::Prompt::initUI()
 
     connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
         m_ticker->stop();
-        m_timeout->start();
+        m_timebar->start();
     });
 
-    connect(m_timeout, &Mere::Lock::Timebar::timeout, this, [&](){
+    connect(m_timebar, &Mere::Lock::Timebar::timeout, this, [&](){
         emit escaped();
     });
 
     connect(m_secret, &Mere::Lock::Secret::changed, this, [&](){
-        m_timeout->reset();
         m_ticker->start();
+        m_timebar->reset();
     });
 
     connect(m_secret, &Mere::Lock::Secret::entered, this, &Mere::Lock::Prompt::entered);
@@ -135,11 +119,11 @@ void Mere::Lock::Prompt::initMessageUI()
     this->layout()->addWidget(m_prompt);
 
     QPalette palette = m_prompt->palette();
-    palette.setColor(QPalette::WindowText, m_config->unlockScreenPromptMessageColor());
+    palette.setColor(QPalette::WindowText, m_config->promptMessageColor());
     m_prompt->setPalette(palette);
 
     QFont font = m_prompt->font();
-    font.setPointSize(m_config->unlockScreenPromptMessageSize());
+    font.setPointSize(m_config->promptMessageSize());
     m_prompt->setFont(font);
 
     m_prompt->move(geometry().center() - m_prompt->fontMetrics().boundingRect(m_prompt->text()).center());
@@ -154,7 +138,7 @@ void Mere::Lock::Prompt::clear()
 
 void Mere::Lock::Prompt::setTimeout()
 {
-    m_timeout = new Mere::Lock::Timebar(this);
+    m_timebar = new Mere::Lock::Timebar(this);
 }
 
 void Mere::Lock::Prompt::setVisible(bool visible)
@@ -166,29 +150,38 @@ void Mere::Lock::Prompt::setVisible(bool visible)
         m_secret->grabKeyboard();
 
         m_ticker->start();
-        m_timeout->stop();
+        m_timebar->stop();
     }
     else
     {
         m_secret->releaseKeyboard();
 
         m_ticker->stop();
-        m_timeout->stop();
+        m_timebar->stop();
     }
 
     QWidget::setVisible(visible);
 }
 
-void Mere::Lock::Prompt::setShadow()
-{
-    QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
-    shadowEffect->setOffset(10);
-    shadowEffect->setBlurRadius(25);
-    setGraphicsEffect(shadowEffect);
-}
-
 void Mere::Lock::Prompt::setBackground()
 {
+    QPalette pal = palette();
+    QPixmap pixmap = m_config->promptBackgroundImage();
+    if (!pixmap.isNull())
+    {
+        pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
+        pal.setBrush(QPalette::Window, pixmap);
+    }
+    else
+    {
+        QColor color = m_config->promptBackgroundColor();
+        if (color.isValid())
+        {
+            pal.setColor(QPalette::Window, QColor(color));
+        }
+    }
+
+    setPalette(pal);
 }
 
 void Mere::Lock::Prompt::setPromptLogo()
@@ -201,6 +194,9 @@ void Mere::Lock::Prompt::setPromptLogo()
     m_logo->setMaximumHeight(96);
 
     m_logo->move(this->width()/2 - m_logo->width()/2, 30);
+
+    if(!m_config->promptLogoShow()) return;
+    setLogo(m_config->promptLogo());
 }
 
 void Mere::Lock::Prompt::setLogo(QPixmap pixmap)
@@ -226,4 +222,9 @@ void Mere::Lock::Prompt::message(const std::string &message)
 {
     m_message->setText(QString::fromStdString(message));
     if(m_message->isHidden()) m_message->show();
+}
+
+void Mere::Lock::Prompt::prompt()
+{
+    showNormal();
 }

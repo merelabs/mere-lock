@@ -16,7 +16,7 @@ Mere::Lock::Timebar::Timebar(QWidget *parent)
       m_animation(new QPropertyAnimation(this, "geometry", this)),
       m_config(Mere::Lock::Config::instance())
 {
-    setObjectName("WaitBar");
+    setObjectName("Timebar");
     setAttribute(Qt::WA_StyledBackground);
     setGeometry(WAITBAR_INIT_STATE);
 
