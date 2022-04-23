@@ -66,7 +66,6 @@ void Mere::Lock::LockScreen::unblock()
 
 void Mere::Lock::LockScreen::tick()
 {
-    return;
     m_elaspsetime = m_elaspsetime.addSecs(1);
 
     if (isBlocked())
