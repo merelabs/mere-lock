@@ -30,6 +30,9 @@ public:
     void tick();
     void restore();
 
+protected:
+    void paintEvent(QPaintEvent *);
+
 private:
     void setTime();
     void setTimePosition();

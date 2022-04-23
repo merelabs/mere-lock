@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include <QPainter>
 #include <QScreen>
 #include <QWindow>
 
@@ -65,6 +66,7 @@ void Mere::Lock::LockScreen::unblock()
 
 void Mere::Lock::LockScreen::tick()
 {
+    return;
     m_elaspsetime = m_elaspsetime.addSecs(1);
 
     if (isBlocked())
@@ -216,10 +218,8 @@ void Mere::Lock::LockScreen::moveToCenter(QLabel *label)
     QRect screenRect = m_screen->geometry();
     QRect screenGeometry(0, 0, screenRect.width(), screenRect.height());
 
-    QRect labelRect = label->fontMetrics().boundingRect(label->text());
-    QRect labelGeometry(0, 0, labelRect.width(), labelRect.height());
-
-    label->move(screenGeometry.center() - labelGeometry.center());
+    QRect labelRect = label->geometry();
+    label->move(screenGeometry.center() - labelRect.center());
 }
 
 void Mere::Lock::LockScreen::setBackground()
@@ -278,4 +278,27 @@ void Mere::Lock::LockScreen::setScreenLogo()
     label->setPixmap(pixmap);
 
     label->move(25, m_screen->size().height() - label->height() - 25);
+}
+
+void Mere::Lock::LockScreen::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+
+    QPoint center = this->geometry().center();
+
+    QPen pen(QColor("#5E716A"));
+    pen.setCapStyle(Qt::RoundCap);
+    pen.setWidth(9);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setPen(pen);
+
+    painter.drawPoint(center);
+
+    pen.setWidth(1);
+    painter.setPen(pen);
+
+    painter.drawLine(QPoint(center.x(), center.y() - 25), QPoint(center.x(), center.y() - 100));    // top
+    painter.drawLine(QPoint(center.x() + 25, center.y()), QPoint(center.x() + 100, center.y()));    // right
+    painter.drawLine(QPoint(center.x(), center.y() + 25), QPoint(center.x(), center.y() + 100));    // bottom
+    painter.drawLine(QPoint(center.x() - 25, center.y()), QPoint(center.x() - 100, center.y()));    // left
 }
