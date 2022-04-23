@@ -31,7 +31,7 @@ public:
     void restore();
 
 protected:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     void setTime();
@@ -68,6 +68,8 @@ private:
     void moveToCenter(QLabel *label);
     void setTextStyle(QLabel *label, const QColor &color, const int size);
 
+    QPoint center() const;
+
 private:
     QLabel *m_time;
     QLabel *m_text;
@@ -75,6 +77,7 @@ private:
     QTime m_blocktime;
     QTime m_elaspsetime;
 
+    QPoint m_center;
     QScreen *m_screen;
     Mere::Lock::Config *m_config;
 };

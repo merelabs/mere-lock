@@ -24,6 +24,8 @@ Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
     setMouseTracking(true);
     setAutoFillBackground(true);
 
+    m_center = center();
+
     setTime();
     setMessage();
     setBackground();
@@ -214,11 +216,15 @@ void Mere::Lock::LockScreen::setTextStyle(QLabel *label, const QColor &color, co
 
 void Mere::Lock::LockScreen::moveToCenter(QLabel *label)
 {
+    label->move(m_center - label->geometry().center());
+}
+
+QPoint Mere::Lock::LockScreen::center() const
+{
     QRect screenRect = m_screen->geometry();
     QRect screenGeometry(0, 0, screenRect.width(), screenRect.height());
 
-    QRect labelRect = label->geometry();
-    label->move(screenGeometry.center() - labelRect.center());
+    return screenGeometry.center();
 }
 
 void Mere::Lock::LockScreen::setBackground()
@@ -279,11 +285,11 @@ void Mere::Lock::LockScreen::setScreenLogo()
     label->move(25, m_screen->size().height() - label->height() - 25);
 }
 
-void Mere::Lock::LockScreen::paintEvent(QPaintEvent *)
+void Mere::Lock::LockScreen::paintEvent(QPaintEvent *event)
 {
-    QPainter painter(this);
+    Q_UNUSED(event);
 
-    QPoint center = this->geometry().center();
+    QPainter painter(this);
 
     QPen pen(QColor("#5E716A"));
     pen.setCapStyle(Qt::RoundCap);
@@ -291,13 +297,16 @@ void Mere::Lock::LockScreen::paintEvent(QPaintEvent *)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(pen);
 
-    painter.drawPoint(center);
+    painter.drawPoint(m_center);
 
     pen.setWidth(1);
     painter.setPen(pen);
 
-    painter.drawLine(QPoint(center.x(), center.y() - 25), QPoint(center.x(), center.y() - 100));    // top
-    painter.drawLine(QPoint(center.x() + 25, center.y()), QPoint(center.x() + 100, center.y()));    // right
-    painter.drawLine(QPoint(center.x(), center.y() + 25), QPoint(center.x(), center.y() + 100));    // bottom
-    painter.drawLine(QPoint(center.x() - 25, center.y()), QPoint(center.x() - 100, center.y()));    // left
+    painter.drawLine(QPoint(m_center.x(), m_center.y() - 25), QPoint(m_center.x(), m_center.y() - 125));    // top
+    painter.drawLine(QPoint(m_center.x() + 25, m_center.y()), QPoint(m_center.x() + 125, m_center.y()));    // right
+    painter.drawLine(QPoint(m_center.x(), m_center.y() + 25), QPoint(m_center.x(), m_center.y() + 125));    // bottom
+    painter.drawLine(QPoint(m_center.x() - 25, m_center.y()), QPoint(m_center.x() - 125, m_center.y()));    // left
+
+    painter.drawEllipse(m_center, 35, 35);
+    painter.drawEllipse(m_center, 75, 75);
 }
