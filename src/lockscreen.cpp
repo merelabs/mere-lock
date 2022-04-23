@@ -302,10 +302,11 @@ void Mere::Lock::LockScreen::paintEvent(QPaintEvent *event)
     pen.setWidth(1);
     painter.setPen(pen);
 
-    painter.drawLine(QPoint(m_center.x(), m_center.y() - 25), QPoint(m_center.x(), m_center.y() - 125));    // top
-    painter.drawLine(QPoint(m_center.x() + 25, m_center.y()), QPoint(m_center.x() + 125, m_center.y()));    // right
-    painter.drawLine(QPoint(m_center.x(), m_center.y() + 25), QPoint(m_center.x(), m_center.y() + 125));    // bottom
-    painter.drawLine(QPoint(m_center.x() - 25, m_center.y()), QPoint(m_center.x() - 125, m_center.y()));    // left
+    int length = 125 + m_elaspsetime.second();
+    painter.drawLine(QPoint(m_center.x(), m_center.y() - 25), QPoint(m_center.x(), m_center.y() - length));    // top
+    painter.drawLine(QPoint(m_center.x() + 25, m_center.y()), QPoint(m_center.x() + length, m_center.y()));    // right
+    painter.drawLine(QPoint(m_center.x(), m_center.y() + 25), QPoint(m_center.x(), m_center.y() + length));    // bottom
+    painter.drawLine(QPoint(m_center.x() - 25, m_center.y()), QPoint(m_center.x() - length, m_center.y()));    // left
 
     painter.drawEllipse(m_center, 35, 35);
     painter.drawEllipse(m_center, 75, 75);
