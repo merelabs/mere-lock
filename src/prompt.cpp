@@ -108,9 +108,9 @@ void Mere::Lock::Prompt::initUI()
     });
 
     connect(m_secret, &Mere::Lock::Secret::escaped, this, &Mere::Lock::Prompt::escaped);
-    connect(m_secret, &Mere::Lock::Secret::entered, [&](){
-        m_secret->setDisabled(true);
-    });
+//    connect(m_secret, &Mere::Lock::Secret::entered, [&](){
+//        m_secret->setDisabled(true);
+//    });
     connect(m_secret, &Mere::Lock::Secret::entered, this, &Mere::Lock::Prompt::entered);
 }
 

@@ -3,8 +3,9 @@
 #include "mere/utils/stringutils.h"
 #include "mere/utils/fileutils.h"
 
-#include <QApplication>
 #include <iostream>
+
+#include <QApplication>
 
 //
 // Prompt Screen

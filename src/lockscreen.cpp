@@ -216,7 +216,10 @@ void Mere::Lock::LockScreen::setTextStyle(QLabel *label, const QColor &color, co
 
 void Mere::Lock::LockScreen::moveToCenter(QLabel *label)
 {
-    label->move(m_center - label->geometry().center());
+    QRect labelRect = label->geometry();
+    QRect labelGeometry(0, 0, labelRect.width(), labelRect.height());
+
+    label->move(m_center - labelGeometry.center());
 }
 
 QPoint Mere::Lock::LockScreen::center() const
