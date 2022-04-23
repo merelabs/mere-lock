@@ -20,7 +20,7 @@ Mere::Lock::Timebar::Timebar(QWidget *parent)
     setAttribute(Qt::WA_StyledBackground);
     setGeometry(TIMEBAR_INIT_RECT);
 
-    m_animation->setDuration(m_config->unlockScreenPromptTimeout() * 1000);
+    m_animation->setDuration(m_config->promptTimeout() * 1000);
     m_animation->setStartValue(QRect(TIMEBAR_INIT_RECT));
     m_animation->setEndValue(QRect(TIMEBAR_INIT_RECT.x(), TIMEBAR_INIT_RECT.y(), parent->geometry().width() - 2 * TIMEBAR_INIT_RECT.x(), 2));
 

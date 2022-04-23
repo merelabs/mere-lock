@@ -37,7 +37,6 @@ int Mere::Lock::ScreenUnlocker::ask()
     QEventLoop loop;
     Mere::Lock::UnlockPrompt prompt(m_screen);
     connect(&prompt, &Mere::Lock::UnlockPrompt::attempted, [&](){
-        qint64 start =  QDateTime::currentDateTime().currentMSecsSinceEpoch();
         if(verify(prompt.input()))
         {
             attempt(0);
@@ -61,6 +60,7 @@ int Mere::Lock::ScreenUnlocker::ask()
 
     prompt.prompt();
 
+    // primary screen is removed when prompt is visible, need to close it forcefully!
     connect(this, &Mere::Lock::ScreenUnlocker::cancelled, [&](){
         ok = 1;
         loop.quit();

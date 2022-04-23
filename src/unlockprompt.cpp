@@ -20,8 +20,8 @@ Mere::Lock::UnlockPrompt::UnlockPrompt(LockScreen *screen, QObject *parent)
       m_prompt(new Prompt(screen)),
       m_config(Mere::Lock::Config::instance())
 {
-    connect(m_prompt, &Mere::Lock::Prompt::entered, this, &Mere::Lock::UnlockPrompt::attempted);
     connect(m_prompt, &Mere::Lock::Prompt::escaped, this, &Mere::Lock::UnlockPrompt::cancelled);
+    connect(m_prompt, &Mere::Lock::Prompt::entered, this, &Mere::Lock::UnlockPrompt::attempted);
 
     initUI();
 }

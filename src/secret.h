@@ -1,7 +1,6 @@
 #ifndef MERE_LOCK_SECRET_H
 #define MERE_LOCK_SECRET_H
 
-#include <QDebug>
 #include <QKeyEvent>
 #include <QLineEdit>
 

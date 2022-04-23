@@ -107,8 +107,11 @@ void Mere::Lock::Prompt::initUI()
         m_timebar->reset();
     });
 
-    connect(m_secret, &Mere::Lock::Secret::entered, this, &Mere::Lock::Prompt::entered);
     connect(m_secret, &Mere::Lock::Secret::escaped, this, &Mere::Lock::Prompt::escaped);
+    connect(m_secret, &Mere::Lock::Secret::entered, [&](){
+        m_secret->setDisabled(true);
+    });
+    connect(m_secret, &Mere::Lock::Secret::entered, this, &Mere::Lock::Prompt::entered);
 }
 
 void Mere::Lock::Prompt::initMessageUI()
