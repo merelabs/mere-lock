@@ -10,7 +10,7 @@ namespace Lock
 
 class Ticker;
 class Config;
-class Waitbar;
+class Timebar;
 class Secret;
 
 class Prompt : public QWidget
@@ -29,6 +29,8 @@ private:
     void initUI();
     void setShadow();
     void setBackground();
+    void setBackground(const QVariant &background);
+
     void setPromptLogo();
     void setTimeout();
 
@@ -46,7 +48,7 @@ private:
 
     Mere::Lock::Secret *m_secret;
     Mere::Lock::Ticker *m_ticker;
-    Mere::Lock::Waitbar *m_timeout;
+    Mere::Lock::Timebar *m_timeout;
 
     Mere::Lock::Config *m_config;
 };

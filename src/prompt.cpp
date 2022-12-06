@@ -1,7 +1,7 @@
 #include "prompt.h"
 #include "config.h"
 #include "ticker.h"
-#include "waitbar.h"
+#include "timebar.h"
 #include "secret.h"
 
 #include "mere/utils/stringutils.h"
@@ -53,7 +53,7 @@ Mere::Lock::Prompt::Prompt(QWidget *parent)
         m_timeout->start();
     });
 
-    connect(m_timeout, &Mere::Lock::Waitbar::timeout, this, [&](){
+    connect(m_timeout, &Mere::Lock::Timebar::timeout, this, [&](){
         emit cancelled();
     });
 
@@ -104,12 +104,10 @@ void Mere::Lock::Prompt::initMessageUI()
     this->layout()->addWidget(label);
 
     QPalette palette = label->palette();
-    palette.setColor(QPalette::WindowText, m_config->unlockScreenPromptMessageColor());
+    palette.setColor(QPalette::WindowText, m_config->unlockPromptMessageColor());
     label->setPalette(palette);
 
-    QFont font = label->font();
-    font.setPointSize(m_config->unlockScreenPromptMessageSize());
-    label->setFont(font);
+    label->setFont(m_config->unlockPromptMessageFont());
 
     label->move(geometry().center() - label->fontMetrics().boundingRect(label->text()).center());
 }
@@ -123,7 +121,7 @@ void Mere::Lock::Prompt::clear()
 
 void Mere::Lock::Prompt::setTimeout()
 {
-    m_timeout = new Mere::Lock::Waitbar(this);
+    m_timeout = new Mere::Lock::Timebar(this);
 }
 
 void Mere::Lock::Prompt::setVisible(bool visible)
@@ -158,27 +156,35 @@ void Mere::Lock::Prompt::setShadow()
 
 void Mere::Lock::Prompt::setBackground()
 {
-    QPalette pal = palette();
-    QPixmap pixmap = m_config->unlockScreenPromptBackgroundImage();
+    auto background = m_config->unlockPromptBackground();
+    setBackground(background);
+}
+
+void Mere::Lock::Prompt::setBackground(const QVariant &background)
+{
+    QPixmap pixmap= background.value<QPixmap>();
     if (!pixmap.isNull())
     {
+        QPalette pal = palette();
         pixmap = pixmap.scaled(size(), Qt::IgnoreAspectRatio);
         pal.setBrush(QPalette::Window, pixmap);
-    }
-    else
-    {
-        QColor color = m_config->unlockScreenPromptBackgroundColor();
-        pal.setColor(QPalette::Window, QColor(color));
+        setPalette(pal);
     }
 
-    setPalette(pal);
+    QColor color = background.value<QColor>();
+    if (color.isValid())
+    {
+        QPalette pal = palette();
+        pal.setColor(QPalette::Window, color);
+        setPalette(pal);
+    }
 }
 
 void Mere::Lock::Prompt::setPromptLogo()
 {
-    if(!m_config->unlockScreenPromptLogoShow()) return;
+    if(!m_config->unlockPromptLogoShow()) return;
 
-    std::string path = m_config->unlockScreenPromptLogo();
+    std::string path = m_config->unlockPromptLogo();
     if (Mere::Utils::StringUtils::isBlank(path)) return;
 
     QPixmap pixmap(QString::fromStdString(path));

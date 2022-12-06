@@ -3,6 +3,7 @@
 
 #include "mere/config/kvconfig.h"
 
+#include <QFont>
 #include <QColor>
 #include <QPixmap>
 
@@ -29,50 +30,38 @@ public:
     //
     // lock
     //
-    std::string lockScreenBackground() const;
+    QVariant lockScreenBackground() const;
     bool checkLockScreenBackground() const;
 
-    QColor lockScreenBackgroundColor() const;
-    bool checkLockScreenBackgroundColor() const;
+    QFont lockScreenStopwatchFont() const;
+    bool checkLockScreenStopwatchFont() const;
 
-    QPixmap lockScreenBackgroundImage() const;
-    bool checkLockScreenBackgroundImage() const;
+    QColor lockScreenStopwatchColor() const;
+    bool checkLockScreenStopwatchColor() const;
 
-    QColor lockScreenTimeFontColor() const;
-    bool checkLockScreenTimeFontColor() const;
+    QColor lockScreenMessageColor() const;
+    bool checkLockScreenMessageColor() const;
 
-    int lockScreenTimeFontSize() const;
-    bool checkLockScreenTimeFontSize() const;
-
-    QColor lockScreenMessageFontColor() const;
-    bool checkLockScreenMessageFontColor() const;
-
-    int lockScreenMessageFontSize() const;
-    bool checkLockScreenMessageFontSize() const;
+    QFont lockScreenMessageFont() const;
+    bool checkLockScreenMessageFont() const;
 
     //
     // block
     //
-    std::string blockScreenBackground() const;
+    QVariant blockScreenBackground() const;
     bool checkBlockScreenBackground() const;
 
-    QColor blockScreenBackgroundColor() const;
-    bool checkBlockScreenBackgroundColor() const;
+    QColor blockScreenStopwatchColor() const;
+    bool checkBlockScreenStopwatchColor() const;
 
-    QPixmap blockScreenBackgroundImage() const;
-    bool checkBlockScreenBackgroundImage() const;
-
-    QColor blockScreenTimeColor() const;
-    bool checkBlockScreenTimeColor() const;
-
-    int blockScreenTimeSize() const;
-    bool checkBlockScreenTimeSize() const;
+    QFont blockScreenStopwatchFont() const;
+    bool checkBlockScreenStopwatchFont() const;
 
     QColor blockScreenMessageColor() const;
     bool checkBlockScreenMessageColor() const;
 
-    int blockScreenMessageSize() const;
-    bool checkBlockScreenMessageSize() const;
+    QFont blockScreenMessageFont() const;
+    bool checkBlockScreenMessageFont() const;
 
     unsigned int blockTimeout() const;
     bool checkBlockTimeout() const;
@@ -80,39 +69,23 @@ public:
     //
     // unlock
     //
-    std::string unlockScreenBackground() const;
-    bool checkUnlockScreenBackground() const;
+    QVariant unlockPromptBackground() const;
+    bool checkUnlockPromptBackground() const;
 
-    QColor unlockScreenBackgroundColor() const;
-    bool checkUnlockScreenBackgroundColor() const;
+    std::string unlockPromptLogo() const;
+    bool checkUnlockPromptLogo() const;
 
-    QPixmap unlockScreenBackgroundImage() const;
-    bool checkUnlockScreenBackgroundImage() const;
+    bool unlockPromptLogoShow() const;
+    bool checkUnlockPromptLogoShow() const;
 
+    QColor unlockPromptMessageColor() const;
+    bool checkUnlockPromptMessageColor() const;
 
-    std::string unlockScreenPromptBackground() const;
-    bool checkUnlockScreenPromptBackground() const;
+    QFont unlockPromptMessageFont() const;
+    bool checkUnlockPromptMessageFont() const;
 
-    QColor unlockScreenPromptBackgroundColor() const;
-    bool checkUnlockScreenPromptBackgroundColor() const;
-
-    QPixmap unlockScreenPromptBackgroundImage() const;
-    bool checkUnlockScreenPromptBackgroundImage() const;
-
-    std::string unlockScreenPromptLogo() const;
-    bool checkUnlockScreenPromptLogo() const;
-
-    bool unlockScreenPromptLogoShow() const;
-    bool checkUnlockScreenPromptLogoShow() const;
-
-    QColor unlockScreenPromptMessageColor() const;
-    bool checkUnlockScreenPromptMessageColor() const;
-
-    int unlockScreenPromptMessageSize() const;
-    bool checkUnlockScreenPromptMessageSize() const;
-
-    unsigned int unlockScreenPromptTimeout() const;
-    bool checkUnlockScreenPromptTimeout() const;
+    unsigned int unlockPromptTimeout() const;
+    bool checkUnlockPromptTimeout() const;
 
     unsigned int unlockAttempts() const;
     bool checkUnlockAttempts() const;
@@ -139,10 +112,18 @@ private:
 
     bool checkInt(const std::string &key) const;
     bool checkBool(const std::string &key) const;
-    bool checkKey(const std::string &key, std::string &value, bool &set) const;
+    bool checkKey(const std::string &key, std::string &value) const;
 
     bool checkColor(const std::string &key) const;
     bool checkImage(const std::string &key) const;
+    bool checkFont(const std::string &key) const;
+
+    QFont font(const std::string &key, const QFont &font) const;
+    QColor color(const std::string &key, const QColor &color) const;
+    QVariant background(const std::string &key, const QVariant &background) const;
+
+    bool value(const std::string &key, const bool &default_value) const;
+    std::string value(const std::string &key, const std::string &default_value) const;
 };
 
 }

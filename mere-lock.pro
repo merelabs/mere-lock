@@ -24,9 +24,9 @@ SOURCES += \
     src/secret.cpp \
     src/systemlocker.cpp \
     src/ticker.cpp \
+    src/timebar.cpp \
     src/unlocker.cpp \
-    src/unlockprompt.cpp \
-    src/waitbar.cpp
+    src/unlockprompt.cpp
 
 HEADERS += \
     src/config.h \
@@ -39,9 +39,9 @@ HEADERS += \
     src/secret.h \
     src/systemlocker.h \
     src/ticker.h \
+    src/timebar.h \
     src/unlocker.h \
-    src/unlockprompt.h \
-    src/waitbar.h
+    src/unlockprompt.h
 
 RESOURCES += \
     res/lock.qrc

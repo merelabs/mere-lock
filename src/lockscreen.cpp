@@ -20,7 +20,6 @@ Mere::Lock::LockScreen::LockScreen(QScreen *screen, QWidget *parent)
 {
     setObjectName("LockScreen-" + screen->name());
 
-//    setCursor(Qt::BlankCursor);
     setMouseTracking(true);
     setAutoFillBackground(true);
 
@@ -44,8 +43,6 @@ void Mere::Lock::LockScreen::unlock()
 {
     m_time->hide();
     m_text->hide();
-
-    applyUnlockTheme();
 }
 
 void Mere::Lock::LockScreen::block()
@@ -116,11 +113,6 @@ void Mere::Lock::LockScreen::applyBlockTheme()
     setBlockMessagePosition();
 }
 
-void Mere::Lock::LockScreen::applyUnlockTheme()
-{
-    setUnlockBackground();
-}
-
 void Mere::Lock::LockScreen::setTime()
 {
     m_time = new QLabel("00:00:00", this);
@@ -139,9 +131,14 @@ void Mere::Lock::LockScreen::setTimeStyle(const QColor &color, const int size)
     setTextStyle(m_time, color, size);
 }
 
+void Mere::Lock::LockScreen::setTimeStyle(const QColor &color, const QFont &font)
+{
+    setTextStyle(m_time, color, font);
+}
+
 void Mere::Lock::LockScreen::setLockTimeStyle()
 {
-    setTimeStyle(m_config->lockScreenTimeFontColor(), m_config->lockScreenTimeFontSize());
+    setTimeStyle(m_config->lockScreenStopwatchColor(), m_config->lockScreenStopwatchFont());
 }
 
 void Mere::Lock::LockScreen::setLockTimePosition()
@@ -151,7 +148,7 @@ void Mere::Lock::LockScreen::setLockTimePosition()
 
 void Mere::Lock::LockScreen::setBlockTimeStyle()
 {
-    setTimeStyle(m_config->blockScreenTimeColor(), m_config->blockScreenTimeSize());
+    setTimeStyle(m_config->blockScreenStopwatchColor(), m_config->blockScreenStopwatchFont());
 }
 
 void Mere::Lock::LockScreen::setBlockTimePosition()
@@ -177,9 +174,14 @@ void Mere::Lock::LockScreen::setMessageStyle(const QColor &color, const int size
     setTextStyle(m_text, color, size);
 }
 
+void Mere::Lock::LockScreen::setMessageStyle(const QColor &color, const QFont &font)
+{
+    setTextStyle(m_text, color, font);
+}
+
 void Mere::Lock::LockScreen::setLockMessageStyle()
 {
-    setMessageStyle(m_config->lockScreenMessageFontColor(), m_config->lockScreenMessageFontSize());
+    setMessageStyle(m_config->lockScreenMessageColor(), m_config->lockScreenMessageFont());
 }
 
 void Mere::Lock::LockScreen::setLockMessagePosition()
@@ -189,7 +191,7 @@ void Mere::Lock::LockScreen::setLockMessagePosition()
 
 void Mere::Lock::LockScreen::setBlockMessageStyle()
 {
-    setMessageStyle(m_config->blockScreenMessageColor(), m_config->blockScreenMessageSize());
+    setMessageStyle(m_config->blockScreenMessageColor(), m_config->blockScreenMessageFont());
 }
 
 void Mere::Lock::LockScreen::setBlockMessagePosition()
@@ -212,6 +214,15 @@ void Mere::Lock::LockScreen::setTextStyle(QLabel *label, const QColor &color, co
     label->adjustSize();
 }
 
+void Mere::Lock::LockScreen::setTextStyle(QLabel *label, const QColor &color, const QFont &font)
+{
+    QPalette palette = label->palette();
+    palette.setColor(QPalette::WindowText, color);
+    label->setPalette(palette);
+    label->setFont(font);
+    label->adjustSize();
+}
+
 void Mere::Lock::LockScreen::moveToCenter(QLabel *label)
 {
     QRect screenRect = m_screen->geometry();
@@ -230,17 +241,34 @@ void Mere::Lock::LockScreen::setBackground()
 
 void Mere::Lock::LockScreen::setLockBackground()
 {
-    setBackground(m_config->lockScreenBackgroundImage(), m_config->lockScreenBackgroundColor());
+    auto background = m_config->lockScreenBackground();
+    setBackground(background);
 }
 
 void Mere::Lock::LockScreen::setBlockBackground()
 {
-    setBackground(m_config->blockScreenBackgroundImage(), m_config->blockScreenBackgroundColor());
+    auto background = m_config->blockScreenBackground();
+    setBackground(background);
 }
 
-void Mere::Lock::LockScreen::setUnlockBackground()
+void Mere::Lock::LockScreen::setBackground(const QVariant &background)
 {
-    setBackground(m_config->unlockScreenBackgroundImage(), m_config->unlockScreenBackgroundColor());
+    QPixmap pixmap= background.value<QPixmap>();
+    if (!pixmap.isNull())
+    {
+        QPalette pal = palette();
+        pixmap = pixmap.scaled(m_screen->availableVirtualSize(), Qt::IgnoreAspectRatio);
+        pal.setBrush(QPalette::Window, pixmap);
+        setPalette(pal);
+    }
+
+    QColor color = background.value<QColor>();
+    if (color.isValid())
+    {
+        QPalette pal = palette();
+        pal.setColor(QPalette::Window, color);
+        setPalette(pal);
+    }
 }
 
 void Mere::Lock::LockScreen::setBackground(QPixmap pixmap, QColor color)
@@ -279,4 +307,31 @@ void Mere::Lock::LockScreen::setScreenLogo()
     label->setPixmap(pixmap);
 
     label->move(25, m_screen->size().height() - label->height() - 25);
+}
+
+void Mere::Lock::LockScreen::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    QPainter painter(this);
+
+    QPen pen(QColor("#5E716A"));
+    pen.setCapStyle(Qt::RoundCap);
+    pen.setWidth(9);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setPen(pen);
+
+    painter.drawPoint(m_center);
+
+    pen.setWidth(1);
+    painter.setPen(pen);
+
+    int length = 125 + m_elaspsetime.second();
+    painter.drawLine(QPoint(m_center.x(), m_center.y() - 25), QPoint(m_center.x(), m_center.y() - length));    // top
+    painter.drawLine(QPoint(m_center.x() + 25, m_center.y()), QPoint(m_center.x() + length, m_center.y()));    // right
+    painter.drawLine(QPoint(m_center.x(), m_center.y() + 25), QPoint(m_center.x(), m_center.y() + length));    // bottom
+    painter.drawLine(QPoint(m_center.x() - 25, m_center.y()), QPoint(m_center.x() - length, m_center.y()));    // left
+
+    painter.drawEllipse(m_center, 35, 35);
+    painter.drawEllipse(m_center, 75, 75);
 }

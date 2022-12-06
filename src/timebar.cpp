@@ -1,4 +1,4 @@
-#include "waitbar.h"
+#include "timebar.h"
 #include "config.h"
 
 #include <iostream>
@@ -6,7 +6,7 @@
 
 static const QRect WAITBAR_INIT_STATE = QRect(10, 10, 0, 2);
 
-Mere::Lock::Waitbar::~Waitbar()
+Mere::Lock::Timebar::~Timebar()
 {
     if (m_animation)
     {
@@ -15,7 +15,7 @@ Mere::Lock::Waitbar::~Waitbar()
     }
 }
 
-Mere::Lock::Waitbar::Waitbar(QWidget *parent)
+Mere::Lock::Timebar::Timebar(QWidget *parent)
     : QWidget(parent),
       m_config(Mere::Lock::Config::instance())
 {
@@ -25,7 +25,7 @@ Mere::Lock::Waitbar::Waitbar(QWidget *parent)
     setGeometry(WAITBAR_INIT_STATE);
 
     m_animation = new QPropertyAnimation(this, "geometry");
-    m_animation->setDuration(m_config->unlockScreenPromptTimeout() * 1000);
+    m_animation->setDuration(m_config->unlockPromptTimeout() * 1000);
     m_animation->setStartValue(QRect(WAITBAR_INIT_STATE));
     m_animation->setEndValue(QRect(WAITBAR_INIT_STATE.x(), WAITBAR_INIT_STATE.y(), parent->geometry().width() - 2 * WAITBAR_INIT_STATE.x(), 2));
 
@@ -35,21 +35,21 @@ Mere::Lock::Waitbar::Waitbar(QWidget *parent)
     });
 }
 
-int Mere::Lock::Waitbar::start()
+int Mere::Lock::Timebar::start()
 {
     m_animation->start();
 
     return 0;
 }
 
-int Mere::Lock::Waitbar::stop()
+int Mere::Lock::Timebar::stop()
 {
     m_animation->stop();
 
     return 0;
 }
 
-int Mere::Lock::Waitbar::reset()
+int Mere::Lock::Timebar::reset()
 {
     stop();
     setGeometry(WAITBAR_INIT_STATE);
