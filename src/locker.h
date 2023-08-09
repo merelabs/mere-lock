@@ -14,16 +14,13 @@ class Locker : public QObject
 {
     Q_OBJECT
 public:
-    ~Locker();
+    virtual ~Locker();
     explicit Locker(QObject *parent = nullptr);
 
     int lock();
     int unlock();
 
-    static uint Attempts;
-
 signals:
-    void locked();
     void unlocked();
 
 private:

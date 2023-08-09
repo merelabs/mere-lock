@@ -3,9 +3,11 @@
 
 #include "mere/utils/apputils.h"
 #include "mere/utils/i18nutils.h"
+#include "mere/utils/stringutils.h"
 
 #include <iostream>
 #include <QTimer>
+#include <QInputDialog>
 #include <QCommandLineParser>
 
 LockApp::~LockApp()
@@ -51,8 +53,17 @@ LockApp::LockApp(int &argc, char **argv)
 
     parser.addOptions({configOption, passwordOption, timeoutOption, screenOption, strictOption});
 
-    parser.process(QCoreApplication::arguments());
-
+    if(!parser.parse(QCoreApplication::arguments()))
+    {
+        // Hack
+        // make -p/--password value optional
+        QString message = parser.errorText();
+        if (!message.startsWith("Missing value after '-p'") && !message.startsWith("Missing value after '--password'"))
+        {
+            std::cout << message.toStdString() << std::endl;
+            std::exit(1);
+        }
+    }
 
     m_config = Mere::Lock::Config::instance(parser.value(configOption).toStdString(),
                                             parser.isSet(strictOption)
@@ -78,7 +89,10 @@ LockApp::LockApp(int &argc, char **argv)
 
     if (parser.isSet(passwordOption))
     {
-        m_config->password(parser.value(passwordOption).toStdString());
+        std::string password = parser.value(passwordOption).toStdString();
+
+        m_config->ask(Mere::Utils::StringUtils::isBlank(password));
+        m_config->password(password);
     }
 
     if (parser.isSet(timeoutOption))
@@ -93,11 +107,14 @@ LockApp::LockApp(int &argc, char **argv)
 
     m_locker = new Mere::Lock::Locker(this);
     connect(m_locker, &Mere::Lock::Locker::unlocked, [&](){
+        // log here
         quit();
     });
 }
 
 int LockApp::start()
 {
-    return m_locker->lock();
+    int ok = m_locker->lock();
+    // log here
+    return ok;
 }

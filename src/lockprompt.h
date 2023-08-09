@@ -1,5 +1,5 @@
-#ifndef MERE_LOCK_UNLOCKPROMPT_H
-#define MERE_LOCK_UNLOCKPROMPT_H
+#ifndef MERE_LOCK_LOCKPROMPT_H
+#define MERE_LOCK_LOCKPROMPT_H
 
 #include <QObject>
 
@@ -12,23 +12,21 @@ class Config;
 class Prompt;
 class LockScreen;
 
-class UnlockPrompt : public QObject
+class LockPrompt : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~UnlockPrompt();
-    explicit UnlockPrompt(LockScreen *screen, QObject *parent = nullptr);
+    virtual ~LockPrompt();
+    explicit LockPrompt(LockScreen *screen, QObject *parent = nullptr);
 
     void prompt() const;
     std::string input() const;
-
-    void failed() const;
 
 protected:
     void initUI();
 
 private:
-    void setBackground() ;
+    void setBackground();
     void setPromptLogo();
 
 signals:
@@ -42,4 +40,4 @@ private:
 
 }
 }
-#endif // MERE_LOCK_UNLOCKPROMPT_H
+#endif // MERE_LOCK_LOCKPROMPT_H

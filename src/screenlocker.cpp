@@ -2,9 +2,12 @@
 #include "config.h"
 #include "ticker.h"
 #include "lockscreen.h"
+#include "lockprompt.h"
 #include "screenunlocker.h"
 
+#include <QScreen>
 #include <QApplication>
+
 Mere::Lock::ScreenLocker::~ScreenLocker()
 {
     for(auto *screen : m_screens)
@@ -21,34 +24,43 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
     : QObject(parent),
       m_ticker(new Mere::Lock::Ticker(1, this)),
       m_config(Mere::Lock::Config::instance())
-{
+{    
     for(QScreen *screen : QApplication::screens())
     {
         auto *lockScreen = new Mere::Lock::LockScreen(screen);
         m_screens.push_back(lockScreen);
     }
+    connect(qApp, &QApplication::screenAdded, [&](QScreen *screen){
+        auto *lockScreen = new Mere::Lock::LockScreen(screen);
+        m_screens.push_back(lockScreen);
+        lockScreen->lock();
+    });
+
+    connect(qApp, &QApplication::screenRemoved, [&](QScreen *screen) {
+        auto it = std::find_if(m_screens.begin(), m_screens.end(), [&](Mere::Lock::LockScreen *lockedScreen){
+            return lockedScreen->screen()->name() == screen->name();
+        });
+
+        if (it != m_screens.end())
+            m_screens.erase(it);
+    });
+
+    connect(qApp, &QApplication::primaryScreenChanged, [&](QScreen *screen){
+        auto it = std::find_if(m_screens.begin(), m_screens.end(), [&](Mere::Lock::LockScreen *lockedScreen){
+            return lockedScreen->screen()->name() == screen->name();
+        });
+
+        if (it != m_screens.end())
+        {
+            m_screen = *it;
+            m_unlocker->screen(m_screen);
+        }
+    });
 
     m_screen = m_screens.at(0);
 
     m_unlocker = new Mere::Lock::ScreenUnlocker(m_screen, this);
-    connect(m_unlocker, &Mere::Lock::Unlocker::blocked, this, [&](){
-        block();
-    });
-
-    connect(m_unlocker, &Mere::Lock::Unlocker::unblocked, this, [&](){
-        unblock();
-    });
-
-    connect(m_unlocker, &Mere::Lock::Unlocker::unlocked, this, [&](){
-        release();
-        emit unlocked();
-    });
-
-    connect(m_unlocker, &Mere::Lock::Unlocker::cancelled, this, [&](){
-        restore();
-    });
-
-    connect(m_ticker, &Mere::Lock::Ticker::tick, this, [&](){
+    connect(m_ticker, &Mere::Lock::Ticker::tick, [&]{
         tick();
     });
 
@@ -56,7 +68,6 @@ Mere::Lock::ScreenLocker::ScreenLocker(QObject *parent)
 
     m_screen->setFocusPolicy(Qt::StrongFocus);
     m_screen->setFocus(Qt::ActiveWindowFocusReason);
-    m_screen->installEventFilter(this);
 }
 
 int Mere::Lock::ScreenLocker::lock()
@@ -64,9 +75,12 @@ int Mere::Lock::ScreenLocker::lock()
     for(auto *screen : m_screens)
         screen->lock();
 
-    capture();
+    // if user does not provide value
+    // for -p/--password option, ask it.
+    if (m_config->ask() && this->ask())
+        return 1;
 
-    emit locked();
+    capture();
 
     return 0;
 }
@@ -78,13 +92,7 @@ int Mere::Lock::ScreenLocker::unlock()
 
     release();
 
-    m_unlocker->unlock();
-
-//    m_ticker->stop();
-
-//    emit unlocked();
-
-    return 0;
+    return m_unlocker->unlock();
 }
 
 void Mere::Lock::ScreenLocker::restore()
@@ -101,6 +109,11 @@ int Mere::Lock::ScreenLocker::block()
         screen->block();
 
     capture();
+
+//    QTimer::singleShot(m_config->blockTimeout() * 1000 * 60, this, [&](){
+    QTimer::singleShot(.1 * 1000 * 60, this, [&]{
+        unblock();
+    });
 
     return 0;
 }
@@ -123,18 +136,44 @@ void Mere::Lock::ScreenLocker::capture()
 {
     m_screen->grabMouse();
     m_screen->grabKeyboard();
+    m_screen->installEventFilter(this);
+
 }
 
 void Mere::Lock::ScreenLocker::release()
 {
     m_screen->releaseMouse();
     m_screen->releaseKeyboard();
+    m_screen->removeEventFilter(this);
+}
+
+int Mere::Lock::ScreenLocker::ask()
+{
+    int ok = 0;
+
+
+    QEventLoop loop;
+
+    Mere::Lock::LockPrompt prompt(m_screen);
+    connect(&prompt, &Mere::Lock::LockPrompt::attempted, [&](){
+        m_config->password(prompt.input());
+        loop.quit();
+
+    });
+    connect(&prompt, &Mere::Lock::LockPrompt::cancelled, [&](){
+        ok = 1;
+        loop.quit();
+    });
+    prompt.prompt();
+
+    loop.exec();
+
+    return ok;
 }
 
 bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
 {
-    if ((event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove)
-         &&  m_unlocker->state() != Mere::Lock::Unlocker::InProgress)
+    if ((event->type() == QEvent::KeyPress || event->type() == QEvent::MouseMove))
     {
 #ifdef QT_DEBUG
         // - test code
@@ -143,9 +182,25 @@ bool Mere::Lock::ScreenLocker::eventFilter(QObject *obj, QEvent *event)
             ::exit(0);
         // - end of test code
 #endif
-
         if (m_unlocker->attempt() < m_config->unlockAttempts())
-            unlock();
+        {
+            release();
+            int ok = unlock();
+            capture();
+
+            switch (ok)
+            {
+                case 1:
+                    restore();
+                    break;
+                case 2:
+                    block();
+                    break;
+                default:
+                    emit unlocked();
+                    break;
+            }
+        }
 
         return true;
     }

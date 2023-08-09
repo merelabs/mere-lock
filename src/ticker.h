@@ -1,9 +1,9 @@
-#ifndef LOCKCOUNTER_H
-#define LOCKCOUNTER_H
+#ifndef MERE_LOCK_TICKER_H
+#define MERE_LOCK_TICKER_H
 
-#include <QTimer>
-#include <QDebug>
 #include <QObject>
+
+class QTimer;
 
 namespace Mere
 {
@@ -15,9 +15,12 @@ class Ticker : public QObject
     Q_OBJECT
 public:
     virtual ~Ticker();
-    explicit Ticker(int step, QObject *parent = nullptr);
+    explicit Ticker(unsigned int step, QObject *parent = nullptr);
+
     int start();
     int stop();
+
+    int reset(int step = 0);
 
 signals:
     void tick();
@@ -29,4 +32,4 @@ private:
 
 }
 }
-#endif // LOCKCOUNTER_H
+#endif // MERE_LOCK_TICKER_H

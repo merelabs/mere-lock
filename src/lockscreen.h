@@ -30,6 +30,9 @@ public:
     void tick();
     void restore();
 
+protected:
+    void paintEvent(QPaintEvent *event) override;
+
 private:
     void setTime();
     void setTimePosition();
@@ -51,13 +54,21 @@ private:
     void setBlockMessagePosition();
 
     void setBackground();
+    void setLockBackground();
+    void setBlockBackground();
+    void setUnlockBackground();
+    void setBackground(QPixmap pixmap, QColor color);
+
     void setScreenLogo();
 
     void applyLockTheme();
     void applyBlockTheme();
+    void applyUnlockTheme();
 
     void moveToCenter(QLabel *label);
     void setTextStyle(QLabel *label, const QColor &color, const int size);
+
+    QPoint center() const;
 
 private:
     QLabel *m_time;
@@ -66,6 +77,7 @@ private:
     QTime m_blocktime;
     QTime m_elaspsetime;
 
+    QPoint m_center;
     QScreen *m_screen;
     Mere::Lock::Config *m_config;
 };

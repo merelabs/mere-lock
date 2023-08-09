@@ -20,12 +20,49 @@ public:
     int init();
     int validate() const;
 
+
+    bool ask() const;
+    void ask(bool ask);
+
     std::string password() const;
     void password(const std::string &password);
 
     unsigned int timeout() const;
     void timeout(unsigned int timeout);
 
+    //
+   // Prompt
+   //
+   std::string promptBackground() const;
+   bool checkPromptBackground() const;
+
+   QColor promptBackgroundColor() const;
+   bool checkPromptBackgroundColor() const;
+
+   QPixmap promptBackgroundImage() const;
+   bool checkPromptBackgroundImage() const;
+
+   QPixmap promptLogo() const;
+   bool checkPromptLogo() const;
+
+   bool promptLogoShow() const;
+   bool checkPromptLogoShow() const;
+
+   QColor promptMessageColor() const;
+   bool checkPromptMessageColor() const;
+
+   int promptMessageSize() const;
+   bool checkPromptMessageSize() const;
+
+   unsigned int promptTimeout() const;
+   bool checkPromptTimeout() const;
+
+   QColor promptTimebarColor() const;
+   bool checkPromptTimebarColor() const;
+
+    //
+    // lock
+    //
     std::string lockScreenBackground() const;
     bool checkLockScreenBackground() const;
 
@@ -35,48 +72,88 @@ public:
     QPixmap lockScreenBackgroundImage() const;
     bool checkLockScreenBackgroundImage() const;
 
-    QColor lockScreenTimeColor() const;
-    bool checkLockScreenTimeColor() const;
+    QColor lockScreenTimeFontColor() const;
+    bool checkLockScreenTimeFontColor() const;
 
-    int lockScreenTimeSize() const;
-    bool checkLockScreenTimeSize() const;
+    int lockScreenTimeFontSize() const;
+    bool checkLockScreenTimeFontSize() const;
 
-    QColor lockScreenMessageColor() const;
-    bool checkLockScreenMessageColor() const;
+    QColor lockScreenMessageFontColor() const;
+    bool checkLockScreenMessageFontColor() const;
 
-    int lockScreenMessageSize() const;
-    bool checkLockScreenMessageSize() const;
+    int lockScreenMessageFontSize() const;
+    bool checkLockScreenMessageFontSize() const;
 
-    std::string lockScreenLogo() const;
-    bool checkLockScreenLogo() const;
+    //
+    // lock screen prompt
+    //
+    std::string lockScreenPromptBackground() const;
+    bool checkLockScreenPromptBackground() const;
 
-    bool lockScreenLogoShow() const;
-    bool checkLockScreenLogoShow() const;
+    QColor lockScreenPromptBackgroundColor() const;
+    bool checkLockScreenPromptBackgroundColor() const;
 
+    QPixmap lockScreenPromptBackgroundImage() const;
+    bool checkLockScreenPromptBackgroundImage() const;
+
+    QPixmap lockScreenPromptLogo() const;
+    bool checkLockScreenPromptLogo() const;
+
+    bool lockScreenPromptLogoShow() const;
+    bool checkLockScreenPromptLogoShow() const;
+
+    QColor lockScreenPromptMessageColor() const;
+    bool checkLockScreenPromptMessageColor() const;
+
+    int lockScreenPromptMessageSize() const;
+    bool checkLockScreenPromptMessageSize() const;
+
+    unsigned int lockScreenPromptTimeout() const;
+    bool checkLockScreenPromptTimeout() const;
+
+    //
+    // block
+    //
     std::string blockScreenBackground() const;
     bool checkBlockScreenBackground() const;
 
-    QColor screenBlockScreenBackgroundColor() const;
+    QColor blockScreenBackgroundColor() const;
     bool checkBlockScreenBackgroundColor() const;
 
     QPixmap blockScreenBackgroundImage() const;
     bool checkBlockScreenBackgroundImage() const;
 
-    QColor blockScreenTimeColor() const;
-    bool checkBlockScreenTimeColor() const;
+    QColor blockScreenTimeFontColor() const;
+    bool checkBlockScreenTimeFontColor() const;
 
-    int blockScreenTimeSize() const;
-    bool checkBlockScreenTimeSize() const;
+    int blockScreenTimeFontSize() const;
+    bool checkBlockScreenTimeFontSize() const;
 
-    QColor blockScreenMessageColor() const;
-    bool checkBlockScreenMessageColor() const;
+    QColor blockScreenMessageFontColor() const;
+    bool checkBlockScreenMessageFontColor() const;
 
-    int blockScreenMessageSize() const;
-    bool checkBlockScreenMessageSize() const;
+    int blockScreenMessageFontSize() const;
+    bool checkBlockScreenMessageFontSize() const;
 
     unsigned int blockTimeout() const;
     bool checkBlockTimeout() const;
 
+    //
+    // unlock
+    //
+    std::string unlockScreenBackground() const;
+    bool checkUnlockScreenBackground() const;
+
+    QColor unlockScreenBackgroundColor() const;
+    bool checkUnlockScreenBackgroundColor() const;
+
+    QPixmap unlockScreenBackgroundImage() const;
+    bool checkUnlockScreenBackgroundImage() const;
+
+
+    //
+    // unlock screen prompt
+    //
     std::string unlockScreenPromptBackground() const;
     bool checkUnlockScreenPromptBackground() const;
 
@@ -86,7 +163,7 @@ public:
     QPixmap unlockScreenPromptBackgroundImage() const;
     bool checkUnlockScreenPromptBackgroundImage() const;
 
-    std::string unlockScreenPromptLogo() const;
+    QPixmap unlockScreenPromptLogo() const;
     bool checkUnlockScreenPromptLogo() const;
 
     bool unlockScreenPromptLogoShow() const;
@@ -103,6 +180,12 @@ public:
 
     unsigned int unlockAttempts() const;
     bool checkUnlockAttempts() const;
+
+    std::string lockScreenLogo() const;
+    bool checkLockScreenLogo() const;
+
+    bool lockScreenLogoShow() const;
+    bool checkLockScreenLogoShow() const;
 
     static Config* instance(const std::string &path = "", const Mere::Config::Spec::Strict &strict = Mere::Config::Spec::Strict::Soft)
     {

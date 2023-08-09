@@ -13,9 +13,8 @@ namespace Lock
 
 class Config;
 class Ticker;
-class Unlocker;
 class LockScreen;
-class UnlockPrompt;
+class ScreenUnlocker;
 
 class ScreenLocker : public QObject
 {
@@ -41,14 +40,15 @@ private:
 
     void restore();
 
+    int ask();
+
 signals:
-    void locked();
     void unlocked();
 
 private:
     Mere::Lock::Ticker *m_ticker;
 
-    Mere::Lock::Unlocker *m_unlocker;
+    Mere::Lock::ScreenUnlocker *m_unlocker;
     Mere::Lock::LockScreen *m_screen;
     std::vector<Mere::Lock::LockScreen *> m_screens;
 

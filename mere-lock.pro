@@ -15,13 +15,17 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 SOURCES += \
     src/config.cpp \
     src/locker.cpp \
+    src/lockprompt.cpp \
     src/lockscreen.cpp \
     src/main.cpp \
     src/lockapp.cpp \
+    src/prompt.cpp \
     src/screenlocker.cpp \
     src/screenunlocker.cpp \
+    src/secret.cpp \
     src/systemlocker.cpp \
     src/ticker.cpp \
+    src/timebar.cpp \
     src/unlocker.cpp \
     src/unlockprompt.cpp
 
@@ -29,11 +33,15 @@ HEADERS += \
     src/config.h \
     src/lockapp.h \
     src/locker.h \
+    src/lockprompt.h \
     src/lockscreen.h \
+    src/prompt.h \
     src/screenlocker.h \
     src/screenunlocker.h \
+    src/secret.h \
     src/systemlocker.h \
     src/ticker.h \
+    src/timebar.h \
     src/unlocker.h \
     src/unlockprompt.h
 
@@ -99,7 +107,7 @@ unix
 
     INSTALLS += config share i18n desktop target
 
-    !linux-g++ {
+    !linux-clang {
         post.path = $${OUT_PWD}/build
         post.commands = chmod u+s /usr/local/bin/mere-lock
         #post.depends =

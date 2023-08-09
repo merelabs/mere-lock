@@ -12,23 +12,22 @@ namespace Lock
 
 class Config;
 class LockScreen;
-class UnlockPrompt;
 
 class ScreenUnlocker : public Unlocker
 {
     Q_OBJECT
 public:
+    virtual ~ScreenUnlocker();
     explicit ScreenUnlocker(LockScreen *screen, QObject *parent = nullptr);
     int unlock() override;
 
-private:
-    void prompt();
-    bool verify();    
+    void screen(LockScreen *screen);
 
 private:
-    Mere::Lock::LockScreen *m_screen;
-    Mere::Lock::UnlockPrompt *m_prompt;
+    int ask();
 
+private:
+    LockScreen *m_screen;
     Mere::Lock::Config *m_config;
 };
 

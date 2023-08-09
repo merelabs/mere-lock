@@ -69,6 +69,7 @@ $ mere-lock --strict --timeout 15
 ```
 
 Tips: you can generate a password while invoking, and pass it using xargs!
+Tips: you can always use your system passowrd to unlock screen(s)!
 
 ### Dependencies
 `mere-lock` requires following componnets
